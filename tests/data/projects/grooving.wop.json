@@ -1,0 +1,938 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "WOP program",
+    "x_mode": "DIAMETER"
+  },
+  "raw_part": {
+    "material": "Mild steel",
+    "outer_diameter_mm": 120.0,
+    "length_outside_mm": 100.0,
+    "inner_diameter_mm": 50.0,
+    "length_mm": 150.0,
+    "front_z_mm": 0
+  },
+  "safety": {
+    "safe_radius_mm": 70.0,
+    "safe_z_mm": 10,
+    "clearance_mm": 1,
+    "change_radius_mm": 100.0,
+    "change_z_mm": 100.0
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "Outside tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              8,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              8,
+              0
+            ],
+            "end": [
+              8,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              8,
+              12
+            ],
+            "end": [
+              0,
+              12
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              12
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "turning",
+      "definition": {
+        "number": 1,
+        "name": "Outside tool",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 0,
+        "side_edge_length_mm": 8,
+        "side_edge_angle_deg": 90,
+        "front_edge_angle_deg": 90,
+        "width_mm": 12,
+        "length_mm": 8
+      }
+    },
+    {
+      "format": 1,
+      "number": 2,
+      "name": "Boring bar",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              -8,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -8,
+              0
+            ],
+            "end": [
+              -8,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -8,
+              12
+            ],
+            "end": [
+              0,
+              12
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              12
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "boring",
+      "definition": {
+        "number": 2,
+        "name": "Boring bar",
+        "material": "CARBIDE",
+        "nose_radius_mm": 0,
+        "wall_edge_length_mm": 12,
+        "wall_edge_angle_deg": 90,
+        "end_edge_angle_deg": 90,
+        "front_width_mm": 8,
+        "bar_width_mm": 8,
+        "length_mm": 12
+      }
+    },
+    {
+      "format": 1,
+      "number": 3,
+      "name": "outside groving  3mm",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              0,
+              3
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              3
+            ],
+            "end": [
+              30.0,
+              3
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              30.0,
+              3
+            ],
+            "end": [
+              30.0,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              30.0,
+              12
+            ],
+            "end": [
+              50.0,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              50.0,
+              12
+            ],
+            "end": [
+              50.0,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              50.0,
+              0
+            ],
+            "end": [
+              30.0,
+              0
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              30.0,
+              0
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "groove",
+      "definition": {
+        "number": 3,
+        "name": "outside groving  3mm",
+        "material": "COATED_CARBIDE",
+        "blade_width_mm": 3,
+        "reach_mm": 30.0,
+        "inside": false
+      }
+    },
+    {
+      "format": 1,
+      "number": 4,
+      "name": "inside groving 3mm",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              0,
+              3
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              3
+            ],
+            "end": [
+              -10,
+              3
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -10,
+              3
+            ],
+            "end": [
+              -10,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -10,
+              12
+            ],
+            "end": [
+              -30,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -30,
+              12
+            ],
+            "end": [
+              -30,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -30,
+              0
+            ],
+            "end": [
+              -10,
+              0
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -10,
+              0
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "groove",
+      "definition": {
+        "number": 4,
+        "name": "inside groving 3mm",
+        "material": "COATED_CARBIDE",
+        "blade_width_mm": 3,
+        "reach_mm": 10,
+        "inside": true
+      }
+    },
+    {
+      "format": 1,
+      "number": 5,
+      "name": "VNMG16_95°",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0.9718330296701491,
+              0.8154647367621207
+            ],
+            "end": [
+              1.2638103706438282,
+              0.11056908027783113
+            ],
+            "center": [
+              1.2289480735447649,
+              0.5090469595145295
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              1.2638103706438282,
+              0.11056908027783113
+            ],
+            "end": [
+              16.543140565582714,
+              1.4473372586043296
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              16.543140565582714,
+              1.4473372586043296
+            ],
+            "end": [
+              29.26432943185158,
+              1.4473372586043296
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              29.26432943185158,
+              1.4473372586043296
+            ],
+            "end": [
+              32.81699217324725,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              32.81699217324725,
+              5
+            ],
+            "end": [
+              150,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              150,
+              5
+            ],
+            "end": [
+              150,
+              25
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              150,
+              25
+            ],
+            "end": [
+              29.26432943185158,
+              25
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              29.26432943185158,
+              25
+            ],
+            "end": [
+              12.721188866268864,
+              10.674344885822725
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              12.721188866268864,
+              10.674344885822725
+            ],
+            "end": [
+              0.9718330296701491,
+              0.8154647367621207
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "holder",
+      "definition": {
+        "number": 3,
+        "name": "VNMG16_95°",
+        "material": "COATED_CARBIDE",
+        "insert_code": "VNMG 160404",
+        "holder_code": "PVLNR 2020 M16",
+        "clamping": "P",
+        "shape": "V",
+        "style": "L",
+        "clearance": "N",
+        "hand": "R",
+        "section": "2020",
+        "length": "M",
+        "insert_size": "16",
+        "tolerance": "M",
+        "insert_type": "G",
+        "thickness": "04",
+        "corner_radius": "04"
+      }
+    }
+  ],
+  "contours": [],
+  "blocks": [
+    {
+      "type": "turning",
+      "parameters": {
+        "block_id": "b3",
+        "tool_number": 5,
+        "spindle": {
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 120.0,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Turning",
+        "comment": "",
+        "side": "OUTSIDE",
+        "target_radius_mm": 40.0,
+        "end_z_mm": -20,
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 1,
+        "pass_direction": "ALONG_Z",
+        "start_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "shoulder_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "finish_allowance_mm": 0.2,
+        "finish_pass": true,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": null
+      }
+    },
+    {
+      "type": "grooving",
+      "parameters": {
+        "block_id": "b1",
+        "tool_number": 3,
+        "spindle": {
+          "mode": "CONSTANT_RPM",
+          "value": 900.0,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Groove",
+        "comment": "",
+        "side": "OUTSIDE",
+        "start_z_mm": -10,
+        "width_mm": 3.0,
+        "bottom_radius_mm": 24.0,
+        "feed_mm_per_rev": 0.1,
+        "peck_depth_mm": 1.0,
+        "peck_mode": "CHIP_BREAK",
+        "one_sided_mode": "MM",
+        "one_sided_cut_value": 1.0,
+        "min_overlap_mm": 0.5,
+        "finish_allowance_mm": 0,
+        "finish_pass": false,
+        "finish_feed_mm_per_rev": null,
+        "finish_spindle_value": null
+      }
+    },
+    {
+      "type": "grooving",
+      "parameters": {
+        "block_id": "b2",
+        "tool_number": 4,
+        "spindle": {
+          "mode": "CONSTANT_RPM",
+          "value": 1000,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Groove",
+        "comment": "",
+        "side": "INSIDE",
+        "start_z_mm": -25.0,
+        "width_mm": 4,
+        "bottom_radius_mm": 30.0,
+        "feed_mm_per_rev": 0.1,
+        "peck_depth_mm": null,
+        "peck_mode": "CHIP_BREAK",
+        "one_sided_mode": "MM",
+        "one_sided_cut_value": 1.0,
+        "min_overlap_mm": 0.5,
+        "finish_allowance_mm": 0,
+        "finish_pass": false,
+        "finish_feed_mm_per_rev": null,
+        "finish_spindle_value": null
+      }
+    },
+    {
+      "type": "grooving",
+      "parameters": {
+        "block_id": "b4",
+        "tool_number": 3,
+        "spindle": {
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 120.0,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Groove",
+        "comment": "",
+        "side": "OUTSIDE",
+        "start_z_mm": -40.0,
+        "width_mm": 20.0,
+        "bottom_radius_mm": 50.0,
+        "feed_mm_per_rev": 0.1,
+        "peck_depth_mm": 2.0,
+        "peck_mode": "CHIP_BREAK",
+        "one_sided_mode": "MM",
+        "one_sided_cut_value": 1.0,
+        "min_overlap_mm": 0.5,
+        "finish_allowance_mm": 0.2,
+        "finish_pass": true,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": 130.0
+      }
+    }
+  ],
+  "workholding": {
+    "grip": "outside",
+    "anchor": "step 1",
+    "jaws": {
+      "format": 1,
+      "name": "Chuck jaws",
+      "kind": "jaws",
+      "outline": {
+        "format": 1,
+        "id": "Chuck jaws",
+        "name": "Chuck jaws",
+        "segments": [
+          {
+            "type": "line",
+            "start": [
+              25,
+              0
+            ],
+            "end": [
+              45,
+              0
+            ]
+          },
+          {
+            "type": "line",
+            "start": [
+              45,
+              0
+            ],
+            "end": [
+              45,
+              -24
+            ]
+          },
+          {
+            "type": "line",
+            "start": [
+              45,
+              -24
+            ],
+            "end": [
+              15,
+              -24
+            ]
+          },
+          {
+            "type": "line",
+            "start": [
+              15,
+              -24
+            ],
+            "end": [
+              15,
+              -12
+            ]
+          },
+          {
+            "type": "line",
+            "start": [
+              15,
+              -12
+            ],
+            "end": [
+              25,
+              -12
+            ]
+          },
+          {
+            "type": "line",
+            "start": [
+              25,
+              -12
+            ],
+            "end": [
+              25,
+              0
+            ]
+          }
+        ],
+        "definition": {
+          "start": [
+            25,
+            0
+          ],
+          "steps": [
+            {
+              "type": "line",
+              "end": [
+                45,
+                0
+              ],
+              "corner": {
+                "kind": "none",
+                "size_mm": 0
+              }
+            },
+            {
+              "type": "line",
+              "end": [
+                45,
+                -24
+              ],
+              "corner": {
+                "kind": "none",
+                "size_mm": 0
+              }
+            },
+            {
+              "type": "line",
+              "end": [
+                15,
+                -24
+              ],
+              "corner": {
+                "kind": "none",
+                "size_mm": 0
+              }
+            },
+            {
+              "type": "line",
+              "end": [
+                15,
+                -12
+              ],
+              "corner": {
+                "kind": "none",
+                "size_mm": 0
+              }
+            },
+            {
+              "type": "line",
+              "end": [
+                25,
+                -12
+              ],
+              "corner": {
+                "kind": "none",
+                "size_mm": 0
+              }
+            }
+          ],
+          "closed": true,
+          "points": [
+            {
+              "name": "step 1",
+              "x": 25,
+              "z": -12
+            },
+            {
+              "name": "step 2",
+              "x": 15,
+              "z": -24
+            },
+            {
+              "name": "mount",
+              "x": 45,
+              "z": -24
+            }
+          ]
+        },
+        "points": [
+          {
+            "name": "step 1",
+            "x": 25,
+            "z": -12
+          },
+          {
+            "name": "step 2",
+            "x": 15,
+            "z": -24
+          },
+          {
+            "name": "mount",
+            "x": 45,
+            "z": -24
+          }
+        ]
+      },
+      "jaw_count": 3,
+      "jaw_width_deg": 20.0
+    }
+  },
+  "machine": {
+    "format": 1,
+    "name": "schaublin_125",
+    "unit_system": "metric",
+    "default_x_mode": "diameter",
+    "axes": [
+      {
+        "name": "X",
+        "min_mm": -81.0,
+        "max_mm": 104.0
+      },
+      {
+        "name": "Z",
+        "min_mm": -400.0,
+        "max_mm": 0.1
+      }
+    ],
+    "min_rpm": 60.0,
+    "max_rpm": 3000.0,
+    "spindle_power_kw": 2.5,
+    "max_velocity_x_mm_min": 3000.0,
+    "max_velocity_z_mm_min": 3000.0,
+    "capabilities": [
+      "constant surface speed",
+      "spindle-synchronised moves"
+    ],
+    "capabilities_off": []
+  },
+  "touched": [
+    "block:b1/bottom_radius_mm",
+    "block:b1/feed_mm_per_rev",
+    "block:b1/peck_depth_mm",
+    "block:b1/spindle.value",
+    "block:b1/tool_number",
+    "block:b1/width_mm",
+    "block:b2/bottom_radius_mm",
+    "block:b2/feed_mm_per_rev",
+    "block:b2/side",
+    "block:b2/start_z_mm",
+    "block:b2/tool_number",
+    "block:b3/spindle.mode",
+    "block:b3/spindle.value",
+    "block:b3/target_radius_mm",
+    "block:b3/tool_number",
+    "block:b4/bottom_radius_mm",
+    "block:b4/feed_mm_per_rev",
+    "block:b4/finish_allowance_mm",
+    "block:b4/finish_feed_mm_per_rev",
+    "block:b4/finish_pass",
+    "block:b4/finish_spindle_value",
+    "block:b4/peck_depth_mm",
+    "block:b4/spindle.mode",
+    "block:b4/spindle.value",
+    "block:b4/start_z_mm",
+    "block:b4/tool_number",
+    "block:b4/width_mm",
+    "setup/change_radius_mm",
+    "setup/change_z_mm",
+    "setup/inner_diameter_mm",
+    "setup/length_mm",
+    "setup/length_outside_mm",
+    "setup/outer_diameter_mm",
+    "setup/safe_radius_mm",
+    "setup/stock_runs_through",
+    "setup/workholding"
+  ]
+}

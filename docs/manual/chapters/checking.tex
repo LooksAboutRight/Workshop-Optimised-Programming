@@ -1,0 +1,62 @@
+\chapter{Checking the program}\label{ch:checking}
+
+WOP checks the program before the machine does. It looks for collisions, estimates the power and compares the speeds with the machine. It also lets you watch the program move by move. Nothing replaces your own look at the first part, but these checks find most mistakes while the part is still a picture.
+
+\section{The rule: written as drawn}
+WOP plans what you ask for. It does not shorten a cut because a tool might not reach, and it does not skip a path because it would collide. Instead, the check reports it. So a collision in the messages is not an error of WOP: it is a true thing about your program, and the G-code would do it.
+
+Roughing is the one exception: it keeps the body of the tool off the finished part, and a line the tool cannot cut all the way is cut as far as it reaches. A note says what stays (Chapter~\ref{ch:blocks}). Finishing always follows the contour. If your tool cannot reach a place of the contour, the check reports a collision, and you turn the finishing pass of that block off.
+
+\section{Collision check}\label{sec:checking:collision}
+The check follows every move of the program. A cutting move removes the material the tool sweeps; other parts of the tool must stay out of the material. It reports these findings:
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y@{}}
+\toprule
+\textbf{Message} & \textbf{What to do} \\
+\midrule
+cuts into the finished part & Use a tool with a narrower body or more clearance, or change the block. \\
+holder runs into the material & Use a tool with a smaller holder, or shorten the cut. \\
+touches the jaws & Shorten the cut, or let the part stick out further. \\
+rapid move through material & Check the safe positions and the approach of the block. \\
+goes behind the clamping plane of the Setup & The part is held there. Shorten the cut, or change the clamping position in the Setup. \\
+cutting move with the spindle stopped & Start the spindle before the block. A \emph{spindle stop} machine function may be in the way. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+Touching is not a collision: only a deeper overlap is reported. A tool whose body reaches below the centre line is also tested on the far side of the part; the picture draws the mirrored material faintly.
+
+A collision shows in three places: the block in the flow list gets a warning mark, the messages box has a line that starts with \textsf{COLLISION:}, and the picture shows a red cross where it happens. The line names the block and the move, with the same numbers that the step bar shows, and then the radius and Z. Step through the block: the cross appears with the move that causes it. From that block on, the picture shows the part with the material missing that the tool cut away.
+
+\section{Machine checks}
+These always run. They compare the program with the machine you chose in the Setup:
+\begin{itemize}
+  \item the spindle speed against the minimum and maximum RPM;
+  \item the feed of each move against the fastest feed of the X and Z axis;
+  \item the size of the part and of the cuts against the travel of the axes;
+  \item whether the machine can do what a block needs: constant surface speed, or spindle-synchronised moves for threading.
+\end{itemize}
+Values that are not set in the machine are not checked.
+
+\section{Power estimate}\label{sec:checking:power}
+For each block WOP works out the power the cut needs: the cross section of the chip, times the feed, times the cutting speed at the largest radius that the block cuts, times the specific cutting force of the material (Chapter~\ref{ch:materials_menu}), with an efficiency of 80\,\%. If the number is higher than the power of the spindle of the machine, the messages say so, for example \emph{needs about 3.2 kW, the spindle has 2.2 kW; reduce the depth of cut or the feed}.
+
+This is an estimate. It is meant to catch the program that is clearly too much, not to give you the exact power. For a block without a depth of cut (a custom path), it assumes twice the mean thickness of the material that the path takes off. If the material of the raw part is not in the table, or the machine has no spindle power, the power check says it was skipped.
+
+\section{Step through}\label{sec:checking:step}
+Step through (Section~\ref{sec:window:stepping}) is the best check there is. The tool is drawn at every move, with the material that is left at that moment. Go through a block you have not used before, and look at where the tool is at the places where you are not sure: the first approach, the corner of a groove, the end of a thread. If the tool collides in a move, the text next to the slider says so.
+
+\section{The 3D view}\label{sec:checking:3d}
+The 3D view (Section~\ref{sec:window:picture}) shows the part as a solid with a quarter cut away, so you see the cut face, the chuck, the jaws, the tool and the path. Drag with the mouse to turn it, use the wheel to zoom. It helps when the 2D section does not show you what you want: a groove at the far side, or the way the jaws hold the part.
+
+\section{Reading the messages}\label{sec:checking:messages}
+The messages box starts each line with a word (Section~\ref{sec:window:messages}). Work from top to bottom:
+\begin{enumerate}
+  \item \textsf{PROBLEM:} first. The program cannot be planned at that block. Fix the value it names.
+  \item \textsf{COLLISION:} next. Each line names the block, the move and a way out.
+  \item \textsf{note:} last. They are for your attention: a place that the tool did not reach, a value that was changed to fit.
+\end{enumerate}
+The checks run by themselves after every change, in the background: the picture comes first and the findings follow. While they run, the messages box says \textsf{WORKING:}.
+
+\begin{tipbox}
+A program with a collision may still be what you want, for example a finishing pass of an undercut that you cut by hand afterwards. WOP asks you at the export and lets you go on. But the machine will do exactly what the picture shows.
+\end{tipbox}

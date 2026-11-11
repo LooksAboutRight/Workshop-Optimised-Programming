@@ -1,0 +1,980 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "Chess pawn",
+    "x_mode": "DIAMETER",
+    "work_offset": "G54"
+  },
+  "raw_part": {
+    "material": "Brass",
+    "outer_diameter_mm": 15,
+    "length_outside_mm": 35,
+    "inner_diameter_mm": 0,
+    "length_mm": null,
+    "front_z_mm": 1
+  },
+  "safety": {
+    "safe_radius_mm": 17.5,
+    "safe_z_mm": 11,
+    "clearance_mm": 1,
+    "change_radius_mm": 50,
+    "change_z_mm": 390
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "MVJNR 2020 K16 VNMG 160408",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              1.9994006482763185,
+              1.5621029881265003
+            ],
+            "end": [
+              2.5337985935311997,
+              0.13279075743746313
+            ],
+            "center": [
+              2.491929828536845,
+              0.9316943852411225
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              2.5337985935311997,
+              0.13279075743746313
+            ],
+            "end": [
+              16.58357427321493,
+              0.869108300234567
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              16.58357427321493,
+              0.869108300234567
+            ],
+            "end": [
+              29.66954299908561,
+              0.869108300234567
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              29.66954299908561,
+              0.869108300234567
+            ],
+            "end": [
+              33.80043469885104,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              33.80043469885104,
+              5
+            ],
+            "end": [
+              125,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              125,
+              5
+            ],
+            "end": [
+              125,
+              25
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              125,
+              25
+            ],
+            "end": [
+              29.66954299908561,
+              25
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              29.66954299908561,
+              25
+            ],
+            "end": [
+              13.085968725870682,
+              10.223879274439186
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              13.085968725870682,
+              10.223879274439186
+            ],
+            "end": [
+              1.9994006482763185,
+              1.5621029881265003
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "holder",
+      "definition": {
+        "number": 1,
+        "name": "",
+        "material": "COATED_CARBIDE",
+        "insert_code": "VNMG 160408",
+        "holder_code": "MVJNR 2020 K16",
+        "clamping": "M",
+        "shape": "V",
+        "style": "J",
+        "clearance": "N",
+        "hand": "R",
+        "section": "2020",
+        "length": "K",
+        "insert_size": "16",
+        "tolerance": "M",
+        "insert_type": "G",
+        "thickness": "04",
+        "corner_radius": "08"
+      }
+    },
+    {
+      "format": 1,
+      "number": 4,
+      "name": "Grooving tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0.2,
+              0
+            ],
+            "end": [
+              0,
+              0.2
+            ],
+            "center": [
+              0.2,
+              0.2
+            ],
+            "direction": "cw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0.2
+            ],
+            "end": [
+              0,
+              3.8
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0,
+              3.8
+            ],
+            "end": [
+              0.2,
+              4
+            ],
+            "center": [
+              0.2,
+              3.8
+            ],
+            "direction": "cw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0.2,
+              4
+            ],
+            "end": [
+              20,
+              4
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20,
+              4
+            ],
+            "end": [
+              20,
+              10
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20,
+              10
+            ],
+            "end": [
+              111,
+              10
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              111,
+              10
+            ],
+            "end": [
+              111,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              111,
+              0
+            ],
+            "end": [
+              20,
+              0
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20,
+              0
+            ],
+            "end": [
+              0.2,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "groove",
+      "definition": {
+        "number": 4,
+        "name": "",
+        "material": "COATED_CARBIDE",
+        "hand": "RIGHT",
+        "inside": false,
+        "blade_width_mm": 4,
+        "reach_mm": 20,
+        "corner_radius_mm": 0.2,
+        "front_angle_deg": 90,
+        "holder_width_mm": 10,
+        "holder_length_mm": 111,
+        "touch_off": "LEFT"
+      },
+      "points": [
+        {
+          "name": "tip",
+          "x": 0,
+          "z": 0
+        }
+      ]
+    }
+  ],
+  "contours": [
+    {
+      "format": 1,
+      "id": "contour1",
+      "name": "Pawn",
+      "segments": [
+        {
+          "type": "arc",
+          "start": [
+            0,
+            -4.587381264556233e-13
+          ],
+          "end": [
+            3.797031220952031,
+            -8.253083753470806
+          ],
+          "center": [
+            -3.503920624282983e-13,
+            -4.999999999999238
+          ],
+          "direction": "cw"
+        },
+        {
+          "type": "arc",
+          "start": [
+            3.797031220952031,
+            -8.253083753470806
+          ],
+          "end": [
+            4.382789287433494,
+            -9.8885082572098
+          ],
+          "center": [
+            4.556437465101434,
+            -8.903700504204002
+          ],
+          "direction": "ccw"
+        },
+        {
+          "type": "line",
+          "start": [
+            4.382789287433494,
+            -9.8885082572098
+          ],
+          "end": [
+            6.121640381633386,
+            -10.195114620497556
+          ]
+        },
+        {
+          "type": "arc",
+          "start": [
+            6.121640381633386,
+            -10.195114620497556
+          ],
+          "end": [
+            6.228332102337311,
+            -10.53349752733731
+          ],
+          "center": [
+            6.0869107461,
+            -10.3920761711
+          ],
+          "direction": "cw"
+        },
+        {
+          "type": "line",
+          "start": [
+            6.228332102337311,
+            -10.53349752733731
+          ],
+          "end": [
+            3.7928932188134485,
+            -12.968936410813448
+          ]
+        },
+        {
+          "type": "arc",
+          "start": [
+            3.7928932188134485,
+            -12.968936410813448
+          ],
+          "end": [
+            3.4999999999999947,
+            -13.676043192
+          ],
+          "center": [
+            4.5,
+            -13.676043192
+          ],
+          "direction": "ccw"
+        },
+        {
+          "type": "line",
+          "start": [
+            3.4999999999999947,
+            -13.676043192
+          ],
+          "end": [
+            3.4999999999822453,
+            -14.176043192000003
+          ]
+        },
+        {
+          "type": "arc",
+          "start": [
+            3.4999999999822453,
+            -14.176043192000003
+          ],
+          "end": [
+            6.714165446373684,
+            -23.453373316132865
+          ],
+          "center": [
+            18.49607213079973,
+            -14.176043191999215
+          ],
+          "direction": "ccw"
+        },
+        {
+          "type": "arc",
+          "start": [
+            6.714165446373684,
+            -23.453373316132865
+          ],
+          "end": [
+            7.249999999996954,
+            -25
+          ],
+          "center": [
+            4.75000000000066,
+            -25.0000000000019
+          ],
+          "direction": "cw"
+        },
+        {
+          "type": "line",
+          "start": [
+            7.249999999996954,
+            -25
+          ],
+          "end": [
+            7.249999999999641,
+            -25.882292226916082
+          ]
+        },
+        {
+          "type": "arc",
+          "start": [
+            7.249999999999641,
+            -25.882292226916082
+          ],
+          "end": [
+            7.277331557681888,
+            -26.114490636294228
+          ],
+          "center": [
+            8.249999999999641,
+            -25.882292226913034
+          ],
+          "direction": "ccw"
+        },
+        {
+          "type": "line",
+          "start": [
+            7.277331557681888,
+            -26.114490636294228
+          ],
+          "end": [
+            8.108098682340582,
+            -29.594535858068337
+          ]
+        }
+      ],
+      "definition": null,
+      "sketch": {
+        "format": 1,
+        "next_id": 43,
+        "points": [
+          [
+            1,
+            -3.503920624282983e-13,
+            -4.999999999999238
+          ],
+          [
+            2,
+            0.0,
+            -4.587381264556233e-13
+          ],
+          [
+            3,
+            3.797031220952031,
+            -8.253083753470806
+          ],
+          [
+            5,
+            4.556437465101434,
+            -8.903700504204002
+          ],
+          [
+            6,
+            4.382789287433494,
+            -9.8885082572098
+          ],
+          [
+            8,
+            6.121640381633386,
+            -10.195114620497556
+          ],
+          [
+            10,
+            6.0869107461,
+            -10.3920761711
+          ],
+          [
+            11,
+            6.228332102337311,
+            -10.53349752733731
+          ],
+          [
+            13,
+            3.7928932188134485,
+            -12.968936410813448
+          ],
+          [
+            15,
+            4.5,
+            -13.676043192
+          ],
+          [
+            16,
+            3.4999999999999947,
+            -13.676043192
+          ],
+          [
+            18,
+            3.4999999999822453,
+            -14.176043192000003
+          ],
+          [
+            20,
+            18.49607213079973,
+            -14.176043191999215
+          ],
+          [
+            21,
+            6.714165446373684,
+            -23.453373316132865
+          ],
+          [
+            23,
+            4.75000000000066,
+            -25.0000000000019
+          ],
+          [
+            24,
+            7.249999999996954,
+            -25.0
+          ],
+          [
+            26,
+            7.25,
+            -26.0
+          ],
+          [
+            30,
+            8.108098682340582,
+            -29.594535858068337
+          ],
+          [
+            32,
+            7.249999999999641,
+            -25.882292226916082
+          ],
+          [
+            35,
+            7.277331557681888,
+            -26.114490636294228
+          ],
+          [
+            38,
+            8.249999999999641,
+            -25.882292226913034
+          ]
+        ],
+        "lines": [
+          [
+            9,
+            6,
+            8,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            14,
+            11,
+            13,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            19,
+            16,
+            18,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            27,
+            24,
+            26,
+            true,
+            false,
+            false,
+            true
+          ],
+          [
+            31,
+            26,
+            30,
+            true,
+            false,
+            false,
+            true
+          ],
+          [
+            33,
+            24,
+            32,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            36,
+            35,
+            30,
+            false,
+            false,
+            false,
+            false
+          ]
+        ],
+        "arcs": [
+          [
+            4,
+            1,
+            2,
+            3,
+            "cw",
+            false,
+            false
+          ],
+          [
+            7,
+            5,
+            3,
+            6,
+            "ccw",
+            false,
+            false
+          ],
+          [
+            12,
+            10,
+            8,
+            11,
+            "cw",
+            false,
+            false
+          ],
+          [
+            17,
+            15,
+            13,
+            16,
+            "ccw",
+            false,
+            false
+          ],
+          [
+            22,
+            20,
+            18,
+            21,
+            "ccw",
+            false,
+            false
+          ],
+          [
+            25,
+            23,
+            21,
+            24,
+            "cw",
+            false,
+            false
+          ],
+          [
+            39,
+            38,
+            32,
+            35,
+            "ccw",
+            false,
+            false
+          ]
+        ],
+        "constraints": [
+          [
+            34,
+            "point_on_line",
+            [
+              32,
+              27
+            ],
+            [],
+            null
+          ],
+          [
+            37,
+            "point_on_line",
+            [
+              35,
+              31
+            ],
+            [],
+            null
+          ],
+          [
+            40,
+            "tangent_line_arc",
+            [
+              33,
+              39,
+              32
+            ],
+            [],
+            null
+          ],
+          [
+            41,
+            "tangent_line_arc",
+            [
+              36,
+              39,
+              35
+            ],
+            [],
+            null
+          ],
+          [
+            42,
+            "radius",
+            [
+              39
+            ],
+            [
+              1.0
+            ],
+            null
+          ]
+        ],
+        "labels": [],
+        "helpers": []
+      }
+    }
+  ],
+  "blocks": [
+    {
+      "type": "facing",
+      "parameters": {
+        "block_id": "b1",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 130,
+          "rpm_limit": 250
+        },
+        "coolant": "NONE",
+        "name": "Face the bar",
+        "comment": "",
+        "target_z_mm": 0,
+        "feed_mm_per_rev": 0.15,
+        "depth_of_cut_mm": 0.5,
+        "direction": "OUTSIDE_IN",
+        "finish_allowance_mm": 0.2,
+        "finish_pass": true,
+        "finish_feed_mm_per_rev": 0.075,
+        "finish_spindle_value": null,
+        "overtravel_mm": 1.6000000000000003
+      }
+    },
+    {
+      "type": "turning_contour",
+      "parameters": {
+        "block_id": "b2",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 130,
+          "rpm_limit": 2500
+        },
+        "coolant": "NONE",
+        "name": "Rough and finish the pawn",
+        "comment": "",
+        "contour_id": "contour1",
+        "side": "OUTSIDE",
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 0.5,
+        "pass_direction": "ALONG_Z",
+        "finish_allowance_mm": 0.4000000000000001,
+        "finish_pass": true,
+        "cutter_compensation": true,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": 130,
+        "plunge_feed_mm_per_rev": 0.1,
+        "plunge_depth_of_cut_mm": 0.25,
+        "min_free_angle_deg": 5,
+        "style": "standard"
+      }
+    },
+    {
+      "type": "grooving",
+      "parameters": {
+        "block_id": "b3",
+        "tool_number": 4,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 60,
+          "rpm_limit": 2500
+        },
+        "coolant": "NONE",
+        "name": "Part off the pawn",
+        "comment": "",
+        "side": "OUTSIDE",
+        "start_z_mm": -25.5,
+        "width_mm": 4,
+        "bottom_radius_mm": 0.1,
+        "feed_mm_per_rev": 0.075,
+        "peck_depth_mm": null,
+        "peck_mode": "CHIP_BREAK",
+        "one_sided_mode": "MM",
+        "one_sided_cut_value": 1,
+        "finish_allowance_mm": 0,
+        "finish_pass": false,
+        "finish_feed_mm_per_rev": null,
+        "finish_spindle_value": null,
+        "style": "standard"
+      }
+    }
+  ],
+  "machine": {
+    "format": 1,
+    "name": "schaublin_125",
+    "unit_system": "metric",
+    "default_x_mode": "diameter",
+    "axes": [
+      {
+        "name": "X",
+        "min_mm": -81.0,
+        "max_mm": 104.0
+      },
+      {
+        "name": "Z",
+        "min_mm": -400.0,
+        "max_mm": 0.1
+      }
+    ],
+    "min_rpm": 60.0,
+    "max_rpm": 3000.0,
+    "spindle_power_kw": 2.5,
+    "max_velocity_x_mm_min": 3000.0,
+    "max_velocity_z_mm_min": 3000.0,
+    "capabilities": [
+      "constant surface speed",
+      "spindle-synchronised moves"
+    ],
+    "capabilities_off": [],
+    "postprocessor": "linuxcnc",
+    "change_radius_mm": 50.0,
+    "change_z_mm": 390.0,
+    "machine_change_radius_mm": 92.5,
+    "machine_change_z_mm": -5.0
+  },
+  "touched": [
+    "block:b1/depth_of_cut_mm",
+    "block:b1/feed_mm_per_rev",
+    "block:b1/finish_allowance_mm",
+    "block:b1/finish_feed_mm_per_rev",
+    "block:b1/finish_pass",
+    "block:b1/spindle.mode",
+    "block:b1/spindle.rpm_limit",
+    "block:b1/spindle.value",
+    "block:b1/target_z_mm",
+    "block:b1/tool_number",
+    "block:b2/contour_id",
+    "block:b2/cutter_compensation",
+    "block:b2/depth_of_cut_mm",
+    "block:b2/spindle.rpm_limit",
+    "block:b3/bottom_radius_mm",
+    "block:b3/feed_mm_per_rev",
+    "block:b3/spindle.rpm_limit",
+    "block:b3/spindle.value",
+    "block:b3/start_z_mm",
+    "block:b3/tool_number",
+    "block:b3/width_mm",
+    "setup/front_z_mm",
+    "setup/length_outside_mm",
+    "setup/material",
+    "setup/outer_diameter_mm"
+  ],
+  "preview": [
+    [
+      "L 0 -34 7.5 -34",
+      "L 7.5 -34 7.5 -29.5",
+      "L 7.5 -29.5 0 -29.5",
+      "L 0 -29.5 0 -34"
+    ]
+  ]
+}

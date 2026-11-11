@@ -1,0 +1,560 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "WOP example",
+    "x_mode": "DIAMETER",
+    "work_offset": "G54"
+  },
+  "raw_part": {
+    "material": "Mild steel",
+    "outer_diameter_mm": 40,
+    "length_outside_mm": 50,
+    "inner_diameter_mm": 14,
+    "length_mm": null,
+    "front_z_mm": 0
+  },
+  "safety": {
+    "safe_radius_mm": 30,
+    "safe_z_mm": 10,
+    "clearance_mm": 1,
+    "change_radius_mm": null,
+    "change_z_mm": null
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "MVJNR 2020 K16 VNMG 160408",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              1.9994006482763185,
+              1.5621029881265003
+            ],
+            "end": [
+              2.5337985935311997,
+              0.13279075743746313
+            ],
+            "center": [
+              2.491929828536845,
+              0.9316943852411225
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              2.5337985935311997,
+              0.13279075743746313
+            ],
+            "end": [
+              16.58357427321493,
+              0.869108300234567
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              16.58357427321493,
+              0.869108300234567
+            ],
+            "end": [
+              29.66954299908561,
+              0.869108300234567
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              29.66954299908561,
+              0.869108300234567
+            ],
+            "end": [
+              33.80043469885104,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              33.80043469885104,
+              5
+            ],
+            "end": [
+              125,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              125,
+              5
+            ],
+            "end": [
+              125,
+              25
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              125,
+              25
+            ],
+            "end": [
+              29.66954299908561,
+              25
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              29.66954299908561,
+              25
+            ],
+            "end": [
+              13.085968725870682,
+              10.223879274439186
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              13.085968725870682,
+              10.223879274439186
+            ],
+            "end": [
+              1.9994006482763185,
+              1.5621029881265003
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "holder",
+      "definition": {
+        "number": 1,
+        "name": "",
+        "material": "COATED_CARBIDE",
+        "insert_code": "VNMG 160408",
+        "holder_code": "MVJNR 2020 K16",
+        "clamping": "M",
+        "shape": "V",
+        "style": "J",
+        "clearance": "N",
+        "hand": "R",
+        "section": "2020",
+        "length": "K",
+        "insert_size": "16",
+        "tolerance": "M",
+        "insert_type": "G",
+        "thickness": "04",
+        "corner_radius": "08"
+      }
+    },
+    {
+      "format": 1,
+      "number": 2,
+      "name": "Boring bar",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              -0.220905693,
+              0.001095621
+            ],
+            "end": [
+              -0.003038449,
+              0.234729636
+            ],
+            "center": [
+              -0.2,
+              0.2
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -0.003038449,
+              0.234729636
+            ],
+            "end": [
+              -1.724919089,
+              10
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -1.724919089,
+              10
+            ],
+            "end": [
+              -3,
+              9.775168833
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -3,
+              9.775168833
+            ],
+            "end": [
+              -3,
+              60
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -3,
+              60
+            ],
+            "end": [
+              -11,
+              60
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -11,
+              60
+            ],
+            "end": [
+              -11,
+              1.134024085
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -11,
+              1.134024085
+            ],
+            "end": [
+              -0.220905693,
+              0.001095621
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "boring",
+      "definition": {
+        "number": 2,
+        "name": "",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 0.2,
+        "wall_edge_length_mm": 10,
+        "wall_edge_angle_deg": 100,
+        "end_edge_angle_deg": 96,
+        "front_width_mm": 11,
+        "bar_width_mm": 8,
+        "length_mm": 60
+      }
+    }
+  ],
+  "contours": [
+    {
+      "format": 1,
+      "id": "shaft",
+      "name": "stepped shaft",
+      "segments": [
+        {
+          "type": "line",
+          "start": [
+            14,
+            0
+          ],
+          "end": [
+            14,
+            -20
+          ]
+        },
+        {
+          "type": "line",
+          "start": [
+            14,
+            -20
+          ],
+          "end": [
+            16,
+            -20
+          ]
+        },
+        {
+          "type": "line",
+          "start": [
+            16,
+            -20
+          ],
+          "end": [
+            16,
+            -30
+          ]
+        }
+      ],
+      "definition": {
+        "start": [
+          14,
+          0
+        ],
+        "steps": [
+          {
+            "type": "line",
+            "end": [
+              14,
+              -20
+            ],
+            "corner": {
+              "kind": "none",
+              "size_mm": 0
+            }
+          },
+          {
+            "type": "line",
+            "end": [
+              16,
+              -20
+            ],
+            "corner": {
+              "kind": "none",
+              "size_mm": 0
+            }
+          },
+          {
+            "type": "line",
+            "end": [
+              16,
+              -30
+            ],
+            "corner": {
+              "kind": "none",
+              "size_mm": 0
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "blocks": [
+    {
+      "type": "facing",
+      "parameters": {
+        "block_id": "r1",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 150,
+          "rpm_limit": 3000
+        },
+        "coolant": "FLOOD",
+        "name": "face",
+        "comment": "",
+        "target_z_mm": -1,
+        "feed_mm_per_rev": 0.15,
+        "depth_of_cut_mm": 1,
+        "direction": "OUTSIDE_IN",
+        "finish_allowance_mm": 0.2,
+        "finish_pass": true,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": 180,
+        "overtravel_mm": 0
+      }
+    },
+    {
+      "type": "turning",
+      "parameters": {
+        "block_id": "r2",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 150,
+          "rpm_limit": 3000
+        },
+        "coolant": "MIST",
+        "name": "outside, along Z",
+        "comment": "",
+        "side": "OUTSIDE",
+        "target_radius_mm": 17,
+        "end_z_mm": -30,
+        "start_z_mm": 0,
+        "taper_deg": 0,
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 1.5,
+        "pass_direction": "ALONG_Z",
+        "start_corner": {
+          "kind": "CHAMFER",
+          "size_mm": 1
+        },
+        "shoulder_corner": {
+          "kind": "FILLET",
+          "size_mm": 1.5
+        },
+        "finish_allowance_mm": 0.3,
+        "finish_pass": true,
+        "cutter_compensation": false,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": 180
+      }
+    },
+    {
+      "type": "turning",
+      "parameters": {
+        "block_id": "r3",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 150,
+          "rpm_limit": 3000
+        },
+        "coolant": "NONE",
+        "name": "outside, along X",
+        "comment": "",
+        "side": "OUTSIDE",
+        "target_radius_mm": 18.5,
+        "end_z_mm": -42,
+        "start_z_mm": 0,
+        "taper_deg": 0,
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 1,
+        "pass_direction": "ALONG_X",
+        "start_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "shoulder_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "finish_allowance_mm": 0,
+        "finish_pass": true,
+        "cutter_compensation": false,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": 180
+      }
+    },
+    {
+      "type": "turning",
+      "parameters": {
+        "block_id": "r4",
+        "tool_number": 2,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 100,
+          "rpm_limit": 3000
+        },
+        "coolant": "FLOOD",
+        "name": "bore",
+        "comment": "",
+        "side": "INSIDE",
+        "target_radius_mm": 10,
+        "end_z_mm": -25,
+        "start_z_mm": 0,
+        "taper_deg": 0,
+        "feed_mm_per_rev": 0.08,
+        "depth_of_cut_mm": 0.5,
+        "pass_direction": "ALONG_Z",
+        "start_corner": {
+          "kind": "CHAMFER",
+          "size_mm": 0.5
+        },
+        "shoulder_corner": {
+          "kind": "FILLET",
+          "size_mm": 1
+        },
+        "finish_allowance_mm": 0.2,
+        "finish_pass": true,
+        "cutter_compensation": false,
+        "finish_feed_mm_per_rev": 0.05,
+        "finish_spindle_value": 120
+      }
+    },
+    {
+      "type": "turning_contour",
+      "parameters": {
+        "block_id": "r6",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 150,
+          "rpm_limit": 3000
+        },
+        "coolant": "NONE",
+        "name": "stepped shaft from a contour",
+        "comment": "",
+        "contour_id": "shaft",
+        "side": "OUTSIDE",
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 1,
+        "pass_direction": "ALONG_Z",
+        "finish_allowance_mm": 0.2,
+        "finish_pass": true,
+        "cutter_compensation": false,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": 180,
+        "plunge_feed_mm_per_rev": null,
+        "plunge_depth_of_cut_mm": null,
+        "min_free_angle_deg": 5,
+        "style": "standard"
+      }
+    }
+  ]
+}

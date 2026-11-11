@@ -1,0 +1,32 @@
+\chapter{The Materials menu}\label{ch:materials_menu}
+
+The material of the raw part decides how much power the cut needs. The \menu{Materials} menu has the table of materials.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y@{}}
+\toprule
+\textbf{Entry} & \textbf{What it does} \\
+\midrule
+\menu{Edit materials...} & Opens the material table. \\
+\menu{Library} & Chooses and manages the material library. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Edit materials}
+\menupath{Materials}{Edit materials...} opens the window \emph{Materials}. The list of materials is on the left, with the buttons \button{New} and \button{Delete}. On the right are the \field{Name} and the \field{Specific cutting force} of the chosen material, in N/mm$^2$. The built-in materials are mild steel, stainless steel, aluminium, brass and cast iron.
+
+A change is saved when you leave the field. If the value cannot be saved (an empty name, a name that exists already), the reason stands under the form and the value stays in the field until you correct it.
+
+\begin{itemize}
+  \item \button{New} makes a material called \emph{New material}; give it a name and a value.
+  \item \button{Delete} removes a material of yours. For a built-in material that you changed, the same button asks whether to bring back its built-in values. If the raw part uses the material, the question says so.
+\end{itemize}
+A material that you added or changed carries a mark in the list.
+
+\begin{notebox}
+The specific cutting force is the force per cut area that the material resists with. The values of the built-in materials are guesses from tables, not measured on your machine. The power check uses them only as an estimate (Section~\ref{sec:checking:power}).
+\end{notebox}
+
+\section{Library}
+The \menu{Library} submenu works as described for tools (Section~\ref{sec:tools_menu:library}). Use a library of your own if you work with materials that are not in the built-in list.

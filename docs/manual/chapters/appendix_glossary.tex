@@ -1,0 +1,41 @@
+\chapter{Glossary}\label{ch:glossary}
+
+\begin{description}
+\item[Block] One step of the program, for example facing or drilling. Blocks are done from top to bottom.
+\item[Boring bar] A tool for work inside a bore.
+\item[Chuck body] The body of the chuck that holds the jaws.
+\item[Clamping plane] The plane in Z where the jaws hold the part. A cut behind it is reported.
+\item[Clearance] The distance the tool keeps from the material while it moves inside a block.
+\item[Collision] The tool, its holder or the jaws touching material or the part where they must not. WOP reports it; it does not stop the program.
+\item[Constant surface speed] The spindle speed changes with the radius so that the cutting speed stays the same (G96 on LinuxCNC).
+\item[Construction line] A line in the sketch editor that helps drawing but is not part of the shape.
+\item[Contour] A shape drawn in the sketch editor from lines and arcs.
+\item[Custom path] A block whose path you draw yourself in the sketch editor, with rapid and feed lines.
+\item[Cutting edge] The part of a tool that is allowed to touch the material. It is drawn in orange.
+\item[Dimension] A measure in the sketch editor, for example the length of a line. The drawing follows it.
+\item[Flow list] The list of blocks on the left of the window.
+\item[Fully defined] A sketch in which every point is fixed by relations and dimensions.
+\item[Jaws] The pieces of the chuck that grip the part.
+\item[Library] A file with tools, workholding or materials that you use in many projects.
+\item[Locked] A thing in the sketch editor that you cannot change there because it comes from elsewhere (the safe point, the outline of the part).
+\item[Machine] What belongs to your lathe: limits, speeds, power, tool change and postprocessor.
+\item[Named point] A point with a name that WOP uses, for example the tip of a tool.
+\item[Offset (tool)] The number the postprocessor calls after a tool change (G43 H...).
+\item[Postprocessor] A text file that says how WOP writes G-code for a controller.
+\item[Preferences] Settings that apply to every new project.
+\item[Project] One job in one file.
+\item[Radius and diameter] X is the distance from the centre line (radius). The forms can show it as a diameter (twice the radius).
+\item[Raw part] The bar or tube you start with.
+\item[Relation] A rule in the sketch editor, for example that two lines are parallel.
+\item[Roughing] Cutting away the bulk of the material, with some material left for the finishing pass.
+\item[Safe position] Where the tool waits between blocks, outside the part and the chuck.
+\item[Setup] The first entry of the flow list: the machine, the raw part, the safe distances and the workholding of the project.
+\item[Sketch editor] The window where shapes are drawn.
+\item[Specific cutting force] A number of the material that, with the chip size, gives the cutting force. It is used for the power estimate.
+\item[Stick-out] How far the part sticks out of the jaws.
+\item[Style] How a block orders its cuts, for example the grooving styles standard and layers.
+\item[Tool change position] Where the tool is changed.
+\item[Toolbox] A set of library tools with their numbers in the turret.
+\item[Touch off] Setting the zero of a tool on the machine.
+\item[Work offset] The zero point of the part on the machine (G54 and the following).
+\end{description}

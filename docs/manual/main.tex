@@ -1,0 +1,51 @@
+% The WOP user manual. Build it with `python tools/make_manual.py` (see tools/TOOLS.md), or with pdflatex in this folder.
+\documentclass[a4paper,11pt,twoside,openany,parskip=half]{scrbook}
+\input{preamble}
+
+\begin{document}
+
+\frontmatter
+\titlehead{\centering\small Draft\\This manual is machine generated.}
+\subject{User manual}
+\title{WOP}
+\subtitle{Workshop Optimised Programming\\for CNC lathes}
+\author{}
+\date{Version \wopversion\\\wopdate}
+\maketitle
+
+\input{chapters/preface}
+\tableofcontents
+
+\mainmatter
+
+\part{Getting started}
+\input{chapters/introduction}
+\input{chapters/installing}
+\input{chapters/window}
+
+\part{The menus}
+\input{chapters/file_menu}
+\input{chapters/edit_menu}
+\input{chapters/tools_menu}
+\input{chapters/workholding_menu}
+\input{chapters/materials_menu}
+
+\part{Making a program}
+\input{chapters/project}
+\input{chapters/blocks}
+\input{chapters/contours}
+\input{chapters/tools}
+\input{chapters/workholding}
+\input{chapters/machines}
+\input{chapters/postprocessors}
+\input{chapters/checking}
+\input{chapters/exporting}
+
+\appendix
+\part{Reference}
+\input{chapters/appendix_shortcuts}
+\input{chapters/appendix_files}
+\input{chapters/appendix_glossary}
+\input{chapters/appendix_troubleshooting}
+
+\end{document}

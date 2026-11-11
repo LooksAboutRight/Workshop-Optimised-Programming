@@ -1,0 +1,34 @@
+\chapter{Exporting G-code}\label{ch:exporting}
+
+The export itself is described in the chapter on the File menu (Section~\ref{sec:file:export}). This chapter is about what to do before it and after it.
+
+\section{Before you export}
+Go through this list once for every new program.
+\begin{enumerate}
+  \item \textbf{The Setup.} Is the machine the right one? Is the raw part the size of the bar you really have? Are the safe position and the tool change position safe on your lathe (Section~\ref{sec:project:safe})?
+  \item \textbf{The tools.} Do the tool numbers match the turret? Is the tool offset right (Section~\ref{sec:tools:view})?
+  \item \textbf{The checks.} They run by themselves after every change; wait until \textsf{WORKING:} is gone. Read all messages (Section~\ref{sec:checking:messages}). A line you accept is fine; a line you do not understand is not.
+  \item \textbf{Step through.} Go through every block you have not used before (Section~\ref{sec:checking:step}).
+  \item \textbf{The postprocessor.} If it is new or changed, check what it writes (Section~\ref{sec:posts:check}).
+  \item \textbf{Save the project.} Then export with \menupath{File}{Export G-code...} (\key{Ctrl}+\key{E}). If the check found something, WOP lists it and asks; the answer is yours.
+\end{enumerate}
+
+\begin{notebox}
+\menupath{File}{Export selected blocks...} writes only the blocks you ticked. Use it to run one block at a time while you try out a new program, or to continue after a stop (Section~\ref{sec:file:selected}).
+\end{notebox}
+
+\section{Running the program on the machine}
+How the file gets to the machine depends on your set-up: a USB stick, the network, or a shared folder. The file ends in the extension that the postprocessor sets (\file{.ngc} for LinuxCNC).
+
+For the first run of a new program:
+\begin{enumerate}
+  \item Open the G-code in a text editor and read the first lines and the first tool change.
+  \item Set the work offset of the machine to match the Setup: X zero is the centre line, and Z zero is the place that the Setup calls \field{Front z}, usually the front face of the part (Section~\ref{sec:project:holding}). The \field{Work offset} of the Setup must be the one you set on the lathe (Section~\ref{sec:project:settings}).
+  \item Touch off the tools. The tool offset numbers must match those in the program.
+  \item Run the program with the part removed or with the tool well away from it, with your hand on the stop. Use the single block mode and a low rapid override.
+  \item Then cut the first part. Look again at the first cuts.
+\end{enumerate}
+
+\begin{warningbox}
+WOP and its postprocessors were not tried on every machine or controller. Anything in this manual that says it was not confirmed on a real machine is exactly that. You are the one who knows what your lathe will do. Stay at the machine.
+\end{warningbox}

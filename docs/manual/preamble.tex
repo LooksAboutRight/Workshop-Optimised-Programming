@@ -1,0 +1,70 @@
+% Packages, colours and the small commands of the WOP manual.
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em} % a line may be a little loose instead of too wide (no overfull box)
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}  % a text column that is not justified
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage[most]{tcolorbox}
+\usepackage{scrlayer-scrpage}
+
+% the version and the date come from tools/make_manual.py (build/version.tex)
+\InputIfFileExists{build/version.tex}{}{\newcommand{\wopversion}{unknown}\newcommand{\wopdate}{\today}}
+
+\usepackage[hidelinks, pdftitle={WOP user manual}, pdfsubject={Workshop Optimised Programming for CNC lathes}]{hyperref}
+
+\definecolor{wopblue}{RGB}{40,90,170}
+\setkomafont{disposition}{\color{wopblue}\sffamily\bfseries}
+\setkomafont{pageheadfoot}{\sffamily\small}
+\setkomafont{subject}{\color{wopblue}\sffamily\Large\bfseries}
+\setkomafont{subtitle}{\color{wopblue}\sffamily\Large}
+\setkomafont{title}{\color{wopblue}\sffamily\bfseries\fontsize{48}{52}\selectfont}
+\setkomafont{titlehead}{\sffamily\small\color{black!60}}
+\renewcommand*{\chapterheadstartvskip}{\vspace*{0.5\baselineskip}}  % a chapter starts near the top of its page
+\renewcommand*{\chapterheadendvskip}{\vspace{1.2\baselineskip}}
+\raggedbottom
+\setcounter{tocdepth}{2}      % chapters, sections and subsections in the contents
+\DeclareTOCStyleEntry[numwidth=3em]{tocline}{section}              % room for numbers like 12.10.
+\DeclareTOCStyleEntry[indent=4.5em,numwidth=3.8em]{tocline}{subsection}
+\setcounter{secnumdepth}{3}
+\captionsetup{font=small,labelfont={sf,bf}}
+\setlist{itemsep=0.2em, topsep=0.4em}
+
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\ihead{\textsf{WOP user manual}}
+\ohead{\headmark}
+\cfoot{\pagemark}
+\cfoot*{\pagemark}
+\automark[section]{chapter}
+
+% --- how things on the screen are written ---------------------------------------------------------------------------------
+\newcommand{\menu}[1]{\textsf{\textbf{#1}}}                     % a menu or a menu entry
+\newcommand{\menupath}[2]{\menu{#1}\,$\rightarrow$\,\menu{#2}}  % File -> Open...
+\newcommand{\button}[1]{\textsf{[#1]}}                          % a button
+\newcommand{\field}[1]{\textsf{#1}}                             % the name of a field or a check box
+\newcommand{\key}[1]{\fbox{\small\textsf{\strut#1}}}            % a key on the keyboard
+\newcommand{\file}[1]{\texttt{\detokenize{#1}}}                 % a file name or a text to type
+
+% --- boxes ---------------------------------------------------------------------------------------------------------------
+\tcbset{boxstyle/.style={breakable, boxrule=0.4pt, left=2mm, right=2mm, top=1mm, bottom=1mm, fonttitle=\sffamily\bfseries\small, before skip=0.8em, after skip=0.8em}}
+\newtcolorbox{notebox}{boxstyle, colback=blue!4, colframe=blue!50!black, title=Note}
+\newtcolorbox{tipbox}{boxstyle, colback=green!5, colframe=green!40!black, title=Tip}
+\newtcolorbox{warningbox}{boxstyle, colback=red!5, colframe=red!60!black, title=Warning}
+\newtcolorbox{draftbox}{boxstyle, colback=yellow!12, colframe=orange!70!black, title=Draft: not written yet}
+
+% a picture of the program: \shot[width as part of the text width]{file in images/}{caption}
+\newcommand{\shot}[3][0.9]{%
+  \begin{figure}[htbp]\centering
+  \fcolorbox{black!30}{white}{\includegraphics[max width=#1\textwidth, max height=0.62\textheight]{images/#2}}
+  \caption{#3}\label{fig:#2}
+  \end{figure}}

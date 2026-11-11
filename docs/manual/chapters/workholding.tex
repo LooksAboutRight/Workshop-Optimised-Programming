@@ -1,0 +1,41 @@
+\chapter{Workholding}\label{ch:workholding}
+
+Workholding is what holds the part: the \emph{chuck body} and the \emph{jaws}. WOP draws them behind the part and uses their shapes for the checks: a cut that runs into the jaws is reported. The menu is in Chapter~\ref{ch:workholding_menu}; the choice for a project is made in the Setup (Section~\ref{sec:project:holding}).
+
+\section{Chuck and jaws}
+There are two types, both in the workholding library:
+\begin{description}
+\item[Chuck body] The fixed body of the chuck. It has a \field{Name}.
+\item[Chuck jaws] The jaws that grip the part. The fields are the \field{Name}, the \field{Number of jaws} and the \field{Width of one jaw} in degrees (they are used for the 3D picture), and the \field{Chuck body} that belongs to them. If you choose jaws in the Setup, their chuck body is used too.
+\end{description}
+
+\section{The shape}\label{sec:workholding:shape}
+A new item has a placeholder shape. Draw the real one with \button{Sketch editor...} (Chapter~\ref{ch:contours}). Draw it as it sits on the machine:
+\begin{itemize}
+  \item X is the radius and Z runs along the axis.
+  \item The front face is at $Z=0$ and the body goes towards minus Z.
+  \item The shape must be closed.
+\end{itemize}
+The named points tell WOP how the parts fit:
+\begin{itemize}
+  \item On jaws: \emph{Step} points mark the steps that can sit on the part, and \emph{mount} marks where the chuck body meets the jaws.
+  \item On a chuck body: \emph{face}.
+\end{itemize}
+Name the points with the buttons of the section \emph{Mark} in the sketch editor (Section~\ref{sec:sketch:names}).
+
+\section{Placing the part}
+In the Setup you choose the jaws and, for stepped jaws, the field \field{Jaw point on the part}: the step of the jaws that sits on the part. The \field{Stick-out} says how far the part comes out of the jaws. With \field{Grip inside} the jaws grip a tube from the bore (Section~\ref{sec:project:holding}).
+
+With no workholding chosen, nothing is drawn and the checks use a flat clamping plane at the stick-out.
+
+\section{What is checked}
+\begin{itemize}
+  \item A cut that touches the jaws is reported as a collision (\emph{touches the jaws}).
+  \item A cut that goes behind the clamping plane of the Setup is reported too.
+  \item The Setup also warns when the stick-out is longer than the part, when a bar is too thick for the chuck body, or when the jaws of an inside grip reach into the wall of the tube.
+\end{itemize}
+WOP does not check how far a part may stick out before it bends or vibrates.
+
+\begin{notebox}
+Stepped jaws and the other workholding checks are only as good as the shape you draw. Compare the picture with your real chuck.
+\end{notebox}

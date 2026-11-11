@@ -1,0 +1,641 @@
+{
+ "format": 1,
+ "settings": {
+  "title": "WOP program",
+  "x_mode": "DIAMETER"
+ },
+ "raw_part": {
+  "material": "Mild steel",
+  "outer_diameter_mm": 60.0,
+  "length_outside_mm": 60,
+  "inner_diameter_mm": 20.0,
+  "length_mm": null,
+  "front_z_mm": 0
+ },
+ "safety": {
+  "safe_radius_mm": 100.0,
+  "safe_z_mm": 30.0,
+  "clearance_mm": 1,
+  "change_radius_mm": 50.0,
+  "change_z_mm": 100.0
+ },
+ "tools": [
+  {
+   "format": 1,
+   "number": 1,
+   "name": "Outside tool",
+   "pieces": [
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       0,
+       0
+      ],
+      "end": [
+       8,
+       0
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       8,
+       0
+      ],
+      "end": [
+       8,
+       12
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       8,
+       12
+      ],
+      "end": [
+       0,
+       12
+      ]
+     }
+    },
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       0,
+       12
+      ],
+      "end": [
+       0,
+       0
+      ]
+     }
+    }
+   ],
+   "material": "CARBIDE",
+   "kind": "turning",
+   "definition": {
+    "number": 1,
+    "name": "Outside tool",
+    "material": "CARBIDE",
+    "hand": "RIGHT",
+    "nose_radius_mm": 0,
+    "side_edge_length_mm": 8,
+    "side_edge_angle_deg": 90,
+    "front_edge_angle_deg": 90,
+    "width_mm": 12,
+    "length_mm": 8
+   }
+  },
+  {
+   "format": 1,
+   "number": 2,
+   "name": "Boring bar",
+   "pieces": [
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       0,
+       0
+      ],
+      "end": [
+       -8,
+       0
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -8,
+       0
+      ],
+      "end": [
+       -8,
+       12
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -8,
+       12
+      ],
+      "end": [
+       0,
+       12
+      ]
+     }
+    },
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       0,
+       12
+      ],
+      "end": [
+       0,
+       0
+      ]
+     }
+    }
+   ],
+   "material": "CARBIDE",
+   "kind": "boring",
+   "definition": {
+    "number": 2,
+    "name": "Boring bar",
+    "material": "CARBIDE",
+    "nose_radius_mm": 0,
+    "wall_edge_length_mm": 12,
+    "wall_edge_angle_deg": 90,
+    "end_edge_angle_deg": 90,
+    "front_width_mm": 8,
+    "bar_width_mm": 8,
+    "length_mm": 12
+   }
+  },
+  {
+   "format": 1,
+   "number": 3,
+   "name": "VNMG16_95\u00b0",
+   "pieces": [
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "arc",
+      "start": [
+       0.9718330296701491,
+       0.8154647367621207
+      ],
+      "end": [
+       1.2638103706438282,
+       0.11056908027783113
+      ],
+      "center": [
+       1.2289480735447649,
+       0.5090469595145295
+      ],
+      "direction": "ccw"
+     }
+    },
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       1.2638103706438282,
+       0.11056908027783113
+      ],
+      "end": [
+       16.543140565582714,
+       1.4473372586043296
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       16.543140565582714,
+       1.4473372586043296
+      ],
+      "end": [
+       29.26432943185158,
+       1.4473372586043296
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       29.26432943185158,
+       1.4473372586043296
+      ],
+      "end": [
+       32.81699217324725,
+       5
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       32.81699217324725,
+       5
+      ],
+      "end": [
+       150,
+       5
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       150,
+       5
+      ],
+      "end": [
+       150,
+       25
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       150,
+       25
+      ],
+      "end": [
+       29.26432943185158,
+       25
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       29.26432943185158,
+       25
+      ],
+      "end": [
+       12.721188866268864,
+       10.674344885822725
+      ]
+     }
+    },
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       12.721188866268864,
+       10.674344885822725
+      ],
+      "end": [
+       0.9718330296701491,
+       0.8154647367621207
+      ]
+     }
+    }
+   ],
+   "material": "COATED_CARBIDE",
+   "kind": "holder",
+   "definition": {
+    "number": 3,
+    "name": "VNMG16_95\u00b0",
+    "material": "COATED_CARBIDE",
+    "insert_code": "VNMG 160404",
+    "holder_code": "PVLNR 2020 M16",
+    "clamping": "P",
+    "shape": "V",
+    "style": "L",
+    "clearance": "N",
+    "hand": "R",
+    "section": "2020",
+    "length": "M",
+    "insert_size": "16",
+    "tolerance": "M",
+    "insert_type": "G",
+    "thickness": "04",
+    "corner_radius": "04"
+   }
+  },
+  {
+   "format": 1,
+   "number": 4,
+   "name": "S10S-PCLNR 06_95\u00b0",
+   "pieces": [
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "arc",
+      "start": [
+       -0.08309453562779072,
+       0.9497748882993139
+      ],
+      "end": [
+       -0.9497748882993139,
+       0.0830945356277909
+      ],
+      "center": [
+       -0.8800502941011871,
+       0.8800502941011872
+      ],
+      "direction": "cw"
+     }
+    },
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -0.9497748882993139,
+       0.0830945356277909
+      ],
+      "end": [
+       -6.423425009989964,
+       0.5619768693830182
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -6.423425009989964,
+       0.5619768693830182
+      ],
+      "end": [
+       -12.0,
+       0.5619768693830182
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -12.0,
+       0.5619768693830182
+      ],
+      "end": [
+       -12.0,
+       250
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -12.0,
+       250
+      ],
+      "end": [
+       -2.0,
+       250
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -2.0,
+       250
+      ],
+      "end": [
+       -2.0,
+       6.423425009989964
+      ]
+     }
+    },
+    {
+     "role": "HOLDER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -2.0,
+       6.423425009989964
+      ],
+      "end": [
+       -0.5619768693830169,
+       6.423425009989964
+      ]
+     }
+    },
+    {
+     "role": "CUTTER",
+     "segment": {
+      "type": "line",
+      "start": [
+       -0.5619768693830169,
+       6.423425009989964
+      ],
+      "end": [
+       -0.08309453562779072,
+       0.9497748882993139
+      ]
+     }
+    }
+   ],
+   "material": "COATED_CARBIDE",
+   "kind": "boring_bar",
+   "definition": {
+    "number": 4,
+    "name": "S10S-PCLNR 06_95\u00b0",
+    "material": "COATED_CARBIDE",
+    "insert_code": "CNMG 060408",
+    "bar_code": "S10S-PCLNR 06",
+    "bar_type": "S",
+    "diameter": "10",
+    "length": "S",
+    "clamping": "P",
+    "shape": "C",
+    "style": "L",
+    "clearance": "N",
+    "hand": "R",
+    "insert_size": "06",
+    "tolerance": "M",
+    "insert_type": "G",
+    "thickness": "04",
+    "corner_radius": "08"
+   }
+  }
+ ],
+ "contours": [
+  {
+   "format": 1,
+   "id": "bore",
+   "name": "Chamfered mouth and a corner radius",
+   "segments": [
+    {
+     "type": "line",
+     "start": [
+      24,
+      0
+     ],
+     "end": [
+      18,
+      -4
+     ]
+    },
+    {
+     "type": "line",
+     "start": [
+      18,
+      -4
+     ],
+     "end": [
+      18.0,
+      -23.0
+     ]
+    },
+    {
+     "type": "arc",
+     "start": [
+      18.0,
+      -23.0
+     ],
+     "end": [
+      15.0,
+      -26.0
+     ],
+     "center": [
+      15.0,
+      -23.0
+     ],
+     "direction": "cw"
+    },
+    {
+     "type": "line",
+     "start": [
+      15.0,
+      -26.0
+     ],
+     "end": [
+      13,
+      -26
+     ]
+    }
+   ],
+   "definition": {
+    "start": [
+     24,
+     0
+    ],
+    "steps": [
+     {
+      "type": "line",
+      "end": [
+       18,
+       -4
+      ],
+      "corner": {
+       "kind": "none",
+       "size_mm": 0
+      }
+     },
+     {
+      "type": "line",
+      "end": [
+       18,
+       -26
+      ],
+      "corner": {
+       "kind": "fillet",
+       "size_mm": 3
+      }
+     },
+     {
+      "type": "line",
+      "end": [
+       13,
+       -26
+      ],
+      "corner": {
+       "kind": "none",
+       "size_mm": 0
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "blocks": [
+  {
+   "type": "turning_contour",
+   "parameters": {
+    "block_id": "b5",
+    "tool_number": 4,
+    "spindle": {
+     "mode": "CONSTANT_RPM",
+     "value": 1000,
+     "rpm_limit": null
+    },
+    "coolant": "NONE",
+    "name": "Bore along the contour",
+    "comment": "",
+    "contour_id": "bore",
+    "side": "INSIDE",
+    "feed_mm_per_rev": 0.2,
+    "depth_of_cut_mm": 1.5,
+    "pass_direction": "ALONG_Z",
+    "finish_allowance_mm": 0.2,
+    "finish_pass": true,
+    "cutter_compensation": false,
+    "finish_feed_mm_per_rev": 0.1,
+    "finish_spindle_value": 1000,
+    "plunge_feed_mm_per_rev": 0.1,
+    "plunge_depth_of_cut_mm": 1.0,
+    "min_free_angle_deg": 5
+   }
+  }
+ ],
+ "machine": {
+  "format": 1,
+  "name": "schaublin_125",
+  "unit_system": "metric",
+  "default_x_mode": "diameter",
+  "axes": [
+   {
+    "name": "X",
+    "min_mm": -81.0,
+    "max_mm": 104.0
+   },
+   {
+    "name": "Z",
+    "min_mm": -400.0,
+    "max_mm": 0.1
+   }
+  ],
+  "min_rpm": 60.0,
+  "max_rpm": 3000.0,
+  "spindle_power_kw": 2.5,
+  "max_velocity_x_mm_min": 3000.0,
+  "max_velocity_z_mm_min": 3000.0,
+  "capabilities": [
+   "constant surface speed",
+   "spindle-synchronised moves"
+  ],
+  "capabilities_off": []
+ },
+ "touched": []
+}

@@ -1,0 +1,49 @@
+\chapter{Machines}\label{ch:machines}
+
+A machine in WOP holds what belongs to your lathe and not to one part: the travel of the axes, the speeds, the power, the tool change position and the postprocessor. Make a machine once; every project can then use it.
+
+Open the list with \menupath{File}{Machines...} (Figure~\ref{fig:machines}).
+
+\shot[0.85]{machines}{The window \emph{Machines}.}
+
+The machines are on the left. The one that the project uses is marked \emph{(in project)}, the default machine \emph{(default)}. The form of the chosen machine is on the right. A change is saved when you leave the field. A value that makes no sense stays in the field with a message below the form until you correct it.
+
+\section{The buttons}
+\begin{description}
+\item[\button{New}] Adds a machine with preset values.
+\item[\button{Import...}] Makes a machine from a file. WOP asks what kind of file it is: a \emph{LinuxCNC ini file} or a \emph{WOP machine file}. The values that the file gave are marked as set; the others stay preset. A message lists what was assumed and what you still have to enter.
+\item[\button{Export...}] Writes the chosen machine to a WOP machine file (\file{.machine.json}).
+\item[\button{Delete}] Removes the machine from the list. Projects keep their own copy.
+\item[\button{Make default}] The default machine is used for new projects, and for old projects that have no machine.
+\item[\button{Use in project}] The project uses the chosen machine.
+\item[\button{Add project's machine}] Adds the machine of the open project to your list, when it is not there yet.
+\end{description}
+
+\section{The settings of a machine}\label{sec:machines:settings}
+\begin{description}
+\item[\field{Name}] The name in the lists.
+\item[\field{Unit system} and \field{Default x mode}] Millimetres, and whether X is shown as diameter or radius in new projects of this machine.
+\item[\field{X min}, \field{X max}, \field{Z min}, \field{Z max}] The travel of the axes in mm. WOP compares the size of the part and of the cuts with them. X is a radius.
+\item[\field{Spindle min} and \field{Spindle max}] The speed range in RPM.
+\item[\field{Spindle power}] In kW. The power check compares the power a cut needs with this value.
+\item[\field{X max velocity} and \field{Z max velocity}] The fastest feed move of each axis, in mm/min. If a feed per revolution at the chosen speed is faster than an axis can go, the messages say so.
+\item[\field{Constant surface speed}] Tick it if the controller can keep the cutting speed constant (G96 on LinuxCNC). If it is off and a block asks for constant surface speed, the messages say so.
+\item[\field{Spindle synchronised moves}] Tick it if the controller can move in step with the spindle. Threading needs it.
+\item[\field{Postprocessor}] The postprocessor that writes the G-code for this machine (Chapter~\ref{ch:posts}).
+\item[\field{Tool change position, X radius} and \field{Z}] Where the tool is changed, in the coordinates of the part. If you leave them empty, the position of the Setup is used.
+\item[\field{Tool change in machine coordinates, X radius} and \field{Z}] A fixed place of the tool change in machine coordinates. If you set it, the postprocessor first moves there with a machine-coordinate move (\file{G53} for LinuxCNC) before every tool change, whatever the work offset is. If you leave it empty, no such move is written.
+\end{description}
+
+A field that you did not touch has a lighter colour. A right click on a field opens \menu{Reset to default}.
+
+\section{Making a machine for your lathe}\label{sec:machines:own}
+\begin{enumerate}
+  \item Open \menupath{File}{Machines...} and press \button{Import...} if you have the \file{.ini} file of your LinuxCNC configuration. The travel, speeds and similar values come from it.
+  \item Otherwise press \button{New} and fill in the form. The five values WOP needs are the limits of X and Z, the minimum and maximum RPM and the spindle power. The import lists the ones that are still missing. A power or RPM check can only compare with a value that is set.
+  \item Choose the postprocessor, and the tool change position if you have a fixed one.
+  \item Press \button{Make default} if this is the machine you use most, and \button{Use in project} for the open project.
+\end{enumerate}
+
+\begin{warningbox}
+WOP uses the limits to warn you. It does not stop a program that is outside them: the G-code is written as drawn. The real limits and the safe position are still your job on the machine.
+\end{warningbox}

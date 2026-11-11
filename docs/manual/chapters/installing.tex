@@ -1,0 +1,34 @@
+\chapter{Installing and starting}\label{ch:installing}
+
+\section{What you need}
+\begin{itemize}
+  \item A Windows PC (or Linux, see below). A screen of 1024 by 768 pixels is enough.
+  \item For the 3D view: a graphics card that can do OpenGL 2. Almost every PC from 2009 on can. Without it, the 3D button is grey and the 2D picture does everything else.
+  \item To run the G-code: LinuxCNC on the lathe, and a way to carry the file there.
+\end{itemize}
+
+\section{Installing}
+WOP for Windows comes as a zip file. Unpack it anywhere on your PC, for example to \texttt{C:\textbackslash WOP}. Nothing is installed. Start only the \file{WOP.exe} that is in the unpacked folder; do not move the file out of it.
+
+The program is not signed. The first time, Windows (SmartScreen) or a virus scanner may warn you. If you got the zip from the place named in the release notes, you can allow it.
+
+\begin{notebox}
+On Linux, WOP is installed with a script, and the rest of this manual applies as it is. Developers can also run WOP from the source code with Python. Both are described in the file \file{README.md}.
+\end{notebox}
+
+\section{Starting WOP}
+Double click \file{WOP.exe}. A window opens with an empty project. Use \menupath{File}{Open...} to open a project file. The example projects in the folder \file{examples} show how finished projects look. They carry the machine of their author (the tool change position and the limits of his lathe): choose your own machine before you export G-code from one of them.
+
+The first time, look at \menupath{File}{Machines...} and make a machine for your lathe (Chapter~\ref{ch:machines}). Then choose it in the Setup.
+
+\section{Where WOP keeps its files}
+\subsection{The user folder}
+Your settings, machines, libraries and postprocessors are not in the project. They are in the \emph{user folder}. WOP uses one of two places:
+\begin{itemize}
+  \item If there is a folder \file{user_data} next to \file{WOP.exe}, WOP uses it. Then you can copy the whole program folder to another PC and take everything with you.
+  \item Otherwise it uses \texttt{\%APPDATA\%\textbackslash WOP}, in the folder of your Windows user.
+\end{itemize}
+To change from one to the other, make or remove the folder \file{user_data}. Files are not moved by themselves.
+
+\subsection{Libraries and settings}
+The user folder holds the settings (\file{settings.json}), your machines, the libraries of tools, workholding and materials, your own postprocessors, and two log files. Chapter~\ref{ch:app_files} lists them.

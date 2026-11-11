@@ -1,0 +1,1479 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "Trepanning inside a groove",
+    "x_mode": "DIAMETER",
+    "work_offset": "G54"
+  },
+  "raw_part": {
+    "material": "Mild steel",
+    "outer_diameter_mm": 60,
+    "length_outside_mm": 120,
+    "inner_diameter_mm": 0,
+    "length_mm": null,
+    "front_z_mm": 0
+  },
+  "safety": {
+    "safe_radius_mm": 40,
+    "safe_z_mm": 10,
+    "clearance_mm": 1,
+    "change_radius_mm": 50,
+    "change_z_mm": 50
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "Grooving tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0.2,
+              0
+            ],
+            "end": [
+              0,
+              0.2
+            ],
+            "center": [
+              0.2,
+              0.2
+            ],
+            "direction": "cw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0.2
+            ],
+            "end": [
+              0,
+              4.8
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0,
+              4.8
+            ],
+            "end": [
+              0.2,
+              5
+            ],
+            "center": [
+              0.2,
+              4.8
+            ],
+            "direction": "cw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0.2,
+              5
+            ],
+            "end": [
+              25,
+              5
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              25,
+              5
+            ],
+            "end": [
+              25,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              25,
+              20
+            ],
+            "end": [
+              120,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              120,
+              20
+            ],
+            "end": [
+              120,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              120,
+              0
+            ],
+            "end": [
+              25,
+              0
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              25,
+              0
+            ],
+            "end": [
+              0.2,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "COATED_CARBIDE",
+      "kind": "groove",
+      "definition": {
+        "number": 1,
+        "name": "",
+        "material": "COATED_CARBIDE",
+        "hand": "RIGHT",
+        "inside": false,
+        "blade_width_mm": 5,
+        "reach_mm": 25,
+        "corner_radius_mm": 0.2,
+        "front_angle_deg": 90,
+        "holder_width_mm": 20,
+        "holder_length_mm": 120,
+        "touch_off": "LEFT"
+      },
+      "points": [
+        {
+          "name": "tip",
+          "x": 0,
+          "z": 0
+        }
+      ]
+    },
+    {
+      "format": 1,
+      "number": 2,
+      "name": "Trepanning tool (custom)",
+      "pieces": [
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              21.00000000014844,
+              12
+            ],
+            "end": [
+              21.000000000160355,
+              3.854892280563903e-18
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              21.000000000160355,
+              3.854892280563903e-18
+            ],
+            "end": [
+              100.0000000000635,
+              4.156048727473854e-18
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100.0000000000635,
+              4.156048727473854e-18
+            ],
+            "end": [
+              100.00000000006789,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100.00000000006789,
+              20
+            ],
+            "end": [
+              5.890106671024923e-11,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              5.890106671024923e-11,
+              20
+            ],
+            "end": [
+              5.497421864613598e-11,
+              0.2000000000000397
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              5.497421864613598e-11,
+              0.2000000000000397
+            ],
+            "end": [
+              0.20000000005497426,
+              0
+            ],
+            "center": [
+              0.20000000005497426,
+              0.20000000000000004
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0.20000000005497426,
+              1.914852392955246e-18
+            ],
+            "end": [
+              4.800000000094111,
+              3.2177910224865052e-18
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              4.800000000094111,
+              6.938893903907228e-16
+            ],
+            "end": [
+              5.0000000000941105,
+              0.1999999999994668
+            ],
+            "center": [
+              4.800000000094111,
+              0.19999999999999998
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              5.0000000000941105,
+              0.1999999999994668
+            ],
+            "end": [
+              5.000000000125569,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              5.000000000125569,
+              12
+            ],
+            "end": [
+              21.00000000014844,
+              12
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "sketch": {
+        "format": 1,
+        "next_id": 64,
+        "points": [
+          [
+            5,
+            21.00000000014844,
+            12.0
+          ],
+          [
+            7,
+            21.000000000160355,
+            3.854892280563903e-18
+          ],
+          [
+            9,
+            100.0000000000635,
+            4.156048727473854e-18
+          ],
+          [
+            11,
+            100.00000000006789,
+            20.0
+          ],
+          [
+            16,
+            5.000000000125569,
+            12.0
+          ],
+          [
+            18,
+            5.000000000093578,
+            3.274440528117666e-18
+          ],
+          [
+            20,
+            5.493455351417523e-11,
+            1.858202887323923e-18
+          ],
+          [
+            22,
+            5.890106671024923e-11,
+            20.0
+          ],
+          [
+            42,
+            5.0000000000941105,
+            0.1999999999994668
+          ],
+          [
+            45,
+            4.800000000094111,
+            3.2177910224865052e-18
+          ],
+          [
+            48,
+            4.800000000094111,
+            0.19999999999999998
+          ],
+          [
+            53,
+            5.497421864613598e-11,
+            0.2000000000000397
+          ],
+          [
+            56,
+            0.20000000005497426,
+            1.914852392955246e-18
+          ],
+          [
+            59,
+            0.20000000005497426,
+            0.20000000000000004
+          ]
+        ],
+        "lines": [
+          [
+            8,
+            5,
+            7,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            10,
+            7,
+            9,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            12,
+            9,
+            11,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            17,
+            5,
+            16,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            19,
+            16,
+            18,
+            true,
+            false,
+            false,
+            true
+          ],
+          [
+            21,
+            18,
+            20,
+            true,
+            false,
+            false,
+            true
+          ],
+          [
+            23,
+            20,
+            22,
+            true,
+            false,
+            false,
+            true
+          ],
+          [
+            24,
+            22,
+            11,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            43,
+            16,
+            42,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            46,
+            45,
+            20,
+            true,
+            false,
+            false,
+            true
+          ],
+          [
+            54,
+            53,
+            22,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            57,
+            45,
+            56,
+            false,
+            true,
+            false,
+            false
+          ]
+        ],
+        "arcs": [
+          [
+            49,
+            48,
+            42,
+            45,
+            "cw",
+            false,
+            true,
+            false
+          ],
+          [
+            60,
+            59,
+            53,
+            56,
+            "ccw",
+            false,
+            true,
+            false
+          ]
+        ],
+        "constraints": [
+          [
+            25,
+            "vertical",
+            [
+              22,
+              11
+            ],
+            [],
+            null
+          ],
+          [
+            26,
+            "vertical",
+            [
+              5,
+              16
+            ],
+            [],
+            null
+          ],
+          [
+            27,
+            "vertical",
+            [
+              18,
+              20
+            ],
+            [],
+            null
+          ],
+          [
+            28,
+            "horizontal",
+            [
+              5,
+              7
+            ],
+            [],
+            null
+          ],
+          [
+            29,
+            "horizontal",
+            [
+              16,
+              18
+            ],
+            [],
+            null
+          ],
+          [
+            30,
+            "horizontal",
+            [
+              20,
+              22
+            ],
+            [],
+            null
+          ],
+          [
+            31,
+            "vertical",
+            [
+              0,
+              20
+            ],
+            [],
+            null
+          ],
+          [
+            32,
+            "horizontal",
+            [
+              0,
+              20
+            ],
+            [],
+            null
+          ],
+          [
+            33,
+            "distance_x",
+            [
+              20,
+              18
+            ],
+            [
+              5.0
+            ],
+            [
+              1.1273708097168234,
+              -3.0624720215914554
+            ]
+          ],
+          [
+            34,
+            "distance_z",
+            [
+              18,
+              16
+            ],
+            [
+              12.0
+            ],
+            [
+              3.0794698257525637,
+              -3.0300946801802318
+            ]
+          ],
+          [
+            35,
+            "distance_z",
+            [
+              20,
+              22
+            ],
+            [
+              20.0
+            ],
+            [
+              -10.865666633885251,
+              1.4920378506247651
+            ]
+          ],
+          [
+            36,
+            "distance_x",
+            [
+              16,
+              5
+            ],
+            [
+              16.0
+            ],
+            [
+              0.2838209988532725,
+              -26.95628458221433
+            ]
+          ],
+          [
+            38,
+            "horizontal",
+            [
+              9,
+              11
+            ],
+            [],
+            null
+          ],
+          [
+            39,
+            "distance_x",
+            [
+              20,
+              9
+            ],
+            [
+              100.0
+            ],
+            [
+              17.141519992393675,
+              -37.66388444367192
+            ]
+          ],
+          [
+            40,
+            "vertical",
+            [
+              7,
+              18
+            ],
+            [],
+            null
+          ],
+          [
+            41,
+            "vertical",
+            [
+              7,
+              9
+            ],
+            [],
+            null
+          ],
+          [
+            44,
+            "point_on_line",
+            [
+              42,
+              19
+            ],
+            [],
+            null
+          ],
+          [
+            47,
+            "point_on_line",
+            [
+              45,
+              21
+            ],
+            [],
+            null
+          ],
+          [
+            50,
+            "tangent_line_arc",
+            [
+              43,
+              49,
+              42
+            ],
+            [],
+            null
+          ],
+          [
+            51,
+            "tangent_line_arc",
+            [
+              46,
+              49,
+              45
+            ],
+            [],
+            null
+          ],
+          [
+            52,
+            "radius",
+            [
+              49
+            ],
+            [
+              0.2
+            ],
+            null
+          ],
+          [
+            55,
+            "point_on_line",
+            [
+              53,
+              23
+            ],
+            [],
+            null
+          ],
+          [
+            58,
+            "point_on_line",
+            [
+              56,
+              46
+            ],
+            [],
+            null
+          ],
+          [
+            61,
+            "tangent_line_arc",
+            [
+              54,
+              60,
+              53
+            ],
+            [],
+            null
+          ],
+          [
+            62,
+            "tangent_line_arc",
+            [
+              57,
+              60,
+              56
+            ],
+            [],
+            null
+          ],
+          [
+            63,
+            "radius",
+            [
+              60
+            ],
+            [
+              0.2
+            ],
+            null
+          ]
+        ],
+        "labels": [],
+        "helpers": [],
+        "path": {
+          "rapid": [],
+          "feeds": []
+        },
+        "locked": {
+          "points": [],
+          "lines": [],
+          "arcs": [],
+          "groups": []
+        },
+        "corners": [
+          [
+            49,
+            18,
+            [
+              43,
+              46
+            ],
+            [
+              42,
+              45
+            ],
+            [
+              19,
+              21
+            ]
+          ],
+          [
+            60,
+            20,
+            [
+              54,
+              57
+            ],
+            [
+              53,
+              56
+            ],
+            [
+              23,
+              46
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "contours": [],
+  "blocks": [
+    {
+      "type": "grooving",
+      "parameters": {
+        "block_id": "b1",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 80,
+          "rpm_limit": 3000
+        },
+        "coolant": "FLOOD",
+        "name": "Wide groove",
+        "comment": "",
+        "side": "OUTSIDE",
+        "start_z_mm": -15,
+        "width_mm": 27,
+        "bottom_radius_mm": 12.5,
+        "feed_mm_per_rev": 0.06,
+        "peck_depth_mm": 5,
+        "peck_mode": "CHIP_BREAK",
+        "one_sided_mode": "MM",
+        "one_sided_cut_value": 1,
+        "finish_allowance_mm": 0.15,
+        "finish_pass": true,
+        "finish_feed_mm_per_rev": 0.04,
+        "finish_spindle_value": null,
+        "style": "standard"
+      }
+    },
+    {
+      "type": "custom_path",
+      "parameters": {
+        "block_id": "b2",
+        "tool_number": 2,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_SURFACE_SPEED",
+          "value": 60,
+          "rpm_limit": 3000
+        },
+        "coolant": "FLOOD",
+        "name": "Trepanning cut",
+        "comment": "",
+        "feed_mm_per_rev": 0.05,
+        "sketch": {
+          "format": 1,
+          "next_id": 44,
+          "points": [
+            [
+              1,
+              40,
+              10
+            ],
+            [
+              2,
+              0,
+              -120
+            ],
+            [
+              3,
+              30,
+              -120
+            ],
+            [
+              4,
+              30,
+              -42
+            ],
+            [
+              5,
+              12.5,
+              -42
+            ],
+            [
+              10,
+              30.875,
+              -39.5483599998729
+            ],
+            [
+              12,
+              13,
+              -39.5483599998729
+            ],
+            [
+              14,
+              13,
+              -45.0483599998729
+            ],
+            [
+              16,
+              13,
+              -39.5483599998729
+            ],
+            [
+              18,
+              40,
+              -39.5483599998729
+            ],
+            [
+              31,
+              12.5,
+              -15
+            ],
+            [
+              32,
+              30,
+              -15
+            ],
+            [
+              33,
+              30,
+              0
+            ],
+            [
+              34,
+              0,
+              0
+            ]
+          ],
+          "lines": [
+            [
+              6,
+              2,
+              3,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              7,
+              3,
+              4,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              8,
+              4,
+              5,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              9,
+              5,
+              31,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              11,
+              1,
+              10,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              13,
+              10,
+              12,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              15,
+              12,
+              14,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              17,
+              14,
+              16,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              19,
+              16,
+              18,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              35,
+              31,
+              32,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              36,
+              32,
+              33,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              37,
+              33,
+              34,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              38,
+              34,
+              2,
+              true,
+              false,
+              false,
+              false
+            ]
+          ],
+          "arcs": [],
+          "constraints": [
+            [
+              24,
+              "vertical",
+              [
+                10,
+                12
+              ],
+              [],
+              null
+            ],
+            [
+              26,
+              "horizontal",
+              [
+                12,
+                14
+              ],
+              [],
+              null
+            ],
+            [
+              27,
+              "distance_z",
+              [
+                14,
+                12
+              ],
+              [
+                5.5
+              ],
+              [
+                -4.899105688077697,
+                -1.4260354740562988
+              ]
+            ],
+            [
+              28,
+              "horizontal",
+              [
+                14,
+                16
+              ],
+              [],
+              null
+            ],
+            [
+              29,
+              "distance_z",
+              [
+                14,
+                16
+              ],
+              [
+                5.5
+              ],
+              [
+                2.7079544978663836,
+                -2.2184195628509578
+              ]
+            ],
+            [
+              39,
+              "distance_line",
+              [
+                10,
+                8
+              ],
+              [
+                2.4516400001270995
+              ],
+              [
+                10.827110444444457,
+                0.5434839999365124
+              ]
+            ],
+            [
+              40,
+              "distance_line",
+              [
+                10,
+                7
+              ],
+              [
+                0.875
+              ],
+              [
+                -0.23538955555554253,
+                11.317663999872963
+              ]
+            ],
+            [
+              41,
+              "distance_line",
+              [
+                12,
+                -1
+              ],
+              [
+                13
+              ],
+              [
+                -1.0416144783950276,
+                51.84282603691
+              ]
+            ],
+            [
+              42,
+              "vertical",
+              [
+                16,
+                18
+              ],
+              [],
+              null
+            ],
+            [
+              43,
+              "distance_line",
+              [
+                18,
+                -1
+              ],
+              [
+                40
+              ],
+              [
+                -4.580412183618927,
+                50.84781246305969
+              ]
+            ]
+          ],
+          "labels": [],
+          "helpers": [],
+          "path": {
+            "rapid": [
+              11,
+              17,
+              19
+            ],
+            "feeds": []
+          },
+          "locked": {
+            "points": [
+              [
+                "safe point",
+                1
+              ],
+              [
+                "outline/0.0s",
+                2
+              ],
+              [
+                "outline/0.1s",
+                3
+              ],
+              [
+                "outline/0.2s",
+                4
+              ],
+              [
+                "outline/0.3s",
+                5
+              ],
+              [
+                "outline/0.4s",
+                31
+              ],
+              [
+                "outline/0.5s",
+                32
+              ],
+              [
+                "outline/0.6s",
+                33
+              ],
+              [
+                "outline/0.7s",
+                34
+              ]
+            ],
+            "lines": [
+              [
+                "outline/0.0",
+                6
+              ],
+              [
+                "outline/0.1",
+                7
+              ],
+              [
+                "outline/0.2",
+                8
+              ],
+              [
+                "outline/0.3",
+                9
+              ],
+              [
+                "outline/0.4",
+                35
+              ],
+              [
+                "outline/0.5",
+                36
+              ],
+              [
+                "outline/0.6",
+                37
+              ],
+              [
+                "outline/0.7",
+                38
+              ]
+            ],
+            "arcs": [],
+            "groups": [
+              [
+                "outline",
+                [
+                  [
+                    "line",
+                    "outline/0.0"
+                  ],
+                  [
+                    "line",
+                    "outline/0.1"
+                  ],
+                  [
+                    "line",
+                    "outline/0.2"
+                  ],
+                  [
+                    "line",
+                    "outline/0.3"
+                  ],
+                  [
+                    "line",
+                    "outline/0.4"
+                  ],
+                  [
+                    "line",
+                    "outline/0.5"
+                  ],
+                  [
+                    "line",
+                    "outline/0.6"
+                  ],
+                  [
+                    "line",
+                    "outline/0.7"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "corners": []
+        }
+      }
+    }
+  ],
+  "machine": {
+    "format": 1,
+    "name": "schaublin_125",
+    "unit_system": "metric",
+    "default_x_mode": "diameter",
+    "axes": [
+      {
+        "name": "X",
+        "min_mm": -81.0,
+        "max_mm": 104.0
+      },
+      {
+        "name": "Z",
+        "min_mm": -400.0,
+        "max_mm": 0.1
+      }
+    ],
+    "min_rpm": 60.0,
+    "max_rpm": 3000.0,
+    "spindle_power_kw": 2.5,
+    "max_velocity_x_mm_min": 3000.0,
+    "max_velocity_z_mm_min": 3000.0,
+    "capabilities": [
+      "constant surface speed",
+      "spindle-synchronised moves"
+    ],
+    "capabilities_off": [],
+    "postprocessor": "linuxcnc",
+    "change_radius_mm": 50.0,
+    "change_z_mm": 390.0,
+    "machine_change_radius_mm": 92.5,
+    "machine_change_z_mm": -5.0
+  },
+  "touched": [
+    "block:b1/bottom_radius_mm",
+    "block:b1/coolant",
+    "block:b1/feed_mm_per_rev",
+    "block:b1/finish_allowance_mm",
+    "block:b1/finish_feed_mm_per_rev",
+    "block:b1/finish_pass",
+    "block:b1/spindle.mode",
+    "block:b1/spindle.rpm_limit",
+    "block:b1/spindle.value",
+    "block:b1/start_z_mm",
+    "block:b1/width_mm",
+    "block:b2/coolant",
+    "block:b2/spindle.value",
+    "block:b2/tool_number",
+    "setup/length_outside_mm",
+    "setup/material",
+    "setup/outer_diameter_mm"
+  ],
+  "preview": [
+    [
+      "L 0 -120 30 -120",
+      "L 30 -120 30 -42",
+      "L 30 -42 18.000000000095042 -42",
+      "L 18.00000000009504 -42 18.00000000009411 -42.34835999987343",
+      "L 18.000000000095444 -42.34835999987343 18.00000000009411 -42.84835999987343",
+      "L 18.000000000095444 -42.84835999987342 18.00000000009411 -43.34835999987343",
+      "L 18.000000000095444 -43.34835999987342 18.00000000009411 -43.84835999987343",
+      "L 18.000000000095444 -43.84835999987342 18.00000000009411 -44.34835999987343",
+      "L 18.000000000095444 -44.34835999987343 18.00000000009411 -44.84835999987343",
+      "A 18.00000000009411 -44.84835999987343 17.800000000094112 -45.0483599998729 17.800000000094112 -44.8483599998729 CW",
+      "L 17.800000000094112 -45.0483599998729 13.200000000054974 -45.0483599998729",
+      "A 13.200000000054974 -45.0483599998729 13.000000000054975 -44.84835999987286 13.200000000054974 -44.8483599998729 CW",
+      "L 13.000000000054975 -44.84835999987286 13.000000000055074 -44.348359999872855",
+      "L 13.000000000054975 -44.34835999987286 13.000000000055074 -43.848359999872855",
+      "L 13.000000000054975 -43.84835999987286 13.000000000055074 -43.348359999872855",
+      "L 13.000000000054975 -43.34835999987286 13.000000000055074 -42.848359999872855",
+      "L 13.000000000054975 -42.84835999987286 13.000000000055074 -42.348359999872855",
+      "L 13.000000000054975 -42.34835999987286 13.000000000055044 -42",
+      "L 13.000000000055048 -42 12.5 -42",
+      "L 12.5 -42 12.5 -15",
+      "L 12.5 -15 30 -15",
+      "L 30 -15 30 0",
+      "L 30 0 0 0",
+      "L 0 0 0 -120"
+    ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "name": "Example lathe (edit the values)",
+  "unit_system": "metric",
+  "default_x_mode": "diameter",
+  "axes": [
+    {
+      "name": "X",
+      "min_mm": -5,
+      "max_mm": 80
+    },
+    {
+      "name": "Z",
+      "min_mm": -250,
+      "max_mm": 10
+    }
+  ],
+  "min_rpm": 50,
+  "max_rpm": 3000,
+  "spindle_power_kw": 2.2,
+  "max_velocity_x_mm_min": null,
+  "max_velocity_z_mm_min": null,
+  "capabilities": [
+    "constant surface speed",
+    "spindle-synchronised moves"
+  ],
+  "capabilities_off": [],
+  "postprocessor": "linuxcnc",
+  "change_radius_mm": null,
+  "change_z_mm": null,
+  "machine_change_radius_mm": null,
+  "machine_change_z_mm": null
+}

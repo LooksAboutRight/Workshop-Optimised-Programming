@@ -1,0 +1,155 @@
+\chapter{The main window}\label{ch:window}
+
+WOP has one window. You build the program in it, you see the result in it, and you read what the program found in it. This chapter shows where everything is. The later chapters use the names you learn here.
+
+\shot{window_parts}{The main window. The numbers are explained below: (1) menu bar, (2) flow list, (3) buttons of the flow list, (4) picture controls, (5) picture, (6) messages, (7) form, (8) handles.}
+
+The window has three columns. On the left is the \emph{flow list}: the steps of your program in the order the machine does them. In the middle is the \emph{picture} of the part and the tool paths, and below it the \emph{messages}. On the right is the \emph{form} of the step you chose in the flow list. When you choose another step, the form changes. When you change a value in the form, the picture follows.
+
+The title of the window shows the name of the project file, the name and version of WOP (for example \emph{WOP 0.1.0}), and a star (\file{*}) when there are changes that are not saved. A new project that has no file yet is called \emph{unsaved project}.
+
+\section{The menu bar}\label{sec:window:menus}
+
+The menu bar (1) has five menus.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y l@{}}
+\toprule
+\textbf{Menu} & \textbf{What it is for} & \textbf{Chapter} \\
+\midrule
+\menu{File} & Projects, G-code, machines, postprocessors, preferences. & \ref{ch:file} \\
+\menu{Edit} & Undo and redo. & \ref{ch:edit} \\
+\menu{Tools} & The tools of the project and the tool libraries. & \ref{ch:tools_menu} \\
+\menu{Workholding} & Jaws and chuck bodies and their libraries. & \ref{ch:workholding_menu} \\
+\menu{Materials} & The material table and its libraries. & \ref{ch:materials_menu} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{The flow list}\label{sec:window:flow}
+
+The flow list (2) is the program. It is read from the top down, and the machine does the steps in that order.
+
+\subsection{Setup, blocks and contours}
+The first entry is always \menu{Setup}. It holds what is true for the whole project: the machine, the raw part, the safe distances and the workholding (Chapter~\ref{ch:project}). It cannot be moved or deleted.
+
+Below it come the \emph{blocks}. A block is one job for one tool, for example facing, or turning along a contour (Chapter~\ref{ch:blocks}). Each block shows
+
+\begin{itemize}
+\item a coloured bar at its left edge. The same colour is used for its tool path in the picture, so you can see which path belongs to which block;
+\item its number and its type, for example \textsf{3: turning};
+\item the name you gave it, if you gave one;
+\item a note, if the program has something to say about it. A warning mark and the text \emph{Collision, see messages} mean that the check found a collision in this block.
+\end{itemize}
+
+Under the blocks is the heading \menu{Contours}. A \emph{contour} is a shape you drew, for example the finished outline of a part (Chapter~\ref{ch:contours}). A contour is not a step of the program. A block that works along a contour names the contour it uses. Each contour shows how many blocks use it.
+
+\subsection{Choosing an entry}
+Click an entry to choose it. The picture and the form show that entry. A click on a contour opens its form at once. A click on Setup or on a block shows its form if the right column is open; a double click opens the right column if it was folded away (Section~\ref{sec:window:handles}).
+
+\subsection{Tick boxes for export}
+Each block has a tick box. The box above the list, \field{Tick all blocks for export}, ticks or unticks all of them; it shows a dash when only some are ticked. The ticks matter when you use \button{Export selected...}: only the ticked blocks are written. See Section~\ref{sec:file:selected}. A normal \menupath{File}{Export G-code...} writes all blocks, whatever the ticks say.
+
+\subsection{Adding, moving, deleting and copying}\label{sec:window:buttons}
+Five buttons sit under the flow list (3).
+
+\begin{description}
+\item[\button{Add block}] opens a list of the block types and, at the end, \menu{Contour}. A new block is put after the block that is chosen, or at the end of the list if none is chosen. \menu{Contour} makes a new contour and opens the sketch editor for it at once (Chapter~\ref{ch:contours}).
+\item[\button{Delete}] deletes the chosen block or contour. If other blocks use a contour, WOP asks whether to delete those blocks too or to keep them without a contour.
+\item[\button{Up} and \button{Down}] move the chosen block one place up or down. The order of the blocks is the order of the program, and the material that one block removes is gone for the next one.
+\item[\button{Export selected...}] writes the ticked blocks (Section~\ref{sec:file:selected}).
+\end{description}
+
+A right click on a block or a contour opens a small menu. \menu{Copy} makes a copy of it. For a block there are also two entries that show the operations of the block as plain text (\emph{neutral code}): the moves before they are turned into the language of one controller. They are meant for people who want to see exactly what a block does.
+
+\begin{tipbox}
+\menupath{Edit}{Undo} takes back the last change, also a deleted block or a move. If a block does something you did not expect, look at it in the picture before you change it: Section~\ref{sec:window:stepping} shows how to step through the moves.
+\end{tipbox}
+
+\section{The picture}\label{sec:window:picture}
+
+The picture (5) shows the raw part, the finished shape, the chuck and the jaws, and the paths of the tool. It is made again after every change.
+
+The controls above it (4) are, from the left: \button{2D} and \button{3D}, \field{Up to selected block}, \field{Step through} and \button{Reset view}. At the right of the picture is the check box \field{Legend}.
+
+\subsection{2D and 3D}
+\button{2D} shows a flat section of the part: the radius (X) goes up, the length (Z) goes to the right, and the chuck is on the left. Use the mouse wheel to zoom. Drag with the left or the middle mouse button to move the picture. A double click, or \button{Reset view}, shows the picture as it was at the start. When you zoom in, the lines keep their width, so close paths stay easy to follow.
+
+\button{3D} shows the part as a solid, with the chuck and the jaws, the tool, and the path on the cut face. The shortcut is \key{Ctrl}+\key{3}. The mouse works as in 2D: wheel to zoom, drag to move, double click to start again. The 3D view needs OpenGL. If your computer cannot draw it, the \button{3D} button is grey and its hover text says why.
+
+\subsection{What the picture shows}
+Solid lines are cutting moves. Dashed lines are rapid moves. The colours are those of the blocks in the flow list. The raw part is grey and the material that is left after the blocks is brown. The finished shape of the chosen block is drawn dashed in pink. A red cross marks a place where the check found a collision; the messages say what it is.
+
+The 2D picture is fitted to the raw part and the cutting moves, so a small part fills the picture. The tool change position and the safe position are not inside the frame: a rapid move towards them runs out of the picture.
+
+\field{Up to selected block} hides all blocks after the chosen one, so you see the part as it is at that moment of the program.
+
+\subsection{Step through}\label{sec:window:stepping}
+\field{Step through} lets you follow the machine move by move. The tool is drawn at the place of the move, and the material that is left at that moment is shown. Four buttons and a slider appear:
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l l Y@{}}
+\toprule
+\textbf{Button} & \textbf{Key} & \textbf{What it does} \\
+\midrule
+\button{|<} & \key{Home} & Goes to the start of the chosen block. \\
+\button{<} & \key{Left} & One move back. \\
+\button{>} & \key{Right} & One move forward. \\
+\button{>|} & \key{End} & Goes to the end of the chosen block. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The text next to the slider says which block and which move you are at, for example \emph{Block 3, move 12 of 40}. If the tool collides with something in this move, the word \textsf{COLLISION} is added; the messages box has the details.
+
+\begin{notebox}
+Stepping through is the best way to find out what a block does. Use it every time you try a block for the first time, before you export.
+\end{notebox}
+
+\subsection{Legend and colours}
+The legend lists the blocks with their colours and explains the line styles. You can hide it with the check box \field{Legend}; WOP remembers your choice. The colours follow the colours of Windows: with a dark theme the picture is dark.
+
+\section{The form on the right}\label{sec:window:form}
+
+The form (7) shows the values of the chosen entry: Setup, a block, a contour, or, in the tool and workholding views, an item of a library. The title above the form says what it is, for example \emph{Block 3: turning}.
+
+\begin{itemize}
+\item A field with a unit shows the unit after the number (mm, mm/rev, deg). You can type the number or use the arrow keys. Both a point and a comma work as the decimal point.
+\item Choices are lists. A check box turns something on or off. A field that says \emph{not set} is optional: leave it empty to use the value of the block.
+\item A \button{Dia.} or \button{Rad.} button next to a field changes how a size in X is shown: as a diameter or as a radius (Section~\ref{sec:project:xmode}).
+\item A field that is grey and cannot be changed shows a value the program works out. Example: the Start Z of a turning block.
+\end{itemize}
+
+\subsection{Values you have not touched}
+When a new block is made, its fields get preset values: the defaults of the Preferences, or the values that belong to the tool you chose. A preset value is shown in a lighter colour. As soon as you type a value in a field, it gets the normal colour, and WOP no longer changes it by itself. If you change the tool, the values of the fields you did not touch follow the new tool; the values you typed stay.
+
+A right click on a field opens a menu with \menu{Reset to default}. The field gets its preset value again and the light colour.
+
+\subsection{The line under the form}
+Under the form of the Setup, one line says how long the raw part is and how much of it sticks out of the chuck.
+
+\section{The messages}\label{sec:window:messages}
+
+The box under the picture (6) is where the program tells you things. A line starts with a word that says how serious it is.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y@{}}
+\toprule
+\textbf{Starts with} & \textbf{Meaning} \\
+\midrule
+\textsf{note:} & Something you should know, for example that a part of the material is not reached by the tool. Nothing is wrong. \\
+\textsf{COLLISION:} & The check found a collision: the tool, its holder or the jaws touch material or the part where they must not. The line says where and gives a way out. \\
+\textsf{PROBLEM:} & The program cannot be planned. The text says why. \\
+\textsf{WORKING:} & The program is being planned or checked. The picture and the notes are those of the program before your last change until the work is done. \\
+\textsf{NOTICE:} & A short message about what you just did, for example that a value was refused. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Drag the border between the picture and the messages (the three dots) up or down to give more room to the one or the other. If there is nothing to say, the box shows \emph{No problems found.} The status bar at the bottom of the window shows the same short messages for a few seconds, and says \emph{Planning ...} or \emph{Checking collisions and power ...} while the work goes on. You can keep working while that goes on; the window stays usable.
+
+\section{Panels and handles}\label{sec:window:handles}
+
+The two side columns can be made wider or narrower, or folded away to give the picture more room. The handles between the columns (8) show three dots. Drag a handle to change the width. Click it once, without dragging, to fold the column away; a folded column leaves a handle with an arrow, and a click on it opens the column again. WOP remembers the sizes when you close it.
+
+WOP is made to work on a screen of 1024 by 768 pixels, so it also fits the small screen of a machine.

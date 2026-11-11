@@ -1,0 +1,44 @@
+\chapter{When something goes wrong}\label{ch:troubleshooting}
+
+\section{The program does not start}
+\begin{itemize}
+  \item Start the \file{WOP.exe} that is in the program folder. A copy outside the folder cannot find its parts.
+  \item If a virus scanner stops it, allow the folder.
+  \item If the window opens and closes at once, look for \file{crash.log} and \file{wop.log} in the user folder (Chapter~\ref{ch:app_files}).
+\end{itemize}
+
+\section{WOP closes by itself}
+If WOP closes with no message, the program stopped. Keep \file{crash.log} and \file{wop.log} from the user folder and tell the developer what you did just before. A note of the steps is the most useful thing. WOP writes the two files itself; you do not need to turn anything on.
+
+\section{The 3D button is grey}
+Your graphics card or its driver does not give OpenGL 2. The hover text of the button says why. Update the graphics driver. Everything else works in 2D.
+
+\section{A message in the flow list}
+\begin{description}
+\item[A warning mark at a block] The check found a collision, or the block has a problem. Select the block and read the messages box (Section~\ref{sec:checking:messages}).
+\item[\textsf{PROBLEM:}] The block cannot be planned. The text says which value.
+\item[\textsf{WORKING:}] Wait. The picture is that of the program before your last change until the work is done.
+\item[Machine without CSS or synchronised moves] The block needs a function that is not ticked in the machine (Section~\ref{sec:machines:settings}). Tick it if your controller has it; otherwise change the block.
+\item[Power] The cut needs more power than the spindle has. Reduce the depth of cut or the feed (Section~\ref{sec:checking:power}).
+\end{description}
+
+\section{A value is refused}
+A field that does not accept your value gives a message and keeps the old value. Typing a diameter where WOP wants a radius is common: look at the label of the field and at the X mode of the Setup (Section~\ref{sec:project:xmode}).
+
+\section{The sketch editor}
+\begin{description}
+\item[I cannot move a point] The sketch has a relation or a dimension that holds it, or the point is locked (Section~\ref{sec:sketch:locked}).
+\item[The editor says there is a problem] The shape breaks a rule of its use, for example it is not closed. The text in the editor says what (Section~\ref{sec:sketch:window}).
+\end{description}
+
+\section{The G-code is not what I expected}
+\begin{itemize}
+  \item Is the right machine in the Setup, and does it use the right postprocessor (Chapter~\ref{ch:machines})?
+  \item Is the post known to work for your controller? Read what it writes (Section~\ref{sec:posts:check}).
+  \item Does the program show the right path in the picture? WOP writes what the picture shows.
+  \item Is X a diameter in the G-code? That is a setting of the post (\field{x diameters}).
+  \item Does the program start where you thought? Look at the safe position and the tool change position in the Setup (Section~\ref{sec:project:safe}).
+\end{itemize}
+
+\section{A tool or the library asks a question}
+When you close or start a new project, WOP may ask whether to update the tool library with tools that you changed (Section~\ref{sec:file:questions}). \button{Leave the library as it is} keeps the library; the project keeps its own tools.

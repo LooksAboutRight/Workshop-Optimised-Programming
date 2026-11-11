@@ -1,0 +1,34 @@
+\chapter{Files and folders}\label{ch:app_files}
+
+\section{Project files}
+A project is one file that ends in \file{.wop.json}. It is a text file, but not made to be edited by hand. It holds the Setup, the raw part, the blocks, the contours, the tools and workholding of the project, and a copy of the machine. You can copy it, mail it, and open it on another PC.
+
+\section{The user folder}
+Everything that belongs to you and not to one project is in the user folder (Chapter~\ref{ch:installing}): the folder \file{user_data} next to \file{WOP.exe} if there is one, otherwise \texttt{\%APPDATA\%\textbackslash WOP}.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y@{}}
+\toprule
+\textbf{File or folder} & \textbf{What it holds} \\
+\midrule
+\file{settings.json} & The settings of the window (size, panels, the last folders, the legend) and which library of each kind is in use. \\
+\file{conventions.json} & The values of \menupath{File}{Preferences...}. \\
+\file{machines} & One file for each machine, \file{name.machine.json}. \\
+\file{libraries} & The libraries, in one folder for each kind (\file{tools}, \file{workholding}, \file{materials}). Each library is one file, \file{name.json}. \\
+\file{posts} & Your own postprocessors, \file{name.post.ini}. \\
+\file{crash.log}, \file{wop.log} & Messages for the developer, see below. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Libraries}
+The library \emph{Example} is part of WOP and has no file; it is always there. Every other library is a file in the folder of its kind. You can copy a library file to another PC and use \menupath{Tools}{Library} $\rightarrow$ \menu{Import library file...} to add it. \menu{Open library folder} in the same submenu shows the folder.
+
+\section{Settings and preferences}
+\file{settings.json} is written by WOP when you change something. \file{conventions.json} holds the Preferences. If you delete either file, WOP starts with its built-in values. Your machines and libraries stay.
+
+\section{Postprocessor files}
+The posts that come with WOP are in the program folder and cannot be changed. Your own posts are in the folder \file{posts} of the user folder. A post file is plain text (Chapter~\ref{ch:posts}).
+
+\section{Log files}
+\file{wop.log} holds the messages that Qt, the toolkit of the window, wrote. \file{crash.log} is written when WOP stops without a message, or when the window stopped answering for about two seconds. It holds what each part of the program was doing. If WOP closes by itself, keep \file{crash.log} and \file{wop.log} and give them to the developer.

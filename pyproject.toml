@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wop"
+version = "0.1.0"
+description = "Workshop Optimised Programming for CNC lathes (LinuxCNC first)"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+# ezdxf: DXF import (only imported by wop/adapters/dxf_files.py, the import says so if it is missing).
+# numpy: imported by wop/core/verify.py, wop/core/reach.py and wop/ui/view3d.py.
+# PySide6 is needed by the standalone UI only.
+# The areas (wop/core/geometry/region.py) need no library.
+dependencies = ["ezdxf>=1.0", "numpy>=1.21"]
+
+[project.optional-dependencies]
+gui = ["PySide6>=6.5"]  # the window (tools/install_linux.sh installs it with `.[gui]`)
+
+[tool.setuptools.packages.find]
+include = ["wop*"]
+
+[tool.setuptools.package-data]
+wop = ["post/posts/*.post.ini"]

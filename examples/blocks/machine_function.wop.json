@@ -1,0 +1,283 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "WOP program",
+    "x_mode": "DIAMETER",
+    "work_offset": "G54"
+  },
+  "raw_part": {
+    "material": "Mild steel",
+    "outer_diameter_mm": 30,
+    "length_outside_mm": 60,
+    "inner_diameter_mm": 0,
+    "length_mm": null,
+    "front_z_mm": 0
+  },
+  "safety": {
+    "safe_radius_mm": 25,
+    "safe_z_mm": 10,
+    "clearance_mm": 1,
+    "change_radius_mm": null,
+    "change_z_mm": null
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "Turning tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0.001643431,
+              0.331358539
+            ],
+            "end": [
+              0.331358539,
+              0.001643431
+            ],
+            "center": [
+              0.3,
+              0.3
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0.331358539,
+              0.001643431
+            ],
+            "end": [
+              20,
+              2.068900951
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20,
+              2.068900951
+            ],
+            "end": [
+              20.217450252,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20.217450252,
+              0
+            ],
+            "end": [
+              100,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100,
+              0
+            ],
+            "end": [
+              100,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100,
+              20
+            ],
+            "end": [
+              2.068900951,
+              20
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              2.068900951,
+              20
+            ],
+            "end": [
+              0.001643431,
+              0.331358539
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "turning",
+      "definition": {
+        "number": 1,
+        "name": "",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 0.3,
+        "side_edge_length_mm": 20,
+        "side_edge_angle_deg": 96,
+        "front_edge_angle_deg": 96,
+        "width_mm": 20,
+        "length_mm": 100
+      }
+    },
+    {
+      "format": 1,
+      "number": 2,
+      "name": "Boring bar",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              -0.331358539,
+              0.001643431
+            ],
+            "end": [
+              -0.004557674,
+              0.352094453
+            ],
+            "center": [
+              -0.3,
+              0.3
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -0.004557674,
+              0.352094453
+            ],
+            "end": [
+              -3.5,
+              20.175732968
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -3.5,
+              20.175732968
+            ],
+            "end": [
+              -3.5,
+              100
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -3.5,
+              100
+            ],
+            "end": [
+              -19.5,
+              100
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -19.5,
+              100
+            ],
+            "end": [
+              -19.5,
+              2.016348833
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -19.5,
+              2.016348833
+            ],
+            "end": [
+              -0.331358539,
+              0.001643431
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "boring",
+      "definition": {
+        "number": 2,
+        "name": "",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 0.3,
+        "wall_edge_length_mm": 25,
+        "wall_edge_angle_deg": 100,
+        "end_edge_angle_deg": 96,
+        "front_width_mm": 19.5,
+        "bar_width_mm": 16,
+        "length_mm": 100
+      }
+    }
+  ],
+  "contours": [],
+  "blocks": [
+    {
+      "type": "machine_function",
+      "parameters": {
+        "block_id": "b1",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_RPM",
+          "value": 1000,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "",
+        "comment": "",
+        "function": "program_stop",
+        "dwell_s": 1,
+        "values": []
+      }
+    }
+  ],
+  "touched": []
+}

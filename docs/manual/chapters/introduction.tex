@@ -1,0 +1,52 @@
+\chapter{Introduction}\label{ch:introduction}
+
+\section{What WOP does}
+WOP (Workshop Optimised Programming) makes G-code for a CNC lathe. You do not write G-code. You describe the job: the raw part, the shape you want, the tools and what to do in which order. WOP works out the tool paths, shows them in a picture, checks them, and writes the G-code for your controller.
+
+WOP is made for lathes with two axes (X and Z) that run on LinuxCNC. Other controllers are possible through the postprocessors (Chapter~\ref{ch:posts}), but only LinuxCNC is the target.
+
+\section{How a program is made}
+A program is a list of \emph{blocks}. Each block is one job on the part: facing, turning, drilling, threading, grooving and so on. The blocks are done from top to bottom. A block works on the material that the blocks above it left over.
+
+You work in this order:
+\begin{enumerate}
+  \item Set the machine, the raw part and the workholding in the \emph{Setup} (Chapter~\ref{ch:project}).
+  \item Add tools (Chapter~\ref{ch:tools}).
+  \item Add blocks and fill in their forms (Chapter~\ref{ch:blocks}). A block that follows a shape needs a \emph{contour}, which you draw in the sketch editor (Chapter~\ref{ch:contours}).
+  \item Look at the picture, step through the moves and read the messages (Chapter~\ref{ch:checking}).
+  \item Export the G-code (Chapter~\ref{ch:file}, Section~\ref{sec:file:export}).
+\end{enumerate}
+You can go back at any step. WOP plans the whole program again after every change.
+
+\section{The words used in this manual}
+\subsection{Project}
+A project is one job in one file (\file{.wop.json}). It holds the Setup, the blocks, the contours, and the tools and workholding of the job.
+
+\subsection{Block}
+A block is one step of the program. The blocks are listed in the flow list on the left of the window. A block has a form on the right with its values.
+
+\subsection{Contour}
+A contour is a shape drawn in the sketch editor, a line of straight lines and arcs. A block can follow a contour. A contour is listed under the heading \emph{Contours} in the flow list. It is not a step of the program, and it can be copied.
+
+\subsection{Tool and workholding}
+A \emph{tool} is a cutting tool with its real shape. \emph{Workholding} is the chuck body and the jaws that hold the part. WOP uses their shapes to find collisions.
+
+\subsection{Machine and postprocessor}
+A \emph{machine} holds what belongs to your lathe: the travel of the axes, the spindle speed and power, the tool change position and which postprocessor to use. A \emph{postprocessor} (post) is a text file that says how the G-code is written for a controller.
+
+\section{Coordinates and units}
+WOP uses millimetres.
+
+\subsection{X as radius or diameter}
+X is the distance from the centre line of the part. In the project you choose whether sizes in X are typed and shown as a \emph{radius} or as a \emph{diameter} (Section~\ref{sec:project:xmode}). The labels of the fields say which. The G-code has its own setting in the postprocessor.
+
+\subsection{Z and the picture}
+Z runs along the part. The picture shows Z to the right and X up; the chuck is on the left. The face of the part is at $Z=0$ and the part lies towards minus Z.
+
+\section{Where WOP is limited}
+\begin{itemize}
+  \item WOP has two axes. There is no C axis, no milling and no live tools.
+  \item The G-code is written as drawn. WOP does not shorten a path because a tool might not reach; the check reports it and you decide (Chapter~\ref{ch:checking}).
+  \item Nothing is tried on every machine. Parts that are not confirmed on a real machine are marked in this manual. Check what a postprocessor writes before you run it; any G-code can crash a machine.
+  \item The checks are estimates. The power check is an approximation, and the check of the feed speed is not a full simulation of the controller.
+\end{itemize}

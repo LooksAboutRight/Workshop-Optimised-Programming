@@ -1,0 +1,118 @@
+\chapter{The project and the Setup}\label{ch:project}
+
+A \emph{project} is one job (Section~\ref{sec:file:projects}). Its first entry in the flow list is \menu{Setup}. The Setup holds everything that is true for the whole program and does not belong to one block: which machine, what the raw part is like, where the tool may move safely, and how the part is held. Fill it in first. The blocks after it use these values.
+
+\shot[0.6]{setup_form}{The form of the Setup: project settings, part, safe distances and workholding.}
+
+The form has four groups. The headings in the form are \emph{Project settings}, \emph{Part}, \emph{Safe distances} and \emph{Workholding}.
+
+\section{Project settings}\label{sec:project:settings}
+
+\subsection{Title}
+The title of the project. WOP writes it as a comment at the top of the G-code, and it suggests it as the name of the G-code file when you export (Section~\ref{sec:file:export}). If the title is empty, the name of the project file is used.
+
+\subsection{Machine}\label{sec:project:machine}
+The machine the program is for. The list shows the machines you made in \menupath{File}{Machines...} (Chapter~\ref{ch:machines}) and the entry \emph{(none)}. The machine decides which postprocessor writes the G-code, where the tool change position is, and what the machine can do: its speeds and its travel. WOP checks the program against these limits.
+
+The button \button{Machine settings...} opens the same dialog as \menupath{File}{Machines...}.
+
+A project always keeps its own copy of the machine, so a project still opens on another PC that does not have this machine in its list. If you open a project that has no machine, WOP gives it the default machine of your list, and says so in the status bar. The project then counts as changed; save it to keep the machine.
+
+\subsection{X mode}\label{sec:project:xmode}
+X mode says how you think of X on your lathe: \emph{diameter} or \emph{radius}. It decides three things.
+
+\begin{itemize}
+\item How sizes in X are shown and typed in the forms. With \emph{diameter}, a size like the target of a turning block is a diameter, and the label says so.
+\item In which mode the G-code is written. LinuxCNC has two modes: \file{G7} (X is a diameter) and \file{G8} (X is a radius).
+\item The first value of the \button{Dia.} and \button{Rad.} buttons that sit next to many X fields.
+\end{itemize}
+
+The button \button{Dia.} or \button{Rad.} next to a field changes only that one field, and only what is shown. WOP keeps all sizes as radii inside, so nothing changes in the program when you switch the button; you only see the same value the other way.
+
+\begin{notebox}
+Typing a diameter where WOP wants a radius is the most common mistake. When a result looks twice as big or twice as small as you meant, look at the label and at the \button{Dia.} / \button{Rad.} button of that field.
+\end{notebox}
+
+\subsection{Work offset}
+The work offset that the program uses (for LinuxCNC \file{G54} to \file{G59.3}). The list is the work offsets of the postprocessor of the machine (Chapter~\ref{ch:posts}). The G-code selects it in its header. It is the zero point of the part on the machine, which you set up on the lathe itself. A postprocessor that writes no work offset leaves the field grey. If a project has an offset that the post of the machine does not know, the list shows it with the note \emph{not in the post}, and the G-code still uses it.
+
+\section{The raw part}\label{sec:project:part}
+
+\subsection{Material}
+The material of the part. WOP takes it from the material table (Chapter~\ref{ch:materials_menu}) and uses it to estimate the cutting power. If the estimate for a block is higher than the machine can give, the check says so (Chapter~\ref{ch:checking}).
+
+\subsection{Bar or tube}
+The raw part starts as a plain bar or tube.
+
+\begin{description}
+\item[\field{Outer diameter}] The diameter of the bar.
+\item[\field{Inner diameter}] The diameter of the hole in a tube. Leave it \file{0} for a solid bar.
+\item[\field{Bar stock (unlimited length)}] Ticked: the bar is long and runs through the spindle, so there is material behind the chuck as far as you ever need. Not ticked: the part has a fixed length. Then \field{Length} is the whole length of the part, also the piece inside the chuck, and you can type it. For bar stock, \field{Length} is grey.
+\end{description}
+
+The line under the form says in words what you set: \emph{Bar stock: the length is not limited}, or the length, how much sticks out and how much is in the chuck.
+
+\subsection{Drawing the raw part}\label{sec:project:draw}
+Not every raw part is a plain bar. A forging, a casting, or a part that was turned in an earlier set-up has steps, a bore or a taper. For these, draw the shape. Click \button{Draw the raw part...}. The sketch editor opens (Chapter~\ref{ch:contours}) with your bar or tube already drawn, so you change a shape that exists and do not start from an empty sheet.
+
+\shot{sketch_raw_part}{The sketch editor opened for the raw part. The green dashed line is the clamping plane. The bar was changed to a stepped shaft.}
+
+Draw the half section of the piece, as for a turning contour: X is the radius and goes up, Z is the length and goes to the right, the spindle axis is the dash-dotted line. The sketch must follow these rules:
+
+\begin{itemize}
+\item \textbf{A solid piece} is one open outline. It starts on the spindle axis, goes round the piece, and ends on the spindle axis. The axis closes it.
+\item \textbf{A hollow piece} (a tube, a ring, a casting with a bore) is one closed loop that stays above the axis. If a loop touches the axis, WOP treats it as a solid piece.
+\item \textbf{The clamping plane.} One point must have the name \emph{Clamping plane}. It marks where the jaws begin; only its Z matters. It must lie inside the length of the piece. Use the button with this name in the section \emph{Mark} of the sketch editor (Section~\ref{sec:sketch:names}). A thin green dashed line across Z shows the plane in the drawing.
+\item The outline must not cross or touch itself.
+\end{itemize}
+
+Draw the \emph{whole} piece, also the part that is inside the jaws. Only the part outside the jaws is material for the blocks. The text under the drawing says what is still wrong, and the \button{OK} button stays off until the sketch follows the rules.
+
+When you press \button{OK}, the numbers of the Setup follow the drawing: \field{Outer diameter} is the biggest diameter, \field{Inner diameter} is the smallest bore if the piece is hollow, \field{Stick-out} is the distance from the front to the clamping plane, \field{Length} is the whole length, and \field{Front z} is the front of the piece. These fields are grey now, because the drawing is the truth. You can still change \field{Material}. The safe distances follow the drawing, as long as you did not type them yourself (Section~\ref{sec:project:safe}).
+
+\shot[0.6]{setup_raw_part}{The Setup after the raw part was drawn: the numbers of the part are grey, and a button goes back to the plain bar.}
+
+To change the shape later, click \button{Draw the raw part...} again. The button \button{Back to a plain bar or tube} forgets the drawing. The numbers it gave stay in the fields, and you can edit them again.
+
+\begin{notebox}
+A drawn raw part with a stepped bore uses the \emph{smallest} bore for \field{Inner diameter}. This number is only used for the check of inside jaws (Section~\ref{sec:project:holding}).
+\end{notebox}
+
+\section{Safe distances}\label{sec:project:safe}
+
+These five values say where the tool may move without touching anything. Every block begins and ends at these places, and WOP moves the tool there between blocks.
+
+\begin{description}
+\item[\field{Safe position, X radius} and \field{Safe position, Z}] The place where the tool waits between blocks. It must be outside the part and the chuck. Blocks travel at this radius.
+\item[\field{Tool change position, X radius} and \field{Tool change position, Z}] The place where the tool is changed. The tool goes here when the next block uses another tool. If your machine has a fixed tool change position in machine coordinates (set in the machine dialog), that position is used and written with \file{G53}.
+\item[\field{Clearance (X and Z)}] The distance the tool keeps from the material while it moves inside a block, the same for X and Z.
+\end{description}
+
+A new project fills these values in for you from the size of the part: the safe radius is the outer radius plus a margin, and the safe Z is the front of the part plus a margin. The margins are in the Preferences (Section~\ref{sec:file:preferences}). The values \emph{follow the part} as long as you have not typed them: if you make the bar thicker, the safe radius grows with it. As soon as you type one of these values yourself, it stays as you typed it. The tool change position also follows the machine, if the machine has a position of its own.
+
+\begin{warningbox}
+Look at the safe position once on the real machine. WOP cannot know where your turret, your tailstock or your steady rest are. If the safe position is not really safe on your lathe, move it here.
+\end{warningbox}
+
+\section{Workholding in the Setup}\label{sec:project:holding}
+
+The last group says how the part is held.
+
+\begin{description}
+\item[\field{Stick-out (free length)}] How far the part sticks out of the jaws, measured from the front of the part. It places the clamping plane. With a drawn raw part this field is grey; the clamping plane of the drawing places it.
+\item[\field{Front z}] The Z of the front face of the raw part. It is usually \file{0}, and the length of the part runs to negative Z.
+\item[\field{Workholding}] The jaws or the chuck body from your workholding library (Chapter~\ref{ch:workholding}). \emph{(none)} means that no chuck is drawn and WOP only checks against a flat clamping plane. With jaws, the chuck body that belongs to them is used too.
+\end{description}
+
+When you choose jaws, two more fields appear.
+
+\begin{description}
+\item[\field{Jaw point on the part}] Which named point of the jaws sits on the part. \emph{(as drawn)} leaves the jaws where they were drawn. A point like \emph{step 1} puts that step of stepped jaws on the part.
+\item[\field{Grip inside (tube held from the bore)}] The jaws expand in the bore of a tube and hold it from the inside.
+\end{description}
+
+WOP checks the way the part is held and tells you in the messages if something does not fit. For example: the stick-out is longer than the part, a bar is too thick to go through the chuck body, or the jaws of an inside grip reach into the wall of the tube.
+
+\begin{notebox}
+WOP does not calculate how far a part can stick out of the jaws without bending or vibrating. That is for you to decide.
+\end{notebox}

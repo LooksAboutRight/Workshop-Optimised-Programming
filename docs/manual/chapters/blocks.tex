@@ -1,0 +1,273 @@
+\chapter{Blocks}\label{ch:blocks}
+
+A program in WOP is a list of \emph{blocks}. A block is one job that is done with one tool: facing the end, turning a shoulder, drilling a hole, cutting a thread. WOP plans the moves of each block from the numbers you give it, checks them, and writes them as G-code. This chapter explains what all blocks have in common and then each type of block.
+
+\section{Adding, moving, deleting and copying blocks}\label{sec:blocks:flow}
+
+Blocks are made and ordered in the flow list (Section~\ref{sec:window:buttons}). \button{Add block} opens the list of types and puts the new block after the one that is chosen. \button{Up} and \button{Down} change the order, \button{Delete} removes a block, and a right click with \menu{Copy} makes a copy.
+
+\emph{The order matters.} The material that one block cuts away is gone for the next one. A roughing block first and a finishing block after it is therefore not two jobs on the same bar: the finishing block starts from what the roughing block left, and its plan uses that. If you move the blocks round, WOP plans them again in the new order.
+
+A new block gets sensible values: the defaults from the Preferences, and for the depth of cut and the allowance the values that belong to the tool you chose. Change what you need. A value you have not touched is shown lighter and follows a change of tool (Section~\ref{sec:window:form}).
+
+\section{What every block has}\label{sec:blocks:common}
+
+Most blocks start with the same fields.
+
+\subsection{Name}
+A name of your own. The flow list shows it under the type, so you can tell two turning blocks apart (for example \emph{rough} and \emph{finish}). It is also written as a comment in the G-code.
+
+\subsection{Tool}
+The tool of this block, chosen from the tools of the project (Chapter~\ref{ch:tools}). The list shows the tool number, its name and its description. \emph{No tool chosen} leaves the block without a tool. A block needs a tool to be planned. When you change the tool, the depth of cut and the allowance follow the tool as long as you have not typed them.
+
+\subsection{Spindle}
+Four fields describe the spindle.
+
+\begin{description}
+\item[\field{Spindle: Direction}] \emph{clockwise} or \emph{counter-clockwise}. A new block always starts clockwise. WOP writes the right code for the controller of your machine (the postprocessor does this, Chapter~\ref{ch:posts}).
+\item[\field{Spindle: Mode}] \emph{rpm} keeps the number of revolutions fixed. \emph{css} (constant surface speed) keeps the cutting speed fixed and lets the spindle speed change with the diameter.
+\item[\field{Spindle: Value}] The number of revolutions per minute for \emph{rpm}, or the cutting speed in metres per minute for \emph{css}.
+\item[\field{Spindle: Rpm limit}] Only for \emph{css}: the highest spindle speed that is allowed. While the tool goes to a small diameter, a constant surface speed asks for a very high spindle speed. The limit holds it back. Leave it empty for no limit.
+\end{description}
+
+\subsection{Feed}
+The feed of a cut, in millimetres per revolution (mm/rev). It is the distance the tool moves for each turn of the spindle. Some blocks have a second field for the finishing pass.
+
+\subsection{Coolant}
+\emph{none}, \emph{flood} or \emph{mist}. WOP writes the code of the coolant when it changes from one block to the next (switching it on, to another kind, or off), if the postprocessor of your machine knows these codes.
+
+\subsection{Depth of cut and finish allowance}
+Cutting blocks take their material off in several passes. The \field{Depth of cut} is how deep each roughing pass goes, measured in X. The \field{Finish allowance} is the layer of material that roughing leaves on the part for the finishing pass.
+
+\subsection{The finishing pass}
+A block with a \field{Finishing pass} check box can cut the last layer in a separate pass that follows the shape exactly. When it is ticked, you can give the pass its own feed and its own spindle speed. An empty field means that the value of the block is used.
+
+\subsection{Cutter compensation}
+The turning blocks have a check box \field{Cutter compensation}. When it is ticked, the finishing pass is written for the control to correct for the radius of the tool nose (\file{G41} and \file{G42}), if the postprocessor of the machine can write it. The pass gets a lead-in and a lead-out for it. Without it, the path in the code is already offset for the nose radius by WOP. The LinuxCNC postprocessor that comes with WOP writes it; it was tried on the lathe in an air cut, not yet in material. Not every postprocessor writes it.
+
+\subsection{How WOP plans what you draw}
+Four rules hold for all cutting blocks. They are important, so read them once.
+
+\begin{itemize}
+\item \textbf{WOP cuts what you draw.} The shape comes from the numbers in the form and from the contour. WOP never shortens or skips it because the tool might not reach. If a block cannot make something, it says so and leaves it as it is.
+\item \textbf{Roughing stays off the finished part.} Roughing is planned from the material that is there, the finished shape, the allowance and the depth of cut. It keeps the body of the tool off the part and goes at most 30 percent of the allowance into it. A line that the tool cannot cut all the way is cut as far as it reaches, or not at all. What stays is left for another tool, and a note says so.
+\item \textbf{Finishing follows the shape.} The finishing pass runs along the whole contour, whatever the tool can reach. If the tool cannot make a corner or a groove, the check reports a collision. Then turn the finishing pass off for this block, or use another tool.
+\item \textbf{The check reports every collision.} It reports what the tool and its holder touch, also in rapid moves (Chapter~\ref{ch:checking}). Before the G-code is exported, WOP asks you if it found problems.
+\end{itemize}
+
+\begin{warningbox}
+A block that has a problem it cannot plan (no contour, an error in the form) is \emph{left out} of the program, with its reason in the messages. Read the messages before you export. A program with a block left out is not what you meant.
+\end{warningbox}
+
+\section{Facing}\label{sec:blocks:facing}
+
+\shot[0.45]{block_facing}{The form of a facing block.}
+
+Facing cuts the end face of the part flat down to a Z that you give. The tool takes passes across the face. Each pass is one depth of cut deeper.
+
+\begin{description}
+\item[\field{Direction}] \emph{outside in}: the tool starts outside the part and moves to the centre. \emph{centre out}: it starts at the centre and moves out.
+\item[\field{Target z}] The Z of the finished face.
+\item[\field{Depth of cut}] How deep each pass is.
+\item[\field{Overtravel past the centre (or bore)}] How far the tool goes past the centre so that no small point of material stays. For a tube, past the bore. The preset follows the tool (two nose radii).
+\item[\field{Finish allowance} and \field{Finishing pass}] The last layer and its own pass (Section~\ref{sec:blocks:common}).
+\end{description}
+
+Each pass comes in beside the part, feeds the last millimetre into the material, cuts to the centre, and rises at feed until it is clear of the face. Only then does the tool move away in a rapid move.
+
+\section{Turning}\label{sec:blocks:turning}
+
+\shot[0.45]{block_turning}{The form of a turning block.}
+
+The turning block makes a simple shape without a contour: a cylinder with a shoulder, a taper, a chamfer or a radius. Use it for the common jobs: roughing a bar to a diameter up to a Z. For a shape with several steps and arcs, draw a contour and use turning along a contour.
+
+\begin{description}
+\item[\field{Side}] \emph{outside} is turning. \emph{inside} is boring a bore; choose a boring bar as the tool.
+\item[\field{Pass direction}] \emph{along Z}: the cuts run along the axis, one layer after the other. \emph{along X}: the cuts run across, from the outside toward the axis, one layer after the other.
+\item[\field{Target radius} or \field{Target diameter}] The size that the surface will have. With X mode diameter, the label says diameter.
+\item[\field{Start Z}] Where the cut begins. WOP takes the place where the material of this block begins: for example, the front of the part, or the step that an earlier block left. The value is shown grey and cannot be typed; the notes under the form say what was found.
+\item[\field{End z}] Where the cut ends.
+\item[\field{Taper}] The angle of a cone. \file{0} is straight. A positive angle makes the part larger towards the chuck. The target diameter is the one at Z~0. The button next to the field switches between the included angle in degrees and the rise of the diameter per 100~mm.
+\item[\field{Start corner} and \field{Shoulder corner}] A chamfer or a fillet at the beginning of the cut and where the cut meets the shoulder. Choose the kind and give the size.
+\end{description}
+
+The fields \field{Depth of cut}, \field{Finish allowance}, \field{Finishing pass} and \field{Cutter compensation} are described in Section~\ref{sec:blocks:common}.
+
+\section{Turning along a contour}\label{sec:blocks:contour}
+
+\shot[0.45]{block_turning_contour}{The form of a block that turns along a contour.}
+
+This block turns the part until a contour that you drew is left (Chapter~\ref{ch:contours}). It is the block for shapes that have several steps, arcs, grooves and tapers. It plans the roughing from the raw part, or from what the blocks before it left, down to the contour plus the finish allowance, and then the finishing pass along the contour.
+
+\begin{description}
+\item[\field{Contour}] The contour to cut. A block without a contour is left out of the program. A contour that cannot be used (an error in its drawing) is shown in the list with its reason.
+\item[\field{Side}, \field{Pass direction}] As for turning (Section~\ref{sec:blocks:turning}). With a contour, \emph{along X} cuts layers across the part from the outside toward the axis, and after every cut the tool follows the contour a little way up and out.
+\item[\field{Feed}, \field{Depth of cut}] The feed and the depth of cut of the roughing.
+\item[\field{Finishing allowance}, \field{Finishing pass}, \field{Finishing feed}, \field{Spindle speed}] The finishing pass and its values.
+\item[\field{Cutter compensation}] See Section~\ref{sec:blocks:common}.
+\item[\field{Plunge feed} and \field{Plunge depth of cut}] Where the tool has to cut straight into the material, for example into a pocket behind a step, it can use another, usually smaller feed and depth. Empty: the values of the block.
+\item[\field{Back clearance}] The smallest angle that the back of the tool keeps free from the contour (the free angle of the tool, in degrees). Where the back of the tool would touch the contour with less, roughing does not cut. The preset is 5~degrees.
+\item[\field{Style}] The order in which the roughing is cut (Section~\ref{sec:blocks:styles}).
+\end{description}
+
+\begin{notebox}
+Roughing stays off the finished part: it is cut only as far as the tool reaches, and the note under the block names what stays. But the finishing pass \emph{always} follows the contour, whatever the tool can reach. For a contour that your tool cannot make, for example a cavity behind a narrow mouth or an undercut, turn the finishing pass off. Otherwise the check reports a collision. Look at the picture and step through the block to see what the tool does.
+\end{notebox}
+
+\section{Drilling}\label{sec:blocks:drilling}
+
+\shot[0.45]{block_drilling}{The form of a drilling block.}
+
+Drilling makes a hole on the axis with a drill tool. The drill goes in along Z to an absolute depth.
+
+\begin{description}
+\item[\field{Drill mode}] \emph{drilling}: one stroke. \emph{peck drilling}: the drill goes in step by step and pulls back a little after each step to break the chips. \emph{peck drilling, full retract}: after each step the drill goes all the way out of the hole.
+\item[\field{Depth (absolute Z)}] The Z that is reached. Behind the front face this number is negative.
+\item[\field{Depth to full diameter}] Ticked: the depth is where the hole has its full diameter, and the point of the drill goes deeper. Not ticked: the tip of the drill reaches the depth.
+\item[\field{Peck depth}] How deep each step goes (only for the peck modes).
+\item[\field{Dwell time}] How long the drill waits at the bottom, in seconds.
+\item[\field{Feed}] The feed of the drill in mm/rev.
+\end{description}
+
+The postprocessor can write a hole as a canned cycle of the controller (\file{G81}, \file{G82}, \file{G83}, \file{G73}) or as single moves. The LinuxCNC postprocessor that comes with WOP writes the cycles; the cycles were tried on the lathe, in the air and in material. If an earlier drill already cut part of the way, WOP skips the air.
+
+\section{Threading}\label{sec:blocks:threading}
+
+\shot[0.45]{block_threading}{The form of a threading block.}
+
+The threading block cuts a thread along Z on the outside or inside of the part. The postprocessor writes the thread as one cycle of the controller (\file{G76} in LinuxCNC) if it has one. The fields are named like the words of that cycle.
+
+\begin{description}
+\item[\field{Side}] \emph{outside} or \emph{inside}.
+\item[\field{Thread (M8x1, Tr40x7, 1/4-20 UNC)}] The designation of the thread. When you type it, WOP fills in the pitch and the sizes from it. You can also type the numbers yourself.
+\item[\field{Spindle RPM}] The thread is cut at a fixed number of revolutions. A thread needs a constant spindle speed, not a constant surface speed.
+\item[\field{Crest X radius}] The size in X (radius or diameter, as the label says) at the crest of the thread: for an outside thread its outer surface, for an inside thread the bore.
+\item[\field{Pitch}] The distance between two turns of the thread.
+\item[\field{Start Z (front)} and \field{End Z}] Where the thread starts and ends. The button \button{Abs.} / \button{Rel.} next to \field{End Z} lets you type the length of the thread instead of the Z of its end.
+\item[\field{Thread depth}] Empty: WOP takes the depth of an ISO metric thread from the pitch.
+\item[\field{First cut depth}, \field{Degression}, \field{Compound angle}, \field{Spring passes}] These set the passes. The notes under the fields explain them. The first pass is the deepest; with a \emph{Degression} of 2 every pass takes the same area, so the passes get shallower. A \emph{Compound angle} of about 29 or 30 degrees offsets each pass along the thread, so that one flank cuts more than the other. A \emph{Spring pass} repeats the last depth without a deeper cut.
+\item[\field{Tapered at} and \field{Taper length}] A tapered run-in or run-out at the start or the end of the thread. \field{Taper length} is its length along the thread.
+\end{description}
+
+\begin{notebox}
+WOP does not apply tolerance classes (6g, 6H). It cuts the thread to the nominal size. Trapezoid threads with several starts, UNJ threads and pipe threads (G, NPT) are not supported yet. Cut a thread in a test piece first and measure it before you cut a real one. The thread cycle of LinuxCNC was run on the lathe, also in material, and looked right; a finished thread has not been measured.
+\end{notebox}
+
+\section{Grooving}\label{sec:blocks:grooving}
+
+\shot[0.45]{block_grooving}{The form of a grooving block.}
+
+The grooving block cuts a groove with a grooving tool on the outside or the inside of the part, or parts the piece off.
+
+\begin{description}
+\item[\field{Style}] How the plunges are ordered (Section~\ref{sec:blocks:styles}).
+\item[\field{Side}] \emph{outside} or \emph{inside}.
+\item[\field{Groove Z (front edge)}] The Z of the wall of the groove that is nearer the front.
+\item[\field{Width}] The width of the groove, along Z.
+\item[\field{Final X radius} or diameter] The bottom of the groove. For a part-off, use \file{0}.
+\item[\field{Peck depth} and \field{Retract after a peck}] A deep groove can be cut in steps. After each step the tool goes back a little (\emph{chip breaking}) or all the way out (\emph{full retract}).
+\item[\field{One-sided cut in} and \field{Max one-sided cut}] A groove wider than the tool is cut in several plunges. A plunge may cut with one side of the blade free and the other side in material by at most this amount, in millimetres or as a percentage of the blade width. A smaller limit keeps the load on the blade lower.
+\item[\field{Finish allowance} and \field{Finishing pass}] Finishing plunges at the walls and a pass along the bottom.
+\end{description}
+
+\begin{notebox}
+A part-off needs a support for the piece that is cut off. WOP does not model that. When a block cuts the part into two pieces, WOP keeps the piece in the chuck and draws the other one dashed.
+\end{notebox}
+
+\section{Machine function}\label{sec:blocks:function}
+
+\shot[0.45]{block_machine_function}{The form of a machine function block.}
+
+A machine function block does not cut. It makes the machine do one thing: stop, wait, or stop the spindle. It has only a name and a function.
+
+\begin{description}
+\item[\emph{program stop}] The program stops until the operator presses start (\file{M0}). Use it to turn the part, to measure, or to clear chips.
+\item[\emph{optional stop}] The same, but only if the optional stop switch of the control is on (\file{M1}).
+\item[\emph{dwell}] The machine waits for a time (a field for the time in seconds appears).
+\item[\emph{spindle stop}] The spindle stops.
+\end{description}
+
+The list can hold more entries: functions that your postprocessor defines for your controller. They have their own fields, which WOP shows when you choose them. Before the function, the tool goes to the safe position, so the operator can reach the part.
+
+\section{Custom path}\label{sec:blocks:path}
+
+\shot[0.45]{block_custom_path}{The form of a custom path block.}
+
+The custom path is for moves that the other blocks cannot make. You draw the path of the tool yourself, and WOP checks it like any other block, draws it, and writes it. A path can have rapid moves, feed moves along lines and feed moves along arcs. Use it for a special groove, a thread relief, a chamfer on a strange shape, or a move to a place that the other blocks never go.
+
+The form has the usual fields (name, tool, spindle, coolant), the \field{Feed} for pieces that have no feed of their own, and the button \button{Draw the path...}.
+
+A new custom path block has nothing drawn yet. A block with no path is left out of the program, and the messages say so, until you draw a path.
+
+\subsection{Drawing a path}
+Click \button{Draw the path...}. The sketch editor opens (Chapter~\ref{ch:contours}). It shows two things that come from the program, in green:
+
+\begin{itemize}
+\item the \textbf{safe point}, a filled green square with its name. This is where every block starts and where the tool waits. WOP takes it from the Setup (Section~\ref{sec:project:safe});
+\item the \textbf{part as it is before this block}: the material that the blocks before it left. It is drawn as green lines and arcs. You cannot move them.
+\end{itemize}
+
+\shot{sketch_path}{The sketch editor for a custom path. The green square is the safe point, the green lines are the part before the block, the pink line with the big arrow is the piece that is shown now while stepping.}
+
+Draw the path as a chain of lines and arcs with the usual tools (Section~\ref{sec:sketch:draw}).
+
+\begin{itemize}
+\item \textbf{The first line starts at the safe point.} Click the green square as the start. If the path does not start there, the check under the drawing says so.
+\item \textbf{The pieces follow each other in the order you draw them}, each one starting where the one before ended. This order is the order of the moves.
+\item \textbf{Every line is a feed move unless you mark it as rapid.} Select the line, or click the button, and use \emph{Rapid move on / off} in the section \emph{Mark}. A rapid line is drawn dashed. A rapid move has no feed: the control decides how fast it is. An arc is always a feed move.
+\item \textbf{A piece can have a feed of its own.} Select it and type the feed under the drawing (mm/rev). Empty means the feed of the block. A rapid line has no feed field.
+\item \textbf{A path may go back along its own line and may cross itself.} Draw the second line over the first one. They are separate pieces and keep their order. Often you cut in with a feed line and go back out with a rapid line along the same line.
+\item A fillet or a chamfer between two lines keeps the flags of the lines: a corner between two rapid lines is rapid. If both lines have the same feed of their own, the corner gets that feed; if the feeds differ, the lines keep theirs and the corner uses the feed of the block.
+\end{itemize}
+
+You can end the path anywhere you want. After the block, WOP moves the tool to the safe point (or, before another tool, to the tool change position), and the check reports it if that move is blocked by material.
+
+\begin{notebox}
+While the tool feeds, the material it passes through counts as removed. A path may start inside the material. Check what you drew with \button{Step through} in the main window (Section~\ref{sec:window:stepping}).
+\end{notebox}
+
+\subsection{Dimensions to the part}
+You can dimension the path to the green part, so that the path follows when the part changes. Choose the \emph{Dimension} tool, click a point of your path, then click a green line, and place the number: you get the \emph{distance} from the point to the line, never a diameter. You can also dimension to the points of the part.
+
+\begin{warningbox}
+Use as few dimensions to the part as you can. They are easier to redo when the part changes. The green part is the material that the blocks before this block leave. When an earlier block changes it, WOP looks at the outline of the part. If it still has the same pieces (the same number and kinds of lines and arcs) and every dimension still works, the dimensions stay and the path follows. If the number or the kind of the pieces has changed, \emph{every} dimension that touches the part is dropped, and the dialog tells you how many. A dimension that cannot be met any more is dropped too. The path itself stays where it is.
+\end{warningbox}
+
+\subsection{Is the path fixed?}
+A path that you have not fully dimensioned can still move its points. The block adds a note \emph{The path is not fully constrained} to the messages whenever this is so. It is only a note: the path is planned and cut as it is. Add dimensions and relations when you want the path to follow changes in the part. You do not have to.
+
+\subsection{Stepping through the path}\label{sec:blocks:pathstep}
+A path can come back along its own lines, so it can be hard to see in what order the moves are made. The sketch editor can step through the path piece by piece. Use the buttons \button{< Step back} and \button{Step forward >} under the drawing, or the keys \key{Left} and \key{Right}.
+
+\begin{itemize}
+\item The first piece is shown and selected, with a big arrow at its end that shows the way the tool moves. All later pieces are hidden.
+\item Each step shows one more piece. The older pieces are drawn thin and faint, and only the dimensions of the piece you are on are shown.
+\item The piece you are on is the one you select and change with the mouse, also where several pieces lie on one place. Hidden pieces cannot be picked.
+\item A label says which piece it is and what kind: \emph{Step 3 of 7: feed line}.
+\item If a piece does not follow the chain, stepping stops there, and the message says why.
+\item \key{Esc} (when no tool is on) or stepping back from the first piece shows everything again. Starting a drawing tool also ends the stepping, because a new piece is added at the end of the path.
+\end{itemize}
+
+\section{Styles}\label{sec:blocks:styles}
+
+Some blocks have a \field{Style}. A style decides only the \emph{order} and the \emph{depth} of the steps. It never changes what is cut. The style is part of the program; there are no style files to edit.
+
+Open the list of styles and hold the mouse over an entry: a window shows pictures of the style on small samples. The colour in the pictures goes from blue (made first) to red (made last), and only the cutting moves are shown.
+
+\subsection{Grooving}
+\begin{description}
+\item[Standard] Plunges from the front wall towards the chuck, each plunge at most one one-sided cut wider than the one before. Finishing plunges at the walls and a pass along the bottom.
+\item[Layers] Cuts the groove layer by layer: first all plunges to a depth, then the next layer deeper.
+\end{description}
+
+\shot[0.6]{style_grooving_standard}{Grooving style \emph{Standard} on four samples.}
+\shot[0.6]{style_grooving_layers}{Grooving style \emph{Layers}.}
+
+\subsection{Turning along a contour}
+\begin{description}
+\item[Standard] Every roughing line is cut when it is found, level by level from the front. Pockets and open lines are taken together.
+\item[Pockets last] All open lines are cut first. Then the pockets behind crests, the front one first, layer by layer.
+\end{description}
+
+\shot[0.6]{style_contour_standard}{Contour style \emph{Standard}.}
+\shot[0.6]{style_contour_pockets_last}{Contour style \emph{Pockets last}.}

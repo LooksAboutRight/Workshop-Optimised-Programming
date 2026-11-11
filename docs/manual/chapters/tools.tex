@@ -1,0 +1,61 @@
+\chapter{Tools}\label{ch:tools}
+
+In WOP a tool is not a number in a table. It is a shape with a cutting edge. WOP uses the shape to plan the cuts and to find collisions of the tool, its holder or the bar with the part. This chapter says how to make a tool, how its shape is made, and how the tool library works. The menu is in Chapter~\ref{ch:tools_menu}.
+
+\section{The Tools view}\label{sec:tools:view}
+Open it with \menupath{Tools}{Show tools}. The top row has the toolbox of the project (see below) and the buttons. Under it are the list of the tools, a picture of the chosen one, and a few lines of information about it. The form of the chosen tool is on the right; a change in the form is used at once.
+
+\begin{description}
+\item[\button{Add tool}] Adds a tool of a type (next section).
+\item[\button{Add from library}] Copies a tool of the tool library into the project.
+\item[\button{Save to library}] Writes the chosen tool to the tool library in use. If the library has another tool of the same name, WOP asks whether to replace it. The button then reads \button{Update library tool}.
+\item[\button{Save as toolbox...}] Makes a toolbox of the tools of the project (Section~\ref{sec:tools:toolboxes}).
+\item[\button{Delete}] Removes the chosen tool from the project.
+\item[\button{Sketch editor...}] Opens the shape of the tool in the sketch editor.
+\item[\field{Tool offset}] The offset number that the postprocessor calls after the tool change (for LinuxCNC \file{G43 H...}). With \emph{tool number}, the offset has the number of the tool. Set another number if the offset of this tool sits elsewhere in your tool table.
+\end{description}
+
+In the list, a tool reads like \emph{T3  Grooving tool  (groove, steel)}. A star after the name means that the tool differs from the tool of the same name in the library.
+
+\section{Tool types}\label{sec:tools:types}
+Every type has a form with the numbers of its shape. The form always starts with the \field{Number}, the \field{Name} and the \field{Material} of the cutting edge. The hand (right or left) mirrors the tool.
+
+\begin{description}
+\item[Turning tool] An insert tool for the outside. The fields are the \field{Nose radius}, the lengths and angles of the side edge and the front edge, and the width and length of the tool. The angle between the edges at the tip is shown as information.
+\item[Turning tool (ISO holder)] Made from the codes of a standard holder (for example \emph{PCLNR 2525 M12}) and a standard insert (for example \emph{CNMG 120408}). Choose or type the \field{Holder code} and the \field{Insert code}; the shape, style, section, length, insert size and corner radius are worked out and can be changed.
+\item[Boring bar] A tool for the inside. Like the turning tool, with the \field{Wall edge}, the \field{End edge}, the front width, the width of the bar and its length. The information shows the smallest bore this bar fits in.
+\item[Boring bar (ISO)] Made from the \field{Boring bar code} and the insert code, with the diameter and the length of the bar.
+\item[Grooving tool] A blade with a width, a reach, corner radii and a holder. It can work outside or, with \field{Inside}, in a bore. \field{Touch-off corner} says which corner of the blade is the zero point of the tool.
+\item[Threading tool] A tip with an \field{Included angle}, a lead angle, a tip radius and a flat, and the size of its body. It can work outside or inside.
+\item[Drill] The \field{Diameter}, the \field{Length} and the \field{Tip angle}.
+\end{description}
+
+\begin{notebox}
+For the ISO holders and bars, WOP draws the head of the holder as a plain envelope; the real head is not standardised. A few dimensions are guessed from the standard and are marked as such in the information under the picture. Compare the picture with your real tool before you trust the collision check for it.
+\end{notebox}
+
+\section{The shape of a tool}\label{sec:tools:shape}
+The shape comes from the numbers of the form, so changing a number redraws the tool. If the form is not enough, \button{Sketch editor...} opens the shape for drawing. After you change it there, the tool becomes a \emph{free shape}: it is no longer made from the numbers of its type, and the form shows only the name, number and material.
+
+In the sketch editor (Chapter~\ref{ch:contours}) the shape must be closed. The tool is drawn so that the tip, the point where you touch off, is the zero point. Two marks matter:
+\begin{itemize}
+  \item \textbf{Cutting edges} are drawn in orange. Only a cutting edge may touch material. Everything else of the tool must never touch it. A line becomes a cutting edge with the mark \emph{cutting edge} (Section~\ref{sec:sketch:marks}).
+  \item \textbf{Named points} are shown with their name.
+\end{itemize}
+
+\section{Named points}\label{sec:tools:points}
+A tool shape can carry names for points, such as the tip. They are drawn with their name in the sketch editor and are used for the touch-off point and the checks. The tools made from a form have their points already; you only need to think about them when you draw a tool by hand.
+
+\section{The tool library}\label{sec:tools:library}
+The tool library keeps tools you use again and again. Make a tool once in a project, press \button{Save to library}, and use \button{Add from library} in the next project.
+
+A project holds its own copy of its tools. WOP remembers which library tool a project tool came from. When you close the project, WOP compares: if a tool of the project differs from the library, or is not in it yet, it asks whether to update the library (Section~\ref{sec:file:questions}). The library you use is chosen under \menupath{Tools}{Library}.
+
+\section{Toolboxes}\label{sec:tools:toolboxes}
+A toolbox is a list of library tools with the numbers they have in the turret of your lathe. A new project starts with the tools of the \emph{default toolbox}. Without a default toolbox it starts with no tools.
+
+\begin{description}
+\item[In the Tools view] \button{Save as toolbox...} makes a toolbox of the tools of the project. The tools must be in the library first. If the tools came from a toolbox, you can update it or make a new one. \button{Make default} makes the toolbox of the project the default.
+\item[\menupath{Tools}{Edit toolboxes...}] The window has the list of the toolboxes on the left with \button{New}, \button{Rename}, \button{Delete} and \button{Make default}, and the tools of the chosen toolbox on the right with \button{Add tool} and \button{Remove tool}. You can set the number of each tool. The tools you add come from the library.
+\item[\menupath{Tools}{Use toolbox}] Puts a toolbox into the project (Chapter~\ref{ch:tools_menu}).
+\end{description}

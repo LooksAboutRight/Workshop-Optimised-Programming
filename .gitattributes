@@ -1,0 +1,15 @@
+# Text files use LF in the repository and in the working folder: the golden file,
+# the example project and the saved project files are compared byte for byte.
+* text=auto
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ngc text eol=lf
+*.txt text eol=lf
+*.tbl text eol=lf
+*.ini text eol=lf
+*.tex text eol=lf
+*.sh text eol=lf
+# DXF files are kept exactly as they are
+*.dxf -text

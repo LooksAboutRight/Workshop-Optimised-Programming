@@ -1,0 +1,24 @@
+\chapter{The Edit menu}\label{ch:edit}
+
+The \menu{Edit} menu has two entries.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l l Y@{}}
+\toprule
+\textbf{Entry} & \textbf{Keys} & \textbf{What it does} \\
+\midrule
+\menu{Undo} & \key{Ctrl}+\key{Z} & Takes back the last change. \\
+\menu{Redo} & \key{Ctrl}+\key{Y} or \key{Ctrl}+\key{Shift}+\key{Z} & Does again what Undo took back. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Undo}
+\menupath{Edit}{Undo} takes back your last change to the project: a value in a form, a block you added, moved or deleted, a change in the Setup. You can go back several steps.
+
+\section{Redo}
+\menupath{Edit}{Redo} puts back what Undo took away. After you make a new change, the steps that were undone cannot be redone any more.
+
+\begin{notebox}
+Undo works on the project. It does not bring back a project you did not save, and it does not change the libraries. The sketch editor has its own undo for the drawing (Chapter~\ref{ch:contours}).
+\end{notebox}

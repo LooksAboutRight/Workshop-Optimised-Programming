@@ -1,0 +1,217 @@
+\chapter{Contours and the sketch editor}\label{ch:contours}
+
+Many things in WOP are shapes: the finished outline of a part, the outline of a tool, the outline of jaws, the shape of a raw part, and the path of a tool. You draw all of them in the same place, the \emph{sketch editor}. This chapter explains how to work in it. It starts with contours, which are the shapes of parts, because they are the most common use.
+
+\section{Contours in the flow list}\label{sec:sketch:contours}
+
+A \emph{contour} is the outline of a part, drawn as a half section: X is the radius and goes up, Z is the length and goes to the right, and the spindle axis is a dash-dotted line. A block that works along a contour (turning along a contour, Section~\ref{sec:blocks:contour}) cuts the material away until the contour is left.
+
+A contour lives under the heading \menu{Contours} in the flow list. It is not a step of the program. Many blocks can use the same contour: a roughing block and a finishing block can both use the shape of the finished part.
+
+\subsection{Making a contour}
+Choose \button{Add block}, then \menu{Contour}. A new contour is made, and the sketch editor opens for it at once. Draw the outline and press \button{OK}. The contour is now in the list.
+
+\subsection{The form of a contour}
+Click a contour in the flow list. Its form has the name of the contour and the button \button{Sketch editor...}. The text under the name says \emph{The contour is fine}, or what is wrong with it. Give the contour a name that says what it is, for example \emph{stepped shaft}. A block chooses its contour by this name.
+
+\shot[0.5]{contour_form}{The form of a contour: its name and the button that opens the sketch editor.}
+
+\subsection{Rules for the contour of a part}
+The editor tells you under the drawing what is wrong. A contour of a part must be
+
+\begin{itemize}
+\item \textbf{one open chain} of lines and arcs that follow one another. If the outline is in several parts, join them, or turn the extra ones into construction lines (Section~\ref{sec:sketch:marks});
+\item \textbf{open}, not a closed loop. Close the shape with the spindle axis, not with a line;
+\item \textbf{above the spindle axis}: no point may have an X below zero;
+\item \textbf{free of crossings}: no piece may cross or touch another piece, except where two pieces join.
+\end{itemize}
+
+You may draw the contour from the front to the chuck or the other way round. WOP turns it so that it starts at its highest Z.
+
+\subsection{Deleting and copying}
+\button{Delete} removes the chosen contour. If blocks use it, WOP asks whether to delete these blocks too, or to keep them without a contour. A block without a contour is left out of the program until you give it one. A right click on a contour and \menu{Copy} makes a copy that you can change without changing the original.
+
+\section{The sketch editor window}\label{sec:sketch:window}
+
+The sketch editor opens in its own window. It opens
+
+\begin{itemize}
+\item from the button \button{Sketch editor...} in the form of a contour;
+\item by itself when you add a new contour;
+\item from the buttons in the tool view and the workholding view, to draw the shape of a tool or of jaws (Chapters~\ref{ch:tools} and~\ref{ch:workholding});
+\item from \button{Draw the raw part...} in the Setup (Section~\ref{sec:project:draw});
+\item from \button{Draw the path...} in a custom path block (Section~\ref{sec:blocks:path}).
+\end{itemize}
+
+There is no menu entry for it. The editor knows what it was opened for, and it checks the drawing against the rules of that use. The title of the window says what it is.
+
+\shot{sketch_editor}{The sketch editor with a contour. On the left the buttons in five sections, in the middle the drawing, under it the hint and the check of the outline.}
+
+\subsection{The parts of the window}
+\begin{description}
+\item[The buttons] on the left are square with a small picture. Hold the mouse over a button to see what it does (Figure~\ref{fig:sketch_hover_text}). They are in five sections: \emph{Draw}, \emph{Edit}, \emph{Constraints}, \emph{Mark} and \emph{General}.
+\item[The drawing] fills the middle. It shows a grid, the origin (a small ring) and the spindle axis. Use the mouse wheel to zoom, and drag with the middle mouse button to move the picture.
+\item[The hint] under the drawing says what to click next for the tool that is on.
+\item[The check] under the hint says \emph{The outline can be used}, or lists what is wrong. \button{OK} stays off until the list is empty.
+\item[The tray] on the right of the drawing lists the relations and dimensions (Section~\ref{sec:sketch:tray}). It starts folded; click its handle to open it.
+\end{description}
+
+\shot[0.7]{sketch_hover_text}{The hover text of a button.}
+
+\subsection{OK, Cancel and Undo}
+\button{OK} puts the drawing into the program. \button{Cancel} throws the changes of this visit away. The key \key{Esc} never closes the window: it ends what you are doing (a line you are drawing, a tool that is on) and goes back to selecting. Undo and redo of the editor work with \key{Ctrl}+\key{Z} and \key{Ctrl}+\key{Y}, and with the buttons in the section \emph{General}. They only concern this window; the main window has its own undo (Chapter~\ref{ch:edit}).
+
+\section{Drawing}\label{sec:sketch:draw}
+
+Choose a tool in the section \emph{Draw}. The tool stays on until you click its button again, press \key{Esc}, or choose another tool. Always read the hint under the drawing: it tells you the next click.
+
+\subsection{Lines}
+Click the start, then the end. The next line continues from the end of the last one, so you draw an outline in one go. A right click ends the line; \key{Esc} ends it and goes back to selecting. With \button{Snap} on (the default), a line that is nearly horizontal or vertical is made exactly so, and the points snap to existing points.
+
+\subsection{Circles and arcs}
+\begin{description}
+\item[Circle] Click the centre, then a point on the circle.
+\item[Arc (centre, start, end)] Click the centre, then the start, then the end of the arc. The end sets the direction.
+\item[Arc (start, end, point on arc)] Click the start, then the end, then a point the arc goes through.
+\end{description}
+
+\subsection{Points}
+The \emph{Point} tool puts a point where you click. A point on its own does not belong to the outline. You need it for a name (Section~\ref{sec:sketch:names}) or as a place to dimension to.
+
+\subsection{Snapping}
+The button \button{Snap} in the section \emph{General} turns snapping on and off. With snapping, a click near a point uses that point, so two lines that meet really share a point. This matters: lines that only look joined but do not share a point make an outline in two parts, and the check says so.
+
+\section{Selecting and moving}\label{sec:sketch:select}
+
+When no tool is on, you are selecting. Click a point or a piece to select it; it turns pink. Hold \key{Ctrl} to add to the selection or to take away from it. Drag on empty space to select with a box. \key{Delete} removes the selection and every piece that ends on a selected point.
+
+Drag a selected point or piece to move it. What happens depends on what is already fixed. A free point follows the mouse. A point that is tied by relations or dimensions moves only as far as they allow; if the mouse asks for more, the point follows a part of the way. If you drop a point on another point, the two become one.
+
+\section{Relations}\label{sec:sketch:relations}
+
+A \emph{relation} is a rule that you give to the drawing, for example \emph{this line is horizontal}. WOP keeps the rule when you move something else. Relations are what make a drawing stay the way you drew it. They are in the section \emph{Constraints}.
+
+Click the button of a relation. If the right things are selected, it acts on them at once. If not, the button stays pressed and you click the things it needs, as the hint says. Click the button again or press \key{Esc} to stop.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l l Y@{}}
+\toprule
+\textbf{Relation} & \textbf{Tag} & \textbf{What it does} \\
+\midrule
+\menu{Horizontal} & H & Two points, or the ends of a line, get the same X: the line runs along Z. The origin can be one of the two points. \\
+\menu{Vertical} & V & Two points, or the ends of a line, get the same Z: the line runs across Z. \\
+\menu{Parallel} & $\parallel$ & Two lines run in the same direction. \\
+\menu{Perpendicular} & T & Two lines meet at a right angle. \\
+\menu{Equal} & = & Two lines get the same length, or two arcs or circles the same radius. \\
+\menu{Tangent} & tan & A line and an arc, or two arcs, that meet at a point touch without a bend. \\
+\menu{Fix in place} & F & A point or a piece cannot move any more. \\
+\menu{Point on line / arc} & on & A point lies on a line or an arc. \\
+\menu{Midpoint} & mid & A point is in the middle of a line. \\
+\menu{Join points (coincident)} & & Two points become one. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The tags are small letters that the drawing shows next to the relation. You can hide them with the button \emph{Show the relations}. A relation that cannot hold is refused with a message, and nothing changes.
+
+\section{Dimensions}\label{sec:sketch:dimensions}
+
+A \emph{dimension} is a number that you give to the drawing: a length, a distance, a radius, an angle. The shape follows the number. A dimension is also a relation, but it has a value.
+
+\subsection{Placing a dimension}\label{sec:sketch:placing}
+Choose the \emph{Dimension} tool, the first button of the section \emph{Constraints}. Then
+
+\begin{itemize}
+\item click \textbf{a line} and then where the number should stand. Near the line it is the \emph{length}. To the side of the line it is the distance along X; above or below it, along Z;
+\item click \textbf{two points} (the origin too) and then where the number should stand: the \emph{distance} between them, in the same way;
+\item click \textbf{an arc} for its radius, or \textbf{a circle} for its diameter;
+\item click \textbf{two lines} for the \emph{angle} between them;
+\item click \textbf{a point or a line and a centre line} for a radius, or for a diameter (Section~\ref{sec:sketch:centre}).
+\end{itemize}
+
+The number is shown while you move the mouse. A click places it. The dimension is made, and the drawing moves to it.
+
+\subsection{Changing and moving a dimension}
+Double click a number, or choose the dimension in the tray and edit it there, to type another value. A point and a comma both work as the decimal point. A dimension that cannot be met together with the others is refused with a message, and the old value stays. You can drag the lines of a dimension with the mouse to move the number to a better place; this changes nothing in the shape.
+
+\shot{sketch_editor_tray}{The tray lists the relations and dimensions. A chosen entry is drawn in pink in the picture.}
+
+\subsection{The tray}\label{sec:sketch:tray}
+The tray is under the heading \emph{Relations and dimensions}. Each relation and each dimension is a line in it. Click a line to see what it acts on in the picture, and \button{Remove} to delete it. The line at the bottom of the tray says \emph{Fully defined}, or how many free movements are left (Section~\ref{sec:sketch:defined}).
+
+\subsection{Diameters in a project typed in diameters}
+If the X mode of the project is \emph{diameter} (Section~\ref{sec:project:xmode}), a dimension along X is shown and typed as a diameter, because a lathe worker thinks that way. The drawing itself stays in radii.
+
+\section{Fully defined or not}\label{sec:sketch:defined}
+
+In a sketch a piece is \textcolor{blue!60!black}{blue} while it can still move, and black (white with a dark theme) when it cannot move any more because relations and dimensions hold it. The text in the tray counts the movements that are left. You do not have to make every sketch fully defined. But you can: when the tray says \emph{Fully defined}, the sketch is exact and nothing can move by a slip of the mouse.
+
+\begin{tipbox}
+Dimension and constrain a sketch \emph{inside itself}: put relations and dimensions between its own parts (this line is as long as that, this point is as far from that point). Fix its position to the origin \emph{last}. Then you can change the position or the direction of the whole shape later with one change, and the shape itself stays as you made it.
+\end{tipbox}
+
+\section{Centre lines and diameters}\label{sec:sketch:centre}
+
+A \emph{centre line} is a helper line that dimensions are measured \emph{across}. In a drawing for a turning contour the spindle axis is a centre line that is always there; you do not draw it. Click a point or a line and then the spindle axis with the \emph{Dimension} tool: if you place the number between the thing and the axis (or beyond the thing), you get a \emph{radius}, the distance to the axis. If you place it across the axis, you get a \emph{diameter}, the distance to the mirror image of the point on the other side. The mirror image is made for you.
+
+You can turn any other line into a centre line with the button \emph{Centre line on / off} in the section \emph{Mark}. Use this for a shape that has its own axis, for example a hole.
+
+\section{Trim, mirror, fillet and chamfer}\label{sec:sketch:edit}
+
+The section \emph{Edit} changes pieces that are already there.
+
+\begin{description}
+\item[Trim] Click the part of a line or arc that you want to cut away. It is cut up to the next crossing or to the end. Hold the button and drag across several pieces to trim everything the mouse crosses.
+\item[Mirror] First select the pieces you want to mirror. Then click the \emph{Mirror} button and click the line to mirror about: any line, a construction line or centre line too, or the spindle axis. The mirrored copies are made and selected.
+\item[Fillet corner...] Rounds a corner with an arc. WOP asks for the radius when you press the button; every corner you click after that gets this radius. A corner is a point where exactly two lines or arcs meet. Fillets also work between a line and an arc and between two arcs.
+\item[Chamfer corner...] The same, but cuts the corner with a straight line, a given distance from the corner along each piece.
+\end{description}
+
+A fillet or a chamfer is one unit. The two pieces are shortened, the new arc or line is added, and the sharp corner stays as thin dashed lines (\emph{reference lines}). If you change the radius, or delete one part of the unit, the unit is undone and the sharp corner comes back.
+
+\section{Marks: construction lines, cutting edges and names}\label{sec:sketch:marks}
+
+The section \emph{Mark} says what a line or a point \emph{is}, without changing where it is.
+
+\begin{description}
+\item[Construction on / off] A \emph{construction line} (or arc) is a helper. It is drawn dashed, and it is not part of the outline. Use it to hold a dimension or to place a point. Select pieces and click the button to make them construction lines, or real again.
+\item[Centre line on / off] See Section~\ref{sec:sketch:centre}.
+\item[Cutting edge on / off] Only in the sketch of a tool: marks the pieces of the outline that cut (Chapter~\ref{ch:tools}).
+\item[Rapid move on / off] Only in the sketch of a custom path (Section~\ref{sec:blocks:path}).
+\end{description}
+
+\subsection{Named points}\label{sec:sketch:names}
+Some shapes need points with a special meaning. A named point has a ring and its name next to it. In the section \emph{Mark} there is one button for each kind of name that the shape you are drawing can use. The table shows the names. Select a point and click the button, or click the button and then the point. Click again to take the name away.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l l Y@{}}
+\toprule
+\textbf{Shape} & \textbf{Name} & \textbf{Meaning} \\
+\midrule
+Raw part & Clamping plane & Where the jaws begin (only its Z). Section~\ref{sec:project:draw}. \\
+Tool & Tip & The touch-off point of the tool. It has no button: WOP finds it from the shape unless you name it. Chapter~\ref{ch:tools}. \\
+Jaws & Mount, Step 1, Step 2 \ldots & Where the jaws meet the chuck face, and the steps where a part is gripped. Chapter~\ref{ch:workholding}. \\
+Chuck body & Face & The front face of the chuck. Chapter~\ref{ch:workholding}. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Importing a DXF drawing}\label{sec:sketch:dxf}
+
+If you have the shape as a drawing from a CAD program, the button \emph{Import DXF} in the section \emph{General} loads it. It replaces what is in the sketch, and WOP asks first if there is something in it.
+
+For a contour of a part WOP asks \emph{How does the part lie in the drawing?}: with the spindle axis horizontal (drawing X is Z, drawing Y is the radius), or vertical (drawing Y is Z, drawing X is the radius). For tool and workholding shapes, the drawing is taken as it is, with the spindle axis horizontal; nothing is moved, turned or mirrored, and the origin of the drawing stays the origin. A \emph{point} with a \emph{text} next to it in the drawing becomes a named point.
+
+WOP reads lines, arcs and polylines (a polyline is split into its lines and arcs). It does not read circles, ellipses, splines or dimensions of the drawing. After the import, a message tells you what was taken and what was left out. The imported shape is a normal sketch: you can dimension it and change it.
+
+\section{Locked things}\label{sec:sketch:locked}
+
+In some sketches parts of the drawing are \textcolor{green!45!black}{green}. They come from the program, not from you: the safe point and the part before a block in the sketch of a custom path. You can pick them and dimension to them, but you cannot move, change or delete them. WOP tells you so if you try. Section~\ref{sec:blocks:path} explains how to use them.
+
+\section{What the editor does not do}\label{sec:sketch:limits}
+
+\begin{itemize}
+\item It cannot offset a contour (make a parallel copy at a distance) or turn a whole shape by an angle. Draw the line you need, or select everything and move it.
+\item It does not read circles, ellipses and splines from a DXF file.
+\item A dimension that only shows a size and does not drive the shape (a \emph{reference dimension}) does not exist yet.
+\end{itemize}

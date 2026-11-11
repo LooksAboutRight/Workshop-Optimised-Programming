@@ -1,0 +1,40 @@
+\chapter{The Tools menu}\label{ch:tools_menu}
+
+The \menu{Tools} menu is the way to your tools. What a tool is, and how its form works, is in Chapter~\ref{ch:tools}.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y@{}}
+\toprule
+\textbf{Entry} & \textbf{What it does} \\
+\midrule
+\menu{Show tools} & Shows the list of the tools of the project in the middle of the window. \\
+\menu{Add tool} & Adds a tool of the type you choose. \\
+\menu{Use toolbox} & Puts a toolbox into the project. \\
+\menu{Edit toolboxes...} & Opens the window to make and change toolboxes. \\
+\menu{Library} & Chooses and manages the tool library. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Show tools}
+\menupath{Tools}{Show tools} replaces the picture in the middle by the \emph{Tools view}. It has the list of the tools of the project, a picture of the chosen tool, and the buttons to add, delete and draw tools. The form of the chosen tool is on the right. To get the picture of the program back, choose a block in the flow list.
+
+\section{Add tool}
+\menupath{Tools}{Add tool} lists the types of tool: turning tool, turning tool (ISO holder), boring bar, boring bar (ISO), grooving tool, threading tool and drill. A new tool of the chosen type gets the next free number and standard values. The same list is on the button \button{Add tool} of the Tools view.
+
+\section{Use toolbox and Edit toolboxes}
+A \emph{toolbox} is a set of tools from the library with the numbers they have in the project, for example the tools that sit in the turret of your lathe. \menupath{Tools}{Use toolbox} lists the toolboxes of the library; the default one is marked \emph{(default)}. If a toolbox would change the tool of a block, WOP lists those blocks and asks before it goes on. A toolbox replaces all tools of the project.
+
+\menupath{Tools}{Edit toolboxes...} opens the window of the toolboxes (Section~\ref{sec:tools:toolboxes}).
+
+\section{Library}\label{sec:tools_menu:library}
+The \menu{Library} submenu is the same for tools, workholding and materials. It chooses which library is in use, and it manages the libraries:
+\begin{itemize}
+  \item The list of libraries. The one in use has a check mark. Click another one to use it.
+  \item \menu{New library...} makes an empty library.
+  \item \menu{Save as library...} saves the one in use under a new name.
+  \item \menu{Import library file...} copies a library file of somebody else into your libraries.
+  \item \menu{Open library folder} shows the folder in Windows.
+  \item \menu{Rename this library...} and \menu{Delete this library...}. Both are off for the library \emph{Example}, which is always there. When you delete a library, its file is removed and the Example is used instead.
+\end{itemize}
+A library holds the tools you may want in many projects. A project keeps its own copy of the tools it uses, so changing a library never changes a finished project.

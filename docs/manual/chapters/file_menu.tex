@@ -1,0 +1,148 @@
+\chapter{The File menu}\label{ch:file}
+
+The \menu{File} menu is where a project starts and ends. It opens and saves projects, writes the G-code, and gives you the dialogs for machines, postprocessors and preferences. This chapter goes through the entries from the top down.
+
+\shot[0.32]{menu_file}{The \menu{File} menu.}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l l Y@{}}
+\toprule
+\textbf{Entry} & \textbf{Keys} & \textbf{What it does} \\
+\midrule
+\menu{New} & \key{Ctrl}+\key{N} & Starts a new project. \\
+\menu{Open...} & \key{Ctrl}+\key{O} & Opens a project from a file. \\
+\menu{Save} & \key{Ctrl}+\key{S} & Saves the project. \\
+\menu{Save as...} & \key{Ctrl}+\key{Shift}+\key{S} & Saves the project under a new name. \\
+\menu{Export G-code...} & \key{Ctrl}+\key{E} & Writes the G-code of the whole program. \\
+\menu{Export selected blocks...} & & Writes the G-code of the blocks you ticked. \\
+\menu{Machines...} & & Opens the list of machines. \\
+\menu{Postprocessors...} & & Opens the postprocessor editor. \\
+\menu{Preferences...} & & Opens the settings that apply to every project. \\
+\menu{Quit} & \key{Ctrl}+\key{Q} & Closes WOP. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Projects}\label{sec:file:projects}
+
+A \emph{project} is one job: the part, the program for it and what it needs. WOP works on one project at a time. A project is kept in one file whose name ends in \file{.wop.json}. The file holds the project settings, the raw part, the blocks, the contours, and the tools and workholding the project uses. The libraries (all your tools, workholding and materials) are kept apart from the project, because they belong to you and not to one job.
+
+\subsection{New}
+\menupath{File}{New} starts an empty project. It begins with the values you set in the Preferences (Section~\ref{sec:file:preferences}): the material, the size of the raw part and the safe distances. If the project you are working on has unsaved changes, WOP asks first (Section~\ref{sec:file:questions}).
+
+\subsection{Open}
+\menupath{File}{Open...} shows the file dialog of Windows. It lists project files, that is files that end in \file{.wop.json} or \file{.json}. The dialog starts in the folder of the last file you opened or saved, so you do not have to look for your folder every time. If a file cannot be read, WOP says why and keeps the project you had.
+
+\subsection{Save and Save as}
+\menupath{File}{Save} writes the project to its file. A project that has no file yet asks for a name first, the same as \menupath{File}{Save as...}. \menu{Save as} always asks for a name and suggests \file{project.wop.json} in the folder of your last file. After \menu{Save as}, the new file is the file of the project.
+
+\begin{tipbox}
+Save often. \menupath{Edit}{Undo} can take back your last changes, but it cannot bring back a project that was never saved.
+\end{tipbox}
+
+\subsection{Questions before something is lost}\label{sec:file:questions}
+\menu{New}, \menu{Open...} and \menu{Quit} all end the project you are working on. WOP makes sure you do not lose anything:
+\begin{enumerate}
+  \item If the project has unsaved changes, it asks \emph{``Save the changes first?''} The answers are \button{Save}, \button{Discard} and \button{Cancel}. \button{Cancel} stops what you started, and nothing is changed.
+  \item If tools of the project differ from your tool library, or are not in it yet, it asks whether to update the library. It lists the tools and offers \button{Update the library}, \button{Leave the library as it is} and \button{Cancel}. Choose \button{Update the library} when you changed a tool on purpose and want the better version in all your future projects.
+\end{enumerate}
+
+\section{Exporting G-code}\label{sec:file:export}
+
+A G-code program only helps when it is written the way you want it and can be trusted. So before WOP writes a file, it checks the program and asks when it found something. WOP follows one rule here: \emph{the G-code is written as drawn}. It never shortens or skips a path because the tool might not reach; if the picture shows a problem, the G-code will do it too. That is why you are asked.
+
+Open the menu with a click on \menu{File} and choose the entry (Figure~\ref{fig:file_menu_in_window}).
+
+\shot[0.55]{file_menu_in_window}{Choosing \menupath{File}{Export G-code...}. The red frame marks the menu, the pointer the entry.}
+
+\subsection{Export G-code}
+\menupath{File}{Export G-code...} writes the whole program. It goes in these steps:
+
+\begin{enumerate}
+  \item \textbf{The checks.} WOP looks for collisions and works out the power the cuts need. The checks run by themselves after every change, and the export makes sure they are done. Then it looks at what they found:
+  \begin{itemize}
+    \item Nothing was found: WOP goes straight on to the next step.
+    \item Problems were found: a window lists them (Figure~\ref{fig:export_found}). \button{Export anyway} writes the G-code as it is drawn. \button{Cancel} goes back to the program so you can correct it.
+  \end{itemize}
+  \item \textbf{What the controller cannot do.} The postprocessor of your machine may lack something a block needs, for example a dwell. Then a window titled \emph{``The controller cannot do everything''} lists each case with a way out and a check box. Tick the ways out you accept. A block that has no accepted way out is left out of the G-code, and the list says so.
+  \item \textbf{The file.} A file dialog suggests a name: the title of the project if you gave one in the Setup, else the name of the project file, with the extension of the postprocessor (\file{.ngc} for LinuxCNC). The dialog starts in the folder of your last export. The file is a plain text file.
+\end{enumerate}
+
+\shot[0.62]{export_found}{The checks found problems. The G-code is written as drawn, so the tool would really do this. Blocks that are left out are listed in the same window.}
+
+When the file is written, the message line at the bottom of the window says which file was written and with which postprocessor. If blocks were left out, the message adds \emph{``INCOMPLETE''}, and the program itself starts with the comment \emph{``INCOMPLETE - DO NOT RUN''} followed by the reason. Read that line before you take the file to the machine.
+
+\begin{warningbox}
+WOP checks collisions and power with the models it has of your tools, workholding and material. It cannot know everything about your machine. Look at the picture, look at the G-code, and make an air cut before the first real cut of a new program.
+\end{warningbox}
+
+\subsection{Export selected blocks}\label{sec:file:selected}
+Sometimes you want the G-code of a few blocks only, for example to try one cut or to run the facing first. In the flow list on the left, every block has a tick box. Tick the blocks you want, or use \field{Tick all blocks for export} above the list. Then choose \menupath{File}{Export selected blocks...}. If no block is ticked, WOP only says \emph{``Tick at least one block first.''}
+
+\shot{export_selected}{Export selected blocks. On the left the picture and the notes, on the right the G-code that will be written.}
+
+The window shows what you will get before you save it (Figure~\ref{fig:export_selected}):
+\begin{itemize}
+  \item At the top you say how the blocks you did \emph{not} tick count: \button{done} means their material is gone (they were run before), \button{not done} means their material is still there. This decides how the ticked blocks are drawn and what is checked, and the G-code starts with a comment that tells which blocks it holds.
+  \item The picture on the left shows the paths of the ticked blocks on the part. Under it, the notes list problems and remarks.
+  \item The G-code on the right is the text that will be written.
+  \item \button{Save G-code...} asks for the file name as described above. \button{Close} closes the window without saving.
+\end{itemize}
+
+\section{Machines, postprocessors and settings}
+
+\subsection{Machines}
+\menupath{File}{Machines...} opens the list of your machines (Figure~\ref{fig:machines}). A machine holds what belongs to one lathe: its postprocessor, the usual position for changing tools, and its limits. The project uses one machine, which you choose in the Setup of the project. The project keeps its own copy of it, so the project still works on a computer that does not have the machine in its list.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l Y@{}}
+\toprule
+\textbf{Button} & \textbf{What it does} \\
+\midrule
+\button{New} & Adds a new machine to the list. \\
+\button{Import...} & Reads a machine from a file into the list. \\
+\button{Export...} & Writes the chosen machine to a file, for example to give it to someone. \\
+\button{Delete} & Takes the chosen machine out of the list. A project that uses it keeps its own copy. \\
+\button{Make default} & New projects start with this machine. \\
+\button{Use in project} & The open project gets a copy of this machine. \\
+\button{Add project's machine} & Puts the copy of the machine that is kept in the open project into your list. This is for a project that you opened on another computer, where the machine is not in the list. \\
+\button{Close} & Closes the dialog. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The settings of a machine are described in Chapter~\ref{ch:machines}.
+
+\subsection{Postprocessors}
+A \emph{postprocessor} (``post'') turns the program into the G-code of one kind of controller. \menupath{File}{Postprocessors...} opens the editor for posts (Figure~\ref{fig:post_editor}). WOP comes with the post for LinuxCNC. Posts are text files, and a new controller is a new file, not a new program. In the folder \file{examples/posts} there are reference posts for other controllers that you can import and change (Chapter~\ref{ch:posts}).
+
+At the top of the window you choose the post and manage the files with \button{New}, \button{Save}, \button{Save as copy...}, \button{Import...}, \button{Delete} and \button{Folder}. The posts that come with WOP cannot be changed. Use \button{Save as copy...} to make your own version, and change that.
+
+\begin{warningbox}
+Every post, the ones that come with WOP too, can crash a machine. Check what a post writes before you run it on a machine. The editor says the same at the bottom of its window.
+\end{warningbox}
+
+The pages and settings of a post are described in Chapter~\ref{ch:posts}.
+
+\subsection{Preferences}\label{sec:file:preferences}
+\menupath{File}{Preferences...} lists the values that WOP uses when you start something new (Figure~\ref{fig:preferences}): the material and size of the raw part of a new project, the safe distances, the feed, depth of cut and allowance of a new block, and values used for the tool paths. For each value the dialog shows what it means and, in grey below it, the name of the value and what is allowed. A value that has a list of choices, such as the material, is a dropdown: click it, then click the entry you want (Figure~\ref{fig:preferences_dropdown}).
+
+\shot[0.95]{preferences_dropdown}{A dropdown in the preferences. Click the value (1) and the list opens; click the entry you want.}
+
+\shot[0.8]{preferences}{The preferences. The sections are \emph{New project}, \emph{New blocks}, \emph{Tool paths} and more below.}
+
+\begin{itemize}
+  \item A value you have not changed is shown in a lighter colour. Once you change it, the text becomes normal.
+  \item \button{Reset} next to a value puts back the value WOP comes with.
+  \item \button{Fixed values...} shows the values that cannot be changed here, such as tables from standards, as text.
+  \item Changes are saved at once, but they apply \emph{after you restart WOP}. WOP does not restart by itself, so save your project first.
+\end{itemize}
+
+The preferences belong to you and to this computer, not to a project. A project you send to someone else does not carry them.
+
+\section{The sketch editor}
+There is no entry for the sketch editor in the \menu{File} menu. It opens from the button \button{Sketch editor...} of a contour, of a tool and of a workholding item, and by itself when you add a contour (Figure~\ref{fig:sketch_editor}). It edits that contour or shape, and \button{OK} stores the result in the project. You can draw lines, arcs and circles, add relations and dimensions, and import a DXF drawing. The buttons have a pictogram and no text. Rest the mouse pointer on a button for a moment and its name appears next to it (Figure~\ref{fig:sketch_hover_text}). How to draw and dimension is explained in Chapter~\ref{ch:contours}.
+
+
+\section{Quit}
+\menupath{File}{Quit} closes WOP. It asks the same two questions as \menu{New} and \menu{Open...} (Section~\ref{sec:file:questions}), so you never lose a change by accident. When WOP closes, it remembers the place and size of the window and the width of the panels, and opens the same way next time. Every dialog (machines, postprocessors, toolboxes, preferences and the others) also opens with the size and place it had when you closed it.

@@ -1,0 +1,418 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "WOP program",
+    "x_mode": "DIAMETER"
+  },
+  "raw_part": {
+    "material": "Mild steel",
+    "outer_diameter_mm": 30,
+    "length_outside_mm": 60,
+    "inner_diameter_mm": 0,
+    "length_mm": null,
+    "front_z_mm": 0
+  },
+  "safety": {
+    "safe_radius_mm": 25,
+    "safe_z_mm": 10,
+    "clearance_mm": 1,
+    "change_radius_mm": null,
+    "change_z_mm": null
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "Outside tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              8,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              8,
+              0
+            ],
+            "end": [
+              8,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              8,
+              12
+            ],
+            "end": [
+              0,
+              12
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              12
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "turning",
+      "definition": {
+        "number": 1,
+        "name": "Outside tool",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 0,
+        "side_edge_length_mm": 8,
+        "side_edge_angle_deg": 90,
+        "front_edge_angle_deg": 90,
+        "width_mm": 12,
+        "length_mm": 8
+      }
+    },
+    {
+      "format": 1,
+      "number": 2,
+      "name": "Boring bar",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              -8,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -8,
+              0
+            ],
+            "end": [
+              -8,
+              12
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              -8,
+              12
+            ],
+            "end": [
+              0,
+              12
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              12
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "boring",
+      "definition": {
+        "number": 2,
+        "name": "Boring bar",
+        "material": "CARBIDE",
+        "nose_radius_mm": 0,
+        "wall_edge_length_mm": 12,
+        "wall_edge_angle_deg": 90,
+        "end_edge_angle_deg": 90,
+        "front_width_mm": 8,
+        "bar_width_mm": 8,
+        "length_mm": 12
+      }
+    },
+    {
+      "format": 1,
+      "number": 3,
+      "name": "6x30 drill",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              3.0,
+              1.8025818570826808
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              3.0,
+              1.8025818570826808
+            ],
+            "end": [
+              3.0,
+              60.0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              3.0,
+              60.0
+            ],
+            "end": [
+              3.0,
+              90.0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              3.0,
+              90.0
+            ],
+            "end": [
+              0,
+              90.0
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              90.0
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE"
+    },
+    {
+      "format": 1,
+      "number": 4,
+      "name": "10x90  drill",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              0
+            ],
+            "end": [
+              5.0,
+              3.0043030951378014
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              5.0,
+              3.0043030951378014
+            ],
+            "end": [
+              5.0,
+              90.0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              5.0,
+              90.0
+            ],
+            "end": [
+              5.0,
+              120.0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              5.0,
+              120.0
+            ],
+            "end": [
+              0,
+              120.0
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0,
+              120.0
+            ],
+            "end": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "material": "HSS",
+      "kind": "drill",
+      "definition": {
+        "number": 4,
+        "name": "10x90  drill",
+        "material": "HSS",
+        "diameter_mm": 10.0,
+        "length_mm": 90.0,
+        "tip_angle_deg": 118
+      }
+    }
+  ],
+  "contours": [],
+  "blocks": [
+    {
+      "type": "drilling",
+      "parameters": {
+        "block_id": "b1",
+        "tool_number": 4,
+        "spindle": {
+          "mode": "CONSTANT_RPM",
+          "value": 1000,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Drill",
+        "comment": "",
+        "start_z_mm": 0,
+        "depth_mm": 10.0,
+        "feed_mm_per_rev": 0.1,
+        "peck_depth_mm": 5
+      }
+    },
+    {
+      "type": "drilling",
+      "parameters": {
+        "block_id": "b2",
+        "tool_number": 3,
+        "spindle": {
+          "mode": "CONSTANT_RPM",
+          "value": 1000,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Drill",
+        "comment": "",
+        "start_z_mm": 0,
+        "depth_mm": 20.0,
+        "feed_mm_per_rev": 0.1,
+        "peck_depth_mm": 5
+      }
+    }
+  ],
+  "machine": {
+    "format": 1,
+    "name": "schaublin_125",
+    "unit_system": "metric",
+    "default_x_mode": "diameter",
+    "axes": [
+      {
+        "name": "X",
+        "min_mm": -81.0,
+        "max_mm": 104.0
+      },
+      {
+        "name": "Z",
+        "min_mm": -400.0,
+        "max_mm": 0.1
+      }
+    ],
+    "min_rpm": 60.0,
+    "max_rpm": 3000.0,
+    "spindle_power_kw": 2.5,
+    "max_velocity_x_mm_min": 3000.0,
+    "max_velocity_z_mm_min": 3000.0,
+    "capabilities": [
+      "constant surface speed",
+      "spindle-synchronised moves"
+    ],
+    "capabilities_off": []
+  },
+  "touched": [
+    "block:b1/depth_mm",
+    "block:b1/tool_number",
+    "block:b2/depth_mm",
+    "block:b2/tool_number"
+  ]
+}

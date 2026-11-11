@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# compiled modules (tools/build_compiled.py): built on each PC, never in the repository
+*.pyd
+*.so
+/wop_compiled.stamp.json
+
+# virtual environments
+.venv/
+venv/
+env/
+
+# editors and operating systems
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# output of the tools (regenerate with tools/wop_run.py)
+wop_output/
+
+# temporary and backup files made by the app
+*.tmp
+*.wop-backup-*
+*.bak
+
+# machine files with your own settings: keep local copies out of the repository
+# (examples/*.machine.json is an example and stays tracked)
+/*.machine.json
+/*.wop.json
+user_data/
+
+# pictures made by tools/make_screenshots.py
+/screenshots/
+
+# the times of the test modules in the last run (tools/run_tests.py)
+/.test_times.json
+/wop_selftest.txt

@@ -1,0 +1,75 @@
+\chapter{Postprocessors}\label{ch:posts}
+
+\begin{warningbox}
+Every postprocessor can crash a machine, the ones that come with WOP too. None of them was run on every controller. Read the G-code, and cut in air first, before you run a new postprocessor on a part.
+\end{warningbox}
+
+\section{What a postprocessor does}
+WOP plans the paths in its own form: moves, spindle, coolant, tool changes. A \emph{postprocessor} (post) turns them into the G-code of your controller. It decides how a rapid move is written, whether X is a diameter, how a thread or a drill cycle looks, what the first lines say, and so on.
+
+A post is a text file that ends in \file{.post.ini}. You do not need a programmer to change it. You change it in the postprocessor editor, which shows what the G-code will look like while you edit.
+
+One post comes with WOP: the post for \textbf{LinuxCNC}. It writes X as diameter, feed per revolution, constant surface speed, the thread cycle and the drill cycles of LinuxCNC, and cutter compensation (G41, G42, G40) for a finishing pass that asks for it. It was tried on one lathe.
+
+Inside the program there is also a plain default post (plain G0, G1, G2, G3 and a few M codes, feed in mm/min, no cycles). It is not in the lists. A post that does not have a page of its own for something uses the page of this default post.
+
+The folder \file{examples/posts} holds reference posts to import with \button{Import...}: a Fanuc style post, a plain G-code post, and the LinuxCNC post with a custom machine function (a bar feeder) that shows how a custom function is written. The Fanuc and the plain post are written from a rough understanding of these controllers and are \emph{not tried} on any machine. Use them as a start for your own post.
+
+The machine says which post is used (Chapter~\ref{ch:machines}).
+
+\section{The editor}\label{sec:posts:editor}
+Open it with \menupath{File}{Postprocessors...} (Figure~\ref{fig:post_editor}).
+
+\shot[0.9]{post_editor}{The postprocessor editor.}
+
+On top is the list of the posts and the buttons:
+\begin{description}
+\item[\button{New}] Makes a new post.
+\item[\button{Save}] Saves your changes.
+\item[\button{Save as copy...}] Saves under a new name. The posts that come with WOP cannot be changed; make a copy and change that.
+\item[\button{Import...}] Copies a post file of somebody else into your posts.
+\item[\button{Delete}] Removes one of your posts.
+\item[\button{Folder}] Shows the folder of your posts in Windows.
+\item[\field{Sample X}] Whether the sample on the pages shows X as diameter or radius.
+\end{description}
+The title of the window gets a star when there are unsaved changes.
+
+\section{The pages of a post}\label{sec:posts:pages}
+The pages are on the left. They are in this order.
+
+\begin{description}
+\item[Post] The name and the description of the post, and the name of its file. A note says whether the whole file reads without a problem.
+\item[Settings] Numbers and switches: the number of decimals, line numbers, whether X is a diameter, whether arcs can be written while X is a diameter, how a thread and a drill are written (as cycle, in two blocks, or as plain passes), cutter compensation, the characters a comment may not hold, and the file extension. Hover over a name to see what it means.
+\item[Code table] The G and M codes of the controller, by name. WOP uses the names; you set the codes. A code that is empty means the controller has no such function, so WOP does not write it. The section \emph{Work offsets} is the list of work offsets of the controller (G54, G55 \ldots) that the Setup offers; add the ones your controller has. You can add codes of your own.
+\item[Modal groups] Which codes cancel each other (for example G0, G1, G2 and G3 are one group). WOP uses the groups to leave out a code that is still valid from the line before. List the codes of the code table here; a code of the table that is in no group is named on the Code table page. You can add groups of your own.
+\item[The concepts] After these four pages comes one page for each thing the post writes: the header and the footer, comments, the start of a block, rapid, feed, arcs, the thread cycle, the drill cycles, a dwell, stops, the tool change, the spindle, coolant, and more. A page has one \emph{template}. Pages that the post does not have of its own show a note: the post uses the default post for this. Tick the box to make it the post's own; it starts as a copy.
+\end{description}
+
+\subsection{Writing a template}
+A template is the line or lines that the post writes for this thing. It is a text with \emph{tokens} between angle brackets. A token is replaced by a value: a code, a coordinate, a feed. For example:
+\begin{center}\texttt{[<comp code> ]<code feed changed>[ X<X changed>][ Z<Z changed>][ F<F changed>]}\end{center}
+is the template of a feed move in the LinuxCNC post. It writes \texttt{G1 X20 Z-5 F0.15}, and leaves out each value that did not change. What the pieces mean:
+\begin{itemize}
+  \item \texttt{<code feed>} is the code with the name \emph{feed} from the code table; \texttt{<X>} is the X coordinate. A token can have modifiers; \texttt{changed} writes it only when it differs from the line before.
+  \item Square brackets make a part \emph{optional}. If the token inside has nothing to write, the whole part (including the space before the X) is left out.
+\end{itemize}
+Below the template, the page shows the same template written twice: with every optional part present and everything changed, and with nothing changed and every optional part gone. Look at both. A problem in the template is written in red.
+
+Under the template is the list of tokens that work on this page. Double click a token, or click it, to put it into the template. \button{All tokens...} lists all of them.
+
+\section{Making your own post}\label{sec:posts:own}
+\begin{enumerate}
+  \item In the editor, choose the post that is nearest to your controller and press \button{Save as copy...}. Give it a name.
+  \item Go through the \emph{Settings} and the \emph{Code table}. Most differences between controllers are here.
+  \item Go through the concept pages that matter: the tool change, the spindle and the cycles are the usual ones. Tick \emph{own} on a page only when you need to change it.
+  \item Press \button{Save}. In \menupath{File}{Machines...}, choose the post in the machine.
+\end{enumerate}
+A post of your own is kept in the \file{posts} folder of the user folder (Chapter~\ref{ch:app_files}). You can copy the file to another PC.
+
+\section{Checking what a post writes}\label{sec:posts:check}
+Do this every time you make or change a post, before the machine runs it:
+\begin{enumerate}
+  \item Export the G-code of a small project that uses the things you changed (Section~\ref{sec:file:export}).
+  \item Open the file in a text editor. Read it from the top. Check the first lines (units, plane, absolute or incremental), the tool change, the spindle start, one rapid move and one feed move.
+  \item Run it on the machine without the part and without the tool, or at a safe height, with your hand on the stop.
+\end{enumerate}
