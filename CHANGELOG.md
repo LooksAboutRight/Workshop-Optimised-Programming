@@ -22,6 +22,8 @@ At a release, `Unreleased` becomes the new version heading with its date.
 - The 2D picture again holds all tool paths, also the moves to the tool change position, but still opens zoomed to the part: zoom out (mouse wheel) to see everything, double click to come back.
 - Posts you made or copied before this change do not follow the new inch output. On an imperial machine they still write `G21` in the header (their setup uses `<code units_mm>`) while the numbers are in inches, so they must be updated: add `units_inch = G20` to `[codes]`, `G20` to the `units` group of `[modal_groups]`, and replace `<code units_mm>` with `<units code>` in the setup. Metric machines are not affected.
 ### Fixed
+- Turning: a start chamfer or fillet now works on the edge of the part also when the target X is the diameter of the bar or more; before, the block refused with "the material is already at or beyond the target radius".
+- Turning (simple and along a contour): when the contour ends just inside the material (a shoulder lower than the nose radius of the tool), the finishing pass no longer ends with a move back into the material.
 - A machine with a tool change position in machine coordinates (G53) now gets the move before every tool change, also when the previous block ended at that position.
 ### Removed
 

@@ -213,6 +213,8 @@ Rules for this list:
 | X10 | Roughing lines follow the contour; no cut deeper than the depth of cut | Tests on the bump and pocket project. | Done |
 | X11 | The back of the tool keeps its free angle from a pocket wall | No move has the back closer to the wall than the free angle. | Partly: the old planner (other blocks, inside, left-hand tools) still enters along the wall |
 | X12 | Rapids keep one clearance from the standing material | `tests/test_analytic_replay.py` | Partly: blocks on the old planner are not checked |
+| X17 | A start corner cuts the edge of a bar also when the target is the bar diameter or more | `tests/test_turning_edge_only.py` | Done, not tried |
+| X18 | A finishing pass past a wall lower than the nose radius ends away from the part | `tests/test_turning_edge_only.py` | Done, not tried |
 | X15 | Simple turning starts where the material of the block begins | `tests/test_turning_start_z.py` | Done, not tried |
 
 ## Preview

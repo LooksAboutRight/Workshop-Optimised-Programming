@@ -136,6 +136,10 @@ class TurningBlock(Block):
         except ContourError as error:
             raise BlockError(f"turning outline: {error}") from error
 
+    def _rounds_the_front(self) -> bool:
+        """The block has a chamfer or a fillet at its start: it cuts the edge of the part even when the target is the diameter of the stock or more."""
+        return self.start_corner.kind is not SHARP_CORNER.kind and self.start_corner.size_mm > GEOMETRY_TOLERANCE_MM
+
     def material_start(self, residual: Region, sign: int, max_z: float) -> float | None:
         """The highest Z where material stands beyond the finished outline (outside it, or inside it for a bore), between the front and the
         end Z: where the material of this block begins. None when no material stands beyond it."""
@@ -148,7 +152,7 @@ class TurningBlock(Block):
         ])
         beyond = residual.intersection(cone)
         if beyond.area <= GEOMETRY_TOLERANCE_MM:
-            return None
+            return max_z if self._rounds_the_front() else None  # no material beyond the straight outline, but a start corner may still cut the edge
         return beyond.bounds.max_z
 
     def start_z(self, residual: Region, sign: int) -> float | None:
@@ -213,12 +217,16 @@ class TurningBlock(Block):
             return BlockResult(empty.operations, empty.removed, ("turning: no material left",))
         stock_radius = bounds.max_x if sign > 0 else inside_stock_radius(residual, self.end_z_mm, bounds.max_z)
         nearest = min(sign * self.radius_at(bounds.max_z), sign * self.radius_at(self.end_z_mm)) * sign  # the finished radius nearest the stock
-        if sign * (stock_radius - nearest) <= GEOMETRY_TOLERANCE_MM:
-            note = "turning: the material is already at or beyond the target radius"
+        beyond_the_target = sign * (stock_radius - nearest) <= GEOMETRY_TOLERANCE_MM
+        note = "turning: the material is already at or beyond the target radius"
+        if beyond_the_target and not self._rounds_the_front():
             return BlockResult(empty.operations, empty.removed, (note,))
 
         start_z = bounds.max_z  # the cut starts at the front face of the material
         if self.end_z_mm >= start_z - GEOMETRY_TOLERANCE_MM:
             note = "turning: the end position is not behind the front face of the material"
             return BlockResult(empty.operations, empty.removed, (note,))
-        return self._from_start(context, stock_radius, sign, empty)
+        result = self._from_start(context, stock_radius, sign, empty)
+        if beyond_the_target and result.removed.is_empty:  # a start corner that takes nothing off: the target is beyond the material
+            return BlockResult(empty.operations, empty.removed, (note,))
+        return result

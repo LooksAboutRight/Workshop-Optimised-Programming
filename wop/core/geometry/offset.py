@@ -110,15 +110,16 @@ def _with_start(segment: Segment, start: Point) -> Segment:
     return ArcSegment(start, segment.end, segment.center, segment.direction)
 
 
-def _join(first: _Piece, second: _Piece) -> list[Segment]:
-    """Make the end of `first` meet the start of `second` (may cut both back); returns what must be put between them."""
+def _join(first: _Piece, second: _Piece, bridged: bool = False) -> list[Segment]:
+    """Make the end of `first` meet the start of `second` (may cut both back); returns what must be put between them. `bridged`: a piece
+    between them was left out, they have no corner of their own: no round join, where they do not cross a straight line joins them."""
     end, start = first.segment.end, second.segment.start
     if end.is_close(start):
         return []
     corner = first.original.end
     gap_x, gap_z = start.x - end.x, start.z - end.z
     tx, tz = tangent_at_end(first.original)  # the moved piece runs the same way; it may be cut back to nothing by the corner before
-    if gap_x * tx + gap_z * tz > 0:  # the outer side of a turn: a round join around the old corner
+    if not bridged and gap_x * tx + gap_z * tz > 0:  # the outer side of a turn: a round join around the old corner
         bx, bz = tangent_at_start(second.original)
         ax, az = tangent_at_end(first.original)
         direction = ArcDirection.CCW if ax * bz - az * bx > 0 else ArcDirection.CW
@@ -132,10 +133,21 @@ def _join(first: _Piece, second: _Piece) -> list[Segment]:
     return [LineSegment(end, start)]
 
 
+def _reversed(piece: _Piece) -> bool:
+    """True when the joins cut the moved piece back past its own start: it runs against the piece it comes from (or is nothing), so it is
+    not part of the offset curve (a wall shorter than the distance it is moved: the curve of its neighbours meets before it)."""
+    moved, original = piece.segment, piece.original
+    if isinstance(moved, LineSegment):
+        tx, tz = tangent_at_start(original)
+        return (moved.end.x - moved.start.x) * tx + (moved.end.z - moved.start.z) * tz <= GEOMETRY_TOLERANCE_MM
+    return moved.sweep > original.sweep + GEOMETRY_TOLERANCE_MM or moved.length <= GEOMETRY_TOLERANCE_MM
+
+
 def offset_segments(
     tagged: list[tuple[int, Segment]], distance_mm: float, closed: bool
 ) -> list[tuple[int, Segment]]:
-    """The segments moved to their left by `distance_mm`, joined; the step index of every piece is kept."""
+    """The segments moved to their left by `distance_mm`, joined; the step index of every piece is kept. In an open chain a piece that the
+    joins turn around (a short wall, a small arc, passed by the curve of its neighbours) is left out and its neighbours are joined."""
     pieces: list[_Piece] = []
     for index, segment in tagged:
         moved = _moved(segment, distance_mm)
@@ -143,15 +155,25 @@ def offset_segments(
             pieces.append(_Piece(moved, segment, index))
     if not pieces:
         return []
-    result: list[tuple[int, Segment]] = []
-    between: dict[int, list[Segment]] = {}
+    between: list[list[Segment]] = []
     pairs = len(pieces) if closed else len(pieces) - 1
     for number in range(pairs):
         first, second = pieces[number], pieces[(number + 1) % len(pieces)]
-        if first is second:
-            continue
-        between[number] = _join(first, second)
+        between.append([] if first is second else _join(first, second))
+    while not closed and len(pieces) > 1:
+        turned = next((number for number, piece in enumerate(pieces) if _reversed(piece)), None)
+        if turned is None:
+            break
+        del pieces[turned]
+        if turned == 0:
+            del between[0]
+        elif turned == len(pieces):  # the last piece
+            del between[-1]
+        else:  # in the middle: the pieces on both sides meet now
+            between[turned - 1:turned + 1] = [_join(pieces[turned - 1], pieces[turned], bridged=True)]
+    result: list[tuple[int, Segment]] = []
     for number, piece in enumerate(pieces):
         result.append((piece.step_index, piece.segment))
-        result.extend((piece.step_index, extra) for extra in between.get(number, []))
+        if number < len(between):
+            result.extend((piece.step_index, extra) for extra in between[number])
     return result
