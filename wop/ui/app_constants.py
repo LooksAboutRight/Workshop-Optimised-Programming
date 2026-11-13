@@ -11,6 +11,7 @@ SAFE_Z_IN_FRONT_MM = 10  # the safe Z follows the front face: front Z plus this
 DEFAULT_CLEARANCE_MM = 1
 DEFAULT_NEW_BLOCK_RPM = 1000
 UNDO_LIMIT = 200  # states kept for Undo
+DISPLAY_UNITS = "mm"  # the unit of lengths in the window: "mm" or "inch" (the program, the files and the G-code unit do not change)
 TAPER_INPUT = "degrees"  # how a taper is shown first: "degrees" (the included angle) or "rise per 100 mm" (of the diameter)
 
 NOT_EDITABLE_BELOW = True  # marker: the constants below this line are fixed (shown read only in Preferences)

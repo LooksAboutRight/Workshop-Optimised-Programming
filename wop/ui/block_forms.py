@@ -19,6 +19,9 @@ import math
 from ..core.constants import NO_TOOL_NUMBER
 from ..core.contour import NO_CONTOUR
 from ..core.program_model.units import XInputMode
+from ..core.program_model.operations import SpindleMode
+from .display_units import length_scale, shown_unit
+from .ui_constants import RPM_UNIT, SURFACE_SPEED_UNIT
 
 HIDDEN_FIELDS = ("block_id", "comment", "angle_deg", "cutting")  # angle_deg: the line step form of W8 handles it; cutting: a checkbox of the tool shape editor
 UNIT_SUFFIXES = (
@@ -149,6 +152,7 @@ class FieldSpec:
     relative_to: str = ""  # an end position that can also be shown as a length from the field with this name (Abs./Rel.)
     button_text: str = ""  # BUTTON: the text on the button
     relative_label: str = ""  # the label while it is shown as a length
+    metric: bool = False  # stays in millimetres whatever the unit of the window (ISO tool sizes)
     preview: str = ""  # CHOICE of styles: the block type whose style pictures are shown when an entry of the list is hovered
     minimum: float | None = None  # a number outside these limits is refused
     maximum: float | None = None
@@ -329,6 +333,18 @@ def _with_function_fields(obj: Any, specs: list, context: FormContext) -> list:
     return result
 
 
+def _with_spindle_units(obj: Any, specs: list[FieldSpec]) -> list[FieldSpec]:
+    """The unit of a spindle speed is the one of its mode: RPM, or m/min (ft/min in the window that shows inches)."""
+    spindle = getattr(obj, "spindle", None)
+    mode = getattr(spindle, "mode", None)
+    if mode is None:
+        return specs
+    surface = mode is SpindleMode.CONSTANT_SURFACE_SPEED
+    speed = SURFACE_SPEED_UNIT if surface else RPM_UNIT
+    units = {("spindle", "value"): speed, ("spindle", "rpm_limit"): RPM_UNIT, ("finish_spindle_value",): speed}
+    return [dataclasses.replace(spec, unit=units[spec.path]) if spec.path in units else spec for spec in specs]
+
+
 def form_for(obj: Any, context: FormContext = FormContext()) -> list[FieldSpec]:
     """The fields of a dataclass instance (a block, the raw part, the settings ...)."""
     specs = _specs(type(obj), (), "", context)
@@ -340,6 +356,9 @@ def form_for(obj: Any, context: FormContext = FormContext()) -> list[FieldSpec]:
             if len(spec.path) == 1 and spec.path[0] in lists else spec
             for spec in specs
         ]
+    specs = _with_spindle_units(obj, specs)
+    if getattr(obj, "metric_only", False):
+        specs = [dataclasses.replace(spec, metric=True) for spec in specs]
     specs = _with_function_fields(obj, specs, context)
     shown = getattr(obj, "form_fields", None)  # an object may show only the fields that matter for its current values
     if callable(shown):
@@ -396,7 +415,8 @@ def form_state(obj: Any) -> tuple:
     """Which fields an object shows and which are greyed out; the form is rebuilt when this changes."""
     shown, disabled = getattr(obj, "form_fields", None), getattr(obj, "form_disabled", None)
     key = getattr(obj, "form_key", None)  # the fields depend on more than the list of names (the variables of a function)
-    return (shown() if callable(shown) else None, disabled() if callable(disabled) else None, key() if callable(key) else None)
+    mode = getattr(getattr(obj, "spindle", None), "mode", None)  # the unit of the spindle speed follows its mode
+    return (shown() if callable(shown) else None, disabled() if callable(disabled) else None, key() if callable(key) else None, mode)
 
 
 # --- reading and changing values -------------------------------------------------
@@ -419,6 +439,16 @@ def set_value(obj: Any, path: tuple[str, ...], value: Any) -> Any:
     return dataclasses.replace(obj, **{head: new})
 
 
+def spec_scale(spec: FieldSpec) -> float:
+    """The factor from the stored value to the shown one for this field."""
+    return 1 if spec.metric else length_scale(spec.unit)
+
+
+def spec_unit(spec: FieldSpec) -> str:
+    """The unit written next to the field."""
+    return spec.unit if spec.metric else shown_unit(spec.unit)
+
+
 def to_display(spec: FieldSpec, value: Any, x_mode: XInputMode) -> Any:
     if spec.kind is FieldKind.INT and isinstance(value, float):
         return int(value)  # a whole number kept as a float in the block
@@ -429,7 +459,9 @@ def to_display(spec: FieldSpec, value: Any, x_mode: XInputMode) -> Any:
     if value is None and spec.kind is FieldKind.BOOL:
         return False
     if spec.is_radius and value is not None and x_mode is XInputMode.DIAMETER:
-        return value * RADIUS_TO_DIAMETER
+        value = value * RADIUS_TO_DIAMETER
+    if value is not None and spec.kind in (FieldKind.FLOAT, FieldKind.OPTIONAL_FLOAT):
+        value = value * spec_scale(spec)  # inches when the window shows them
     return value
 
 
@@ -449,6 +481,8 @@ def taper_label(as_rise: bool) -> tuple[str, str]:
 
 
 def from_display(spec: FieldSpec, value: Any, x_mode: XInputMode) -> Any:
+    if value is not None and spec.kind in (FieldKind.FLOAT, FieldKind.OPTIONAL_FLOAT):
+        value = value / spec_scale(spec)
     if spec.is_radius and value is not None and x_mode is XInputMode.DIAMETER:
         return value / RADIUS_TO_DIAMETER
     return value
@@ -473,7 +507,8 @@ def parse_text(spec: FieldSpec, text: str) -> Any:
             number = float(text.replace(",", "."))
         except ValueError:
             raise FormError(f"{spec.label}: '{text}' is not a number") from None
-        return check_limits(spec, number)
+        check_limits(spec, number / spec_scale(spec))  # the limits are in the stored unit
+        return number
     if spec.kind is FieldKind.INT:
         try:
             whole = int(text)

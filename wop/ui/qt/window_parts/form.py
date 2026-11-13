@@ -7,6 +7,7 @@ from PySide6.QtCore import QTimer
 from ....core.program_model.touched import SETUP_OWNER
 from ....core.sketch.model import SketchError
 from ...app_model import ModelError
+from ...display_units import shown_text
 from ...block_forms import FieldSpec, form_for, form_state, get_value, set_value
 from ...material_form import NewMaterial
 from ...setup_form import SETUP_TITLE, stock_summary
@@ -82,7 +83,7 @@ class FormMixin:
         """Under the Setup form: what the stock does behind the clamping plane and its total length (R7)."""
         self.setup_info.setVisible(self._mode == MODE_SETUP)
         if self._mode == MODE_SETUP:
-            self.setup_info.setText(stock_summary(self.model.setup_form()) + "\n" + self.model.workholding_note())
+            self.setup_info.setText(shown_text(stock_summary(self.model.setup_form()) + "\n" + self.model.workholding_note()))
 
     def _new_material(self, spec: FieldSpec) -> None:
         """"New..." in the material list: ask for name and cutting force, keep the material, use it."""

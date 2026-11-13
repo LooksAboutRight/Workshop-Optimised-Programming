@@ -14,7 +14,7 @@ from ...core.files.convention_overrides import ensure_file, problems as conventi
 from ...core.files.user_folder import user_folder
 from .. import crash_log, error_log
 from ..app_model import AppModel, ModelError
-from . import click_commit
+from . import click_commit, unit_text
 from .background import BackgroundRunner
 from .gl_view import opengl_works
 from .main_window import MainWindow
@@ -46,6 +46,7 @@ def main(argv: list[str]) -> int:
     application = QApplication(argv)
     retry_with_software_opengl(argv)
     click_commit.install(application)
+    unit_text.install(application)
     fit_filter = ScreenFitFilter(application)  # a window larger than the screen is made smaller when it is first shown
     application.installEventFilter(fit_filter)
     log = error_log.install(user_folder() / error_log.LOG_FILE_NAME)  # errors inside handlers are only printed: keep them

@@ -33,6 +33,8 @@ from ..block_forms import (
     length_to_end,
     TAPER_RISE_CHOICE,
     parse_text,
+    spec_scale,
+    spec_unit,
     set_value,
     taper_from_display,
     taper_label,
@@ -40,10 +42,11 @@ from ..block_forms import (
     to_display,
 )
 from .. import app_constants
+from ..display_units import is_inch
 from ..ui_constants import RESET_TO_DEFAULT_TEXT
 from .number_boxes import NumberBox, WholeNumberBox
 from .style_preview import StyleCombo
-from .qt_constants import SPIN_DECIMALS, SPIN_LIMIT, SPIN_STEP, TEXT_EDIT_DELAY_MS
+from .qt_constants import SPIN_DECIMALS, SPIN_DECIMALS_INCH, SPIN_LIMIT, SPIN_STEP, SPIN_STEP_INCH, TEXT_EDIT_DELAY_MS
 
 
 class FormPanel(QWidget):
@@ -137,7 +140,7 @@ class FormPanel(QWidget):
                 widget.setEnabled(spec.enabled)
                 label = spec.display_label(x_mode)
                 if spec.kind is FieldKind.OPTIONAL_FLOAT and spec.unit:  # a text field has no unit suffix
-                    label += f" ({spec.unit})"
+                    label += f" ({spec_unit(spec)})"
                 if following is not None and following.same_line and not following.heading:
                     index += 1  # the next field shares this line: widget, its small label, its widget
                     second = self._widget_for(following, to_display(following, get_value(obj, following.path), x_mode))
@@ -198,12 +201,7 @@ class FormPanel(QWidget):
         always keeps the radius.
         """
         state = {"mode": self._x_mode, "radius": radius}
-        box = NumberBox()
-        box.setDecimals(SPIN_DECIMALS)
-        box.setRange(-SPIN_LIMIT, SPIN_LIMIT)
-        box.setSingleStep(SPIN_STEP)
-        box.setKeyboardTracking(False)
-        box.setSuffix(f" {spec.unit}" if spec.unit else "")
+        box = self._number_box(spec)
         label = QLabel(spec.display_label(state["mode"]))
         button = QToolButton()
 
@@ -299,12 +297,7 @@ class FormPanel(QWidget):
         The button changes only what is shown in this input. The program always keeps the absolute Z.
         """
         state = {"relative": False}
-        box = NumberBox()
-        box.setDecimals(SPIN_DECIMALS)
-        box.setRange(-SPIN_LIMIT, SPIN_LIMIT)
-        box.setSingleStep(SPIN_STEP)
-        box.setKeyboardTracking(False)
-        box.setSuffix(f" {spec.unit}" if spec.unit else "")
+        box = self._number_box(spec)
         label = QLabel(spec.label)
         button = QToolButton()
 
@@ -314,14 +307,15 @@ class FormPanel(QWidget):
         def show() -> None:
             end = float(get_value(self._obj, spec.path))
             box.blockSignals(True)
-            box.setValue(end_to_length(start(), end) if state["relative"] else end)
+            box.setValue((end_to_length(start(), end) if state["relative"] else end) * spec_scale(spec))
             box.blockSignals(False)
             label.setText(spec.relative_label if state["relative"] else spec.label)
             button.setText("Rel." if state["relative"] else "Abs.")
 
         def typed(value: float) -> None:
             if not self._loading:
-                self._emit(spec, length_to_end(start(), value) if state["relative"] else value)
+                stored = value / spec_scale(spec)
+                self._emit(spec, length_to_end(start(), stored) if state["relative"] else stored, shown=False)
 
         def toggle() -> None:
             state["relative"] = not state["relative"]
@@ -343,9 +337,10 @@ class FormPanel(QWidget):
 
     # --- one widget per kind ------------------------------------------------------
 
-    def _emit(self, spec: FieldSpec, value: Any) -> None:
+    def _emit(self, spec: FieldSpec, value: Any, shown: bool = True) -> None:
+        """Report an edit. `shown`: the value is as displayed (diameter, inches); False: it already is what the model stores."""
         if not self._loading:
-            model_value = from_display(spec, value, self._x_mode)
+            model_value = from_display(spec, value, self._x_mode) if shown else value
             try:
                 self._obj = set_value(self._obj, spec.path, model_value)  # stays current for the Abs./Rel. rows
             except ValueError:
@@ -384,16 +379,25 @@ class FormPanel(QWidget):
         if menu.exec(widget.mapToGlobal(point)) is action:
             self.reset_requested.emit(spec)
 
+    def _number_box(self, spec: FieldSpec) -> NumberBox:
+        """A number field of the unit the window shows (inches: finer decimals and step, limits and unit converted)."""
+        box = NumberBox()
+        scale = spec_scale(spec)
+        box.setDecimals(SPIN_DECIMALS_INCH if scale < 1 else SPIN_DECIMALS)
+        low = -SPIN_LIMIT if spec.minimum is None else spec.minimum * scale
+        high = SPIN_LIMIT if spec.maximum is None else spec.maximum * scale
+        box.setRange(low, high)
+        box.setSingleStep(SPIN_STEP_INCH if scale < 1 else SPIN_STEP)
+        box.setKeyboardTracking(False)
+        unit = spec_unit(spec)
+        box.setSuffix(f" {unit}" if unit else "")
+        return box
+
     def _widget_for(self, spec: FieldSpec, value: Any) -> QWidget:
         """The input widget for one field by its kind, filled with `value`; an edit is reported through `_emit`."""
         kind = spec.kind
         if kind is FieldKind.FLOAT:
-            box = NumberBox()
-            box.setDecimals(SPIN_DECIMALS)
-            box.setRange(-SPIN_LIMIT if spec.minimum is None else spec.minimum, SPIN_LIMIT if spec.maximum is None else spec.maximum)
-            box.setSingleStep(SPIN_STEP)
-            box.setKeyboardTracking(False)
-            box.setSuffix(f" {spec.unit}" if spec.unit else "")
+            box = self._number_box(spec)
             box.setValue(float(value))
             box.valueChanged.connect(lambda v, s=spec: self._emit(s, v))
             return box
@@ -405,7 +409,7 @@ class FormPanel(QWidget):
             box.valueChanged.connect(lambda v, s=spec: self._emit(s, v))
             return box
         if kind is FieldKind.OPTIONAL_FLOAT:
-            line = QLineEdit("" if value is None else f"{value:g}")
+            line = QLineEdit("" if value is None else f"{value:.{SPIN_DECIMALS_INCH}g}" if is_inch() else f"{value:g}")
             line.setPlaceholderText("not set")
             line.editingFinished.connect(lambda s=spec, w=line: self._from_text(s, w.text()))
             return line

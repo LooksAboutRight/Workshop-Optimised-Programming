@@ -153,6 +153,8 @@ How the program is built and why: the current state only, in short bullets. Hist
 - Libraries (materials, workholding, tools): files `libraries/<kind>/<name>.json`; "Example" built in; the first change forks it; a machine remembers its libraries.
 - Settings: `settings.json` in the user folder (`user_data` next to the program if it exists, else `%APPDATA%\WOP`); a damaged file is set aside.
 - File > Preferences: rows from `conventions.py`; changes apply after a restart.
+- Window unit (preference `DISPLAY_UNITS`, mm or inch; independent of the unit of the G-code): the program and the files stay in mm. `ui/display_units.py` converts what a form field (units `mm`, `mm/rev`, `mm/min`, by `to_display` / `from_display` in `block_forms.py`) and a sketch dimension show and take; inch boxes have 6 decimals so a value survives the round trip. Messages (message box, status bar, problem lists, block notes, setup summary, message dialogs) get `shown_text`: every `<number> mm`, `mm/rev`, `mm/min` in the text becomes inches, so a message must not hold a range ("1 to 5 mm") or an ISO size in mm.
+- Stays metric whatever the window unit (the user's decision): ISO tool sizes and codes (`IsoDefinition.metric_only`), the values and meanings in File > Preferences (names end in `_MM`), the taper rise per 100 mm, the list of operations of a block (File > ... Operations) and the G-code (the unit of the machine), the post editor, DXF import units and the pictures. Thread pitch is shown in the window unit (the designation text stays as typed). A spindle speed field carries the unit of its mode: RPM, m/min, or ft/min in the window that shows inches (`_with_spindle_units`).
 - Untouched fields are dimmed; Reset to default.
 
 ## 14. Window

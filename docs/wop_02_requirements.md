@@ -188,7 +188,8 @@ Rules for this list:
 | M10 | Spindle sync as a capability | With it off, a threading block is reported. | Done |
 | M6 | Metric by default, imperial selectable | A metric ini gives metric, an imperial ini imperial. | Partly: the window shows metric only |
 | M13 | G-code in the unit of the machine | An imperial machine gives `G20`, lengths and feeds in inches (`tests/test_post_inch.py`). | Done in tests, not tried on a machine |
-| M14 | The window shows the unit of a preference, independent of the machine | Window in inch, G-code in mm, and the reverse. | Open |
+| M15 | A length can be typed with its unit (25mm, 25 mm, 1inch, 1", also m/min, mm/rev) in any unit setting | 1" typed in a window set to mm is stored as 25.4 mm. | Future |
+| M14 | The window shows the unit of a preference, independent of the machine | Window in inch, G-code in mm, and the reverse (`tests/test_display_units.py`). | Partly: form fields, sketch dimensions and messages; what stays metric is in the design notes; not tried by the user |
 | M11 | Machine codes of functions (chuck, bar feeder) | - | Removed (they are in the post, N19) |
 
 ## Checks and toolpaths

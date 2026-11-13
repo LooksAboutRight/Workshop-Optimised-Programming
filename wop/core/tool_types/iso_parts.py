@@ -7,7 +7,7 @@ other representations follow whatever was changed last; dropdown values that no 
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from typing import Any
+from typing import Any, ClassVar
 
 from ..constants import (
     HOLDER_CLAMPING,
@@ -33,6 +33,8 @@ Options = tuple[tuple[str, str], ...]  # (value, label)
 @dataclass(frozen=True)
 class IsoDefinition:
     """Number, name, material and the parts of the insert code (the holder parts are added by the two types)."""
+
+    metric_only: ClassVar[bool] = True  # ISO sizes are metric: the form shows millimetres whatever the unit of the window
 
     number: int = 0  # the tool number (set by the model when the form is shown)
     name: str = ""

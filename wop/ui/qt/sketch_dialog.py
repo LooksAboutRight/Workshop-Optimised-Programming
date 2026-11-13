@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
 from ...core.dxf_contour import DxfAxes
 from ...core.sketch.modes import TURNING
 from ...core.sketch.model import SketchError
+from ..display_units import from_shown, shown_unit, to_shown
 from ..number_text import number_from_text
 from ..sketch_constants import CORNER_ACTIONS, TOOL_SELECT
 from ..model.helpers import ModelError
@@ -102,7 +103,7 @@ class SketchDialog(QDialog):
         self.feed_row = QWidget()  # a path: the feed of the selected piece
         feed_layout = QHBoxLayout(self.feed_row)
         feed_layout.setContentsMargins(0, 0, 0, 0)
-        feed_layout.addWidget(QLabel("Feed of the selected piece (mm per revolution, empty: the feed of the block):"))
+        feed_layout.addWidget(QLabel(f"Feed of the selected piece ({'mm' if shown_unit('mm') == 'mm' else 'inch'} per revolution, empty: the feed of the block):"))
         self.feed_edit = QLineEdit()
         self.feed_edit.setMaximumWidth(FEED_EDIT_WIDTH_PX)
         self.feed_edit.editingFinished.connect(self._feed_edited)
@@ -131,7 +132,7 @@ class SketchDialog(QDialog):
         if text and (value is None or value <= 0):
             self.session.message = "The feed must be a number greater than zero"
         else:
-            self.session.set_piece_feed(value)
+            self.session.set_piece_feed(None if value is None else from_shown(value, "mm/rev"))
         self._refresh()
 
     def _refresh_feed(self) -> None:
@@ -139,7 +140,7 @@ class SketchDialog(QDialog):
         chosen = {self.session.sketch.piece_feeds.get(i) for i in feed_pieces}
         self.feed_edit.setEnabled(bool(feed_pieces))
         if not self.feed_edit.hasFocus():
-            self.feed_edit.setText("" if len(chosen) != 1 or None in chosen else f"{chosen.pop():g}")
+            self.feed_edit.setText("" if len(chosen) != 1 or None in chosen else f"{to_shown(chosen.pop(), 'mm/rev'):.6g}")
 
     def _refresh(self) -> None:
         self.toolbox.refresh()
@@ -201,11 +202,11 @@ class SketchDialog(QDialog):
         value = 0.0
         if name in CORNER_ACTIONS and self.session.armed != name:
             label = "Radius" if name == "fillet" else "Distance from the corner"
-            asked = ask_value(self, name.capitalize(), f"{label} (mm):", DEFAULT_CORNER_MM)
+            asked = ask_value(self, name.capitalize(), f"{label} ({shown_unit('mm')}):", to_shown(DEFAULT_CORNER_MM, "mm"))
             if asked is None:
                 self._refresh()  # the button flipped on its own
                 return
-            value = asked
+            value = from_shown(asked, "mm")
         self.session.use_modify(name, value)
         self._refresh()
 

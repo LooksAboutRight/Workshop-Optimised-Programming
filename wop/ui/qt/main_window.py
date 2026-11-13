@@ -6,6 +6,7 @@ from PySide6.QtCore import QEvent, Qt, QTimer
 from PySide6.QtWidgets import QCheckBox, QGridLayout, QLabel, QListWidgetItem, QMainWindow, QMenu, QPlainTextEdit, QPushButton, QScrollArea, QStackedWidget, QToolButton, QVBoxLayout, QWidget
 
 from ..app_model import AppModel
+from ..display_units import shown_text
 from ..setup_form import SETUP_TITLE
 from ..svg_preview import block_color
 from .centre_view import CentreView
@@ -231,7 +232,7 @@ class MainWindow(
                 note = f"{WARNING_MARK} {note or FLOW_COLLISION_NOTE}"
             label = block.display_label()
             name = block.title if block.title and block.title != label else ""
-            item = self._card(KIND_BLOCK, f"{index + 1}: {label}", name, note, warn, block_color(self.model.colors, index))
+            item = self._card(KIND_BLOCK, f"{index + 1}: {label}", name, shown_text(note), warn, block_color(self.model.colors, index))
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Checked if self.model.is_ticked(index) else Qt.Unchecked)
             self.flow.addItem(item)
@@ -286,7 +287,7 @@ class MainWindow(
             lines.append("NOT CHECKED: collisions and power were not checked since the last change (Check > Verify now, F5).")
         lines += [f"note: {message}" for message in analysis.messages]
         lines += [f"COLLISION: {f.message} - {f.remedy}" for f in analysis.findings]
-        self.messages.setPlainText("\n".join(lines) if lines else "No problems found.")
+        self.messages.setPlainText(shown_text("\n".join(lines)) if lines else "No problems found.")
 
     def _check_error_log(self) -> None:
         """An error that was only printed (a handler failed) is not silent: tell the user where to look."""
@@ -296,6 +297,7 @@ class MainWindow(
 
     def _say(self, text: str) -> None:
         """A short notice: in the status bar and at the top of the messages box, where it is seen."""
+        text = shown_text(text)
         self.statusBar().showMessage(text, STATUS_MESSAGE_MS)
         self._notice = text
         self._fill_messages()

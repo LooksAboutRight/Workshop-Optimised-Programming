@@ -16,9 +16,14 @@ from PySide6.QtWidgets import (
 )
 
 from ...core.sketch.relations import relation_for
+from ..display_units import is_inch, shown_unit
 from ..sketch_session import SketchSession
 from .number_boxes import NumberBox
-from .sketch_view_constants import PANEL_MIN_PX, VALUE_DECIMALS, VALUE_LIMIT
+from .sketch_view_constants import PANEL_MIN_PX, VALUE_DECIMALS, VALUE_DECIMALS_INCH, VALUE_LIMIT
+
+
+def value_decimals() -> int:
+    return VALUE_DECIMALS_INCH if is_inch() else VALUE_DECIMALS
 
 
 def constraint_text(session: SketchSession, constraint_id: int) -> str:
@@ -26,7 +31,7 @@ def constraint_text(session: SketchSession, constraint_id: int) -> str:
     relation = relation_for(constraint.kind)
     if not relation.dimension:
         return relation.label
-    return f"{session.kind_label(constraint.kind, constraint.refs)}  {session.display_value(constraint):.{VALUE_DECIMALS}f} {relation.unit}"
+    return f"{session.kind_label(constraint.kind, constraint.refs)}  {session.display_value(constraint):.{value_decimals()}f} {shown_unit(relation.unit)}"
 
 
 def ask_value(parent: QWidget, title: str, label: str, shown: float) -> float | None:
@@ -35,7 +40,7 @@ def ask_value(parent: QWidget, title: str, label: str, shown: float) -> float | 
     dialog.setWindowTitle(title)
     box = NumberBox()
     box.setRange(-VALUE_LIMIT, VALUE_LIMIT)
-    box.setDecimals(VALUE_DECIMALS)
+    box.setDecimals(value_decimals())
     box.setValue(shown)
     form = QFormLayout()
     form.addRow(label, box)
@@ -116,6 +121,6 @@ class ConstraintPanel(QWidget):
         if not relation.dimension:
             return
         label = self.session.kind_label(constraint.kind, constraint.refs)
-        shown = ask_value(self, label, f"{label} ({relation.unit}):", self.session.display_value(constraint))
+        shown = ask_value(self, label, f"{label} ({shown_unit(relation.unit)}):", self.session.display_value(constraint))
         if shown is not None:
             self.session.edit_dimension(constraint_id, shown)

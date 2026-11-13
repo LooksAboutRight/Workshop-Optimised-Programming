@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 
 from ...core.program_model.units import XInputMode
 from ..block_forms import FieldSpec, form_for, set_value
+from ..display_units import shown_text
 from .form_panel import FormPanel
 from .qt_constants import (
     DIALOG_HEIGHT_PX,
@@ -142,7 +143,7 @@ class ExportCheckDialog(QDialog):
         self._run.setVisible(not report.checked)
         self._run.setDefault(not report.checked)
         self._list.setVisible(bool(problems))
-        self._list.setPlainText("\n".join(f"- {line}" for line in problems))
+        self._list.setPlainText(shown_text("\n".join(f"- {line}" for line in problems)))
 
     def _run_now(self) -> None:
         self._heading.setText(EXPORT_CHECK_BUSY)
@@ -236,7 +237,7 @@ class ExportSelectedDialog(QDialog):
             return
         svg, notes, gcode = shown
         self._picture.load(QByteArray(svg.encode("utf-8")))
-        self._notes.setPlainText(notes)
+        self._notes.setPlainText(shown_text(notes))
         self._code.setPlainText(gcode)
 
 

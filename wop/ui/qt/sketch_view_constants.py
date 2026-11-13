@@ -17,6 +17,7 @@ TAG_OFFSET_PX = 8
 TAG_LINE_PX = 14
 VALUE_LIMIT = 100000
 VALUE_DECIMALS = 3
+VALUE_DECIMALS_INCH = 5  # a dimension of 0.5 mm must survive being typed again in inches
 FEED_EDIT_WIDTH_PX = 90
 ARROW_ALONG = 0.9  # the arrow on the current piece of a path points along the last tenth of it
 OLD_PIECE_ALPHA = 0.45  # while stepping through a path the pieces before the current one are drawn this faint

@@ -1,5 +1,11 @@
 """Constants of the user interface layer (colours, sizes)."""
 
+DISPLAY_UNIT_INCH = "inch"  # the value of the preference DISPLAY_UNITS that shows inches
+INCH_UNITS = {"mm": "in", "mm/rev": "in/rev", "mm/min": "in/min", "m/min": "ft/min"}  # the units of a form field that are shown in inches, and how
+INCHES_PER_FOOT = 12  # a cutting speed of m/min is shown in feet per minute
+RPM_UNIT = "RPM"  # the unit of a spindle speed that is not a surface speed
+SURFACE_SPEED_UNIT = "m/min"  # the unit of a constant surface speed in a form
+
 PICTURE_WIDTH_PX = 1000
 PICTURE_MARGIN_PX = 40
 MIN_PICTURE_HEIGHT_PX = 200

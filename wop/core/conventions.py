@@ -171,6 +171,7 @@ CONVENTIONS = (
     # --- DXF ---
     Convention("DXF_MIN_LINE_LENGTH_MM", DXF, "DXF lines shorter than this are ignored", NON_NEGATIVE),
     # --- program ---
+    Convention("DISPLAY_UNITS", PROGRAM, "the unit of lengths, feeds and sketch dimensions shown and typed in the window (the program, the files and the unit of the G-code do not change); takes effect after a restart", CHOICE, APP, ("mm", "inch")),
     Convention("UNDO_LIMIT", PROGRAM, "how many states Undo keeps", WHOLE_POSITIVE, APP),
 )
 

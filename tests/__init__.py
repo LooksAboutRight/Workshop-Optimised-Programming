@@ -8,3 +8,7 @@ os.environ.setdefault("QT_LOGGING_RULES", "default.warning=false;qt.qpa.*=false"
 from wop.ui.model import helpers  # noqa: E402
 
 helpers.NEW_PROJECT_USES_STUB_TOOLS = True
+
+from wop.ui import app_constants  # noqa: E402
+
+app_constants.DISPLAY_UNITS = "mm"  # the tests work in millimetres whatever the user chose in File > Preferences

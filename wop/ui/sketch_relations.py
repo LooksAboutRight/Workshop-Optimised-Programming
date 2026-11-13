@@ -13,6 +13,7 @@ from ..core.sketch.constants import AXIS_LINE, ORIGIN, SLOT_POINT
 from ..core.sketch.model import SketchError
 from ..core.sketch.pick import piece_points
 from ..core.sketch.relations import Constraint, relation_for
+from .display_units import length_scale, shown_unit
 from .sketch_constants import PENDING_MIRROR
 
 POSITIVE_KINDS = ("length", "distance", "distance_line", "radius", "diameter")  # dimensions that cannot be zero or negative
@@ -206,7 +207,7 @@ class SketchRelationsMixin:
         relation = relation_for(kind)
         measured = relation.measure(self.sketch.constraint_args(Constraint(0, kind, refs)))
         shown = relation.to_display(measured[0]) * self._scale(kind)
-        return DimensionPlan(kind, refs, shown, relation.unit, self.kind_label(kind))
+        return DimensionPlan(kind, refs, shown, shown_unit(relation.unit), self.kind_label(kind))
 
     def _dimension_refs(self, ui_kind: str, points, lines, arcs) -> tuple[tuple[int, ...], str]:
         if ui_kind in ("length", "along_z", "along_x"):
@@ -247,6 +248,9 @@ class SketchRelationsMixin:
     def _scale(self, kind: str, refs: tuple[int, ...] = ()) -> float:
         """Along-X dimensions are shown as diameters when the project is typed in diameters. A dimension to a mirror
         point (across a centre line) already is a diameter: nothing to do."""
+        return self._diameter_scale(kind, refs) * length_scale(relation_for(kind).unit)  # and inches when the window shows them
+
+    def _diameter_scale(self, kind: str, refs: tuple[int, ...] = ()) -> float:
         across = any(ref == PENDING_MIRROR or ref in self.sketch.helpers for ref in refs)
         return self.target.x_scale if kind == "distance_x" and not across else 1
 
@@ -254,7 +258,7 @@ class SketchRelationsMixin:
         label = relation_for(kind).label
         if any(ref == PENDING_MIRROR or ref in self.sketch.helpers for ref in refs):  # across a centre line
             return "Diameter (across a centre line)"
-        return label.replace("radius", "diameter") if self._scale(kind, refs) != 1 else label
+        return label.replace("radius", "diameter") if self._diameter_scale(kind, refs) != 1 else label
 
     def display_value(self, constraint: Constraint) -> float:
         """The value of a dimension as the user sees it."""
