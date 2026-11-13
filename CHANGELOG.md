@@ -11,6 +11,7 @@ At a release, `Unreleased` becomes the new version heading with its date.
 ## [Unreleased]
 
 ### Added
+- Postprocessors: a speed ramp before every spindle stop for a drive that trips when it is stopped from speed: the settings `spindle_ramp_step`, `spindle_ramp_dwell` and `spindle_ramp_min`, the template `[spindle_ramp_step]` and the token `<spindle ramp>` in front of the stop code. Off in the shipped posts; new example post `linuxcnc_spindle_ramp.post.ini`. A post you made earlier keeps working unchanged.
 - Grooving: a chamfer or a fillet on the edge of each groove wall (left: chuck side, right: face side), with the new style "Edges before full depth" for a cut-off with a chamfer or fillet on the part. The edge and the wall are cut in one move (pecked as the form says), a large edge in several passes (at most the one-sided cut). New preferences GROOVE_EDGE_SIZE_MM, GROOVE_EDGE_SKIN_MM and GROOVE_EDGE_RELIEF_MM.
 - Window unit: File > Preferences > Program > DISPLAY_UNITS shows lengths, feeds and sketch dimensions in inches or millimetres (after a restart), whatever the unit of the machine. Messages and summaries follow it. A spindle speed field names its unit (RPM, m/min, or ft/min in inch). ISO tool sizes, the values in Preferences and the taper rise per 100 mm stay metric.
 - G-code in inches: an imperial machine writes `G20`, lengths and feeds in inches and constant surface speed in feet per minute (new post token `<units code>`, post settings `decimals_inch` and `feed_decimals_inch`).

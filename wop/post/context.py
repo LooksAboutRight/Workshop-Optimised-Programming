@@ -67,6 +67,7 @@ class PostContext:
     estimated_time_min: float = 0
     change_radius_mm: float | None = None  # the tool change position of the machine in machine coordinates (X radius, Z); None: none
     change_z_mm: float | None = None
+    max_rpm: float | None = None  # the highest spindle speed of the machine (a ramp before a stop with constant surface speed is limited by it)
 
     @property
     def tools_in_use(self) -> tuple[ToolInfo, ...]:
@@ -102,6 +103,7 @@ def make_context(
         tools=tools, blocks=blocks, tool_sequence=sequence, now=now, path_length_mm=length, estimated_time_min=minutes,
         change_radius_mm=None if machine is None else machine.machine_change_radius_mm,
         change_z_mm=None if machine is None else machine.machine_change_z_mm,
+        max_rpm=None if machine is None else machine.max_rpm,
     )
 
 

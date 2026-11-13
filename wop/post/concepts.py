@@ -33,6 +33,7 @@ _LIST = (
     Concept("spindle_css", "start the spindle with constant surface speed"),
     Concept("spindle_rpm", "start the spindle with a fixed speed"),
     Concept("spindle_stop", "stop the spindle"),
+    Concept("spindle_ramp_step", "one step of the speed ramp before the spindle stops: the speed is <S>, the wait <dwell> (setting spindle_ramp_step; used by <spindle ramp>)", needed=False),
     Concept("coolant_flood", "flood coolant on"),
     Concept("coolant_mist", "mist coolant on"),
     Concept("coolant_off", "coolant off"),
@@ -55,4 +56,4 @@ DRILL_CYCLES = frozenset({"drill_cycle", "dwell_drill_cycle", "peck_drill_cycle"
 MOVES = frozenset({"rapid", "feed", "arc_ccw", "arc_cw", "machine_rapid"})
 ARCS = frozenset({"arc_ccw", "arc_cw"})
 THREADS = frozenset({"thread_cycle", "thread_two_block", "thread_passes"})
-SPINDLE = frozenset({"spindle_css", "spindle_rpm"})
+SPINDLE = frozenset({"spindle_css", "spindle_rpm", "spindle_ramp_step"})

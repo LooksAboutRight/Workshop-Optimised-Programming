@@ -19,6 +19,7 @@ SINGLE_FILES = (
     ("make_compensation_test.py", "tests/data/projects/compensation_test.wop.json"),
     ("make_example_machine.py", "examples/example.machine.json"),
     ("make_example_post.py", "examples/posts/linuxcnc_custom_function.post.ini"),
+    ("make_example_post_ramp.py", "examples/posts/linuxcnc_spindle_ramp.post.ini"),
 )
 
 

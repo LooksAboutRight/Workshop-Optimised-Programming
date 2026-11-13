@@ -8,6 +8,7 @@ group, the line number, the spindle speed, the tool and the block.
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -31,12 +32,13 @@ from ..core.program_model.operations import (
     SpindleSetting,
     ThreadOperation,
 )
+from ..core.program_model.operations import SpindleDirection
 from ..core.program_model.units import UnitSystem, XInputMode
 from .base import PostError, PostInfo, Postprocessor, PostSettings
 from .concepts import CONCEPTS
 from .context import BlockInfo, PostContext
 from .numbers import NumberFormat, format_number
-from .post_constants import INCHES_PER_FOOT, M_PER_MIN_TO_MM_PER_MIN, SEPARATOR_PLACEHOLDER
+from .post_constants import INCHES_PER_FOOT, M_PER_MIN_TO_MM_PER_MIN, MAX_SPINDLE_RAMP_STEPS, SEPARATOR_PLACEHOLDER
 from .post_definition import BoundOptional, Line, PostDefinition, replace_pairs
 from .template import Literal
 from .tokens import DIMENSION_LENGTH, DIMENSION_SURFACE_SPEED, BoundToken, dimension_of
@@ -65,6 +67,9 @@ class EngineState:
     groups: dict[str, str] = field(default_factory=dict)  # the last code of every modal group
     line_number: int | None = None
     rpm: float | None = None  # the fixed spindle speed, None when unknown (off, or constant surface speed)
+    css: tuple[float, float | None] | None = None  # constant surface speed running: (m/min, rpm limit); None otherwise
+    direction: SpindleDirection = SpindleDirection.CLOCKWISE  # the direction of the last start
+    cut_x: float | None = None  # the radius of the last feed move (the speed of a constant surface speed follows it)
     tool_cursor: int = 0  # tool changes done
     tool_index: int | None = None  # place of the current tool in the tool sequence of the program
     tool_number: int | None = None
@@ -352,6 +357,7 @@ class TemplatePost(Postprocessor):
         lines = self.render_concept("feed", scope)
         self._check_compensation_code(move, lines)
         self._moved(move.end.x, move.end.z, move.contour_end)
+        self.state.cut_x = move.end.x
         return lines
 
     def arc(self, move: ArcMove, start_x: float, start_z: float) -> list[str]:
@@ -366,6 +372,7 @@ class TemplatePost(Postprocessor):
         }
         lines = self.render_concept(ARC_CONCEPTS[move.direction], scope)
         self._moved(move.end.x, move.end.z, move.contour_end)
+        self.state.cut_x = move.end.x
         return lines
 
     def thread(self, operation: ThreadOperation) -> list[str]:
@@ -433,13 +440,65 @@ class TemplatePost(Postprocessor):
     def set_spindle(self, setting: SpindleSetting) -> list[str]:
         css = setting.mode is SpindleMode.CONSTANT_SURFACE_SPEED
         self.state.rpm = None if css else setting.value
+        self.state.css = (setting.value, setting.rpm_limit) if css else None
+        self.state.direction = setting.direction
         return self.render_concept(
             "spindle_css" if css else "spindle_rpm", {"value": setting.value, "rpm_limit": setting.rpm_limit, "direction": setting.direction},
         )
 
     def stop_spindle(self) -> list[str]:
+        lines = self.render_concept("spindle_stop")
         self.state.rpm = None
-        return self.render_concept("spindle_stop")
+        self.state.css = None
+        return lines
+
+    def _spindle_speed(self) -> float | None:
+        """The speed of the spindle now (rpm), None when it is off. With constant surface speed: from the radius of the last cut, not above the
+        rpm limit of the block or the highest speed of the machine; without a radius (or any limit) the limit stands for it."""
+        if self.state.rpm is not None:
+            return self.state.rpm
+        if self.state.css is None:
+            return None
+        surface_speed, limit = self.state.css
+        caps = [value for value in (limit, self.context.max_rpm) if value]
+        radius = self.state.cut_x
+        if radius is not None and radius > GEOMETRY_TOLERANCE_MM:
+            speed = surface_speed * M_PER_MIN_TO_MM_PER_MIN / (2 * math.pi * radius)
+            return min([math.floor(speed), *caps])  # whole rpm: the steps of the ramp are round numbers
+        if caps:
+            return min(caps)
+        raise PostError(
+            "the speed of the spindle before the stop is not known (constant surface speed, no cut yet, no rpm limit in the block and no highest speed in the "
+            "machine): give the block an rpm limit or the machine a highest speed, or turn the ramp off (spindle_ramp_step = 0)"
+        )
+
+    def spindle_ramp(self) -> list[str]:
+        """The steps that slow the spindle down before a stop: from the speed now down in steps of `spindle_ramp_step` rpm, each with a wait,
+        not below `spindle_ramp_min`. The spindle counts as stopped afterwards (the stop code follows). Nothing when the ramp is off."""
+        settings = self.definition.settings
+        step = settings.spindle_ramp_step
+        if step <= 0:
+            return []
+        speed = self._spindle_speed()
+        if speed is None:
+            return []
+        speeds = []
+        level = speed - step
+        while level > 0 and level >= settings.spindle_ramp_min:
+            speeds.append(level)
+            level -= step
+            if len(speeds) > MAX_SPINDLE_RAMP_STEPS:
+                raise PostError(f"the speed ramp from {speed:.0f} rpm in steps of {step:g} rpm would have more than {MAX_SPINDLE_RAMP_STEPS} steps: raise spindle_ramp_step")
+        if speeds and self.definition.lines_for("spindle_ramp_step") is None:
+            raise PostError("the post has a speed ramp (spindle_ramp_step) but no [spindle_ramp_step] template that writes one step")
+        lines: list[str] = []
+        for level in speeds:
+            lines += self.render_concept(
+                "spindle_ramp_step", {"value": level, "seconds": settings.spindle_ramp_dwell, "rpm_limit": None, "direction": self.state.direction},
+            )
+        self.state.rpm = None
+        self.state.css = None
+        return lines
 
     def set_coolant(self, mode: CoolantMode) -> list[str]:
         concept = {CoolantMode.NONE: "coolant_off", CoolantMode.FLOOD: "coolant_flood", CoolantMode.MIST: "coolant_mist"}[mode]

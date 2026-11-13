@@ -17,10 +17,12 @@ from dataclasses import dataclass
 
 from ..core.geometry import ArcSegment, Point
 from ..core.program_model.operations import DrillMode, ThreadTaper
-from ..core.program_model.units import UnitSystem, XInputMode
+from ..core.program_model.units import XInputMode
 from .base import PostError
 from .concepts import ARCS, DRILL_CYCLES, MOVES, SPINDLE, THREADS
-from .token_codes import _code, _comp_code, _prepare_code, _prepare_compensation, _prepare_spindle_code, _spindle_code  # noqa: F401 (the code tokens live in token_codes.py)
+from .token_codes import (  # noqa: F401 (the code tokens live in token_codes.py)
+    _code, _comp_code, _prepare_code, _prepare_compensation, _prepare_spindle_code, _prepare_units, _spindle_code, _units_code,
+)
 from .numbers import NUMBER_OPTIONS, TEXT_OPTIONS, OptionError, Options, parse_options
 from .post_constants import WOP_VERSION_TEXT
 from .template import RawToken, TemplateError
@@ -250,14 +252,6 @@ def _x_mode_code(render, args, _options: Options):
     return args[0] if render.engine.settings.x_mode is XInputMode.DIAMETER else args[1]
 
 
-def _prepare_units(_args: tuple, codes: dict) -> tuple:
-    return tuple(codes[name].text if name in codes else None for name in ("units_mm", "units_inch"))
-
-
-def _units_code(render, args, _options: Options):
-    return args[1] if render.engine.settings.unit is UnitSystem.IMPERIAL else args[0]
-
-
 def _line_number(advance: bool) -> Evaluate:
     def evaluate(render, _args, _options: Options):
         state, settings = render.state, render.engine.definition.settings
@@ -381,6 +375,11 @@ def _date(setting: str | None) -> Evaluate:
     return evaluate
 
 
+def _spindle_ramp(render, _args, _options: Options):
+    """The lines that slow the spindle down in steps (post settings spindle_ramp_*), from the template [spindle_ramp_step]; nothing without a ramp."""
+    return render.engine.spindle_ramp()
+
+
 def _list_tools(render, _args, _options: Options):
     lines: list[str] = []
     for tool in render.context.tools_in_use:
@@ -455,7 +454,7 @@ def _define() -> None:
                    NUMBER_OPTIONS, "number", "speed", changeable=True, memory=True, dimension=DIMENSION_SURFACE_SPEED))
     register(Token("S max", "speed limit for constant surface speed (empty without a limit)", "3000", _plain("rpm_limit"),
                    SPINDLE, NUMBER_OPTIONS, "number", "speed"))
-    register(Token("dwell", "dwell time in seconds", "1.5", _plain("seconds"), frozenset({"dwell"}), NUMBER_OPTIONS, "number", "feed",
+    register(Token("dwell", "dwell time in seconds", "1.5", _plain("seconds"), frozenset({"dwell", "spindle_ramp_step"}), NUMBER_OPTIONS, "number", "feed",
                    dimension=DIMENSION_NONE))
     register(Token("code", "a code of the code table of the post (the word after it is the name); `changed`: empty when the "
                    "last code of its modal group was this one", "G0", _code, every, frozenset(), "text", args=1, changeable=True,
@@ -520,6 +519,9 @@ def _define() -> None:
     # lines of their own
     register(Token("list tools", "one line per tool of the program, from [tool_entry]", "", _list_tools, frozenset({"header", "setup"}),
                    kind="lines"))
+    register(Token("spindle ramp", "the steps that slow the spindle down before it stops (settings spindle_ramp_step, spindle_ramp_dwell, spindle_ramp_min; template "
+                   "[spindle_ramp_step]); put it in front of the stop code. Nothing when the spindle is off or the ramp is off", "", _spindle_ramp,
+                   frozenset({"tool_change", "spindle_stop", "footer"}), kind="lines"))
     register(Token("list notes", "one line per note, from [note_entry]", "", _list_notes, frozenset({"header"}), kind="lines"))
     # thread
     thread = frozenset({"thread_cycle", "thread_two_block", "thread_passes"})

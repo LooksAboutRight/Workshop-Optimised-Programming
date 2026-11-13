@@ -80,6 +80,8 @@ def _scope(concept: str, present: bool) -> dict:
         return {"value": 120, "rpm_limit": 3000 if present else None, "direction": SpindleDirection.CLOCKWISE}
     if concept == "spindle_rpm":
         return {"value": 1200, "rpm_limit": None, "direction": SpindleDirection.CLOCKWISE}
+    if concept == "spindle_ramp_step":
+        return {"value": 900, "seconds": 1.0, "rpm_limit": None, "direction": SpindleDirection.CLOCKWISE}
     if concept in ("thread_cycle", "thread_two_block", "thread_passes"):
         op = _thread(present)
         return {"op": op, "start_x": op.start_x, "start_z": op.start_z}

@@ -118,6 +118,9 @@ Not a tool: the cutting values of the example projects (mild steel, coated carbi
 ### make_example_post.py
 `python tools/make_example_post.py [file]`: writes `examples/posts/linuxcnc_custom_function.post.ini`, made from the shipped LinuxCNC post plus a custom machine function (a bar feeder: three codes, a modal group, the concept `bar_feed`). It follows the LinuxCNC post: `tests/test_examples_current.py` fails when the committed file is not what the tool writes.
 
+### make_example_post_ramp.py
+`python tools/make_example_post_ramp.py [file]`: writes `examples/posts/linuxcnc_spindle_ramp.post.ini`, made from the shipped LinuxCNC post plus a speed ramp before every spindle stop (the settings `spindle_ramp_*`, the template `[spindle_ramp_step]`, the token `<spindle ramp>`). `tests/test_examples_current.py` fails when the committed file is not what the tool writes.
+
 ## Checks and tests
 
 ### check_small_screen.py: do the windows fit a small screen

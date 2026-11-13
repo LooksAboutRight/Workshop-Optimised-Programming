@@ -30,6 +30,7 @@ from .post_constants import (
     FEED_DECIMALS_INCH,
     POST_FILE_FORMAT_VERSION,
     SPEED_DECIMALS,
+    SPINDLE_RAMP_DWELL_S,
     WORK_OFFSET_CODE_PREFIX,
 )
 from .modal_groups import NON_MODAL, ModalGroupError, code_word, group_of_word, normalize_code, parse_modal_groups
@@ -92,6 +93,9 @@ class PostFileSettings:
     cutter_compensation: bool = False  # write the nominal contour and G41 / G42 / G40 for the moves of a compensated finishing pass
     threading_style: str = "cycle"
     drilling_style: str = "expanded"
+    spindle_ramp_step: float = 0.0  # rpm: before a spindle stop the speed goes down in steps of this many rpm (0: no ramp); see <spindle ramp>
+    spindle_ramp_dwell: float = SPINDLE_RAMP_DWELL_S  # seconds to wait after every step
+    spindle_ramp_min: float = 0.0  # the last step is not below this speed (the spindle stops from there)
     program_number: str = ""
     date_format: str = EXAMPLE_DATE_FORMAT
     time_format: str = EXAMPLE_TIME_FORMAT
@@ -113,6 +117,8 @@ SETTING_HELP = {
     "x_diameters": "the controller takes X as a diameter (yes/no)", "arcs_in_diameters": "the controller can write arcs while X is a diameter (yes/no)",
     "cutter_compensation": "write the contour and G41 / G42 / G40 for compensated finishing passes (yes/no); no: the tool path",
     "threading_style": "cycle, two_block or passes", "drilling_style": "expanded or cycle",
+    "spindle_ramp_step": "slow the spindle down in steps of this many rpm before it stops (0: no ramp); the post needs a [spindle_ramp_step] template and <spindle ramp> before its stop code",
+    "spindle_ramp_dwell": "seconds to wait after every step of the ramp", "spindle_ramp_min": "the last step of the ramp is not below this speed (rpm)",
     "program_number": "text for <program number>", "date_format": "format of <date> (strftime)", "time_format": "format of <time>",
 }
 
@@ -223,6 +229,14 @@ def read_settings(entries: list[tuple[int, str, str]]) -> PostFileSettings:
             if not value.lstrip("-").isdigit():
                 raise PostFileError(f"{key} must be a whole number", "settings", line)
             values[key] = int(value)
+        elif kind == "float":
+            try:
+                number = float(value.replace(",", "."))
+            except ValueError:
+                raise PostFileError(f"{key} must be a number", "settings", line) from None
+            if number < 0:
+                raise PostFileError(f"{key} must not be negative", "settings", line)
+            values[key] = number
         else:
             values[key] = value
     settings = PostFileSettings(**values)

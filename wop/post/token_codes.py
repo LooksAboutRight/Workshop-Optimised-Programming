@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ..core.program_model.operations import CompensationSide, MoveRole, SpindleDirection
+from ..core.program_model.units import UnitSystem
 from .base import PostError
 from .modal_groups import normalize_code
 from .numbers import Options
@@ -55,3 +56,12 @@ def _comp_code(render, args, _options: Options):
     if role is MoveRole.LEAD_OUT:
         return args[2]
     return None
+
+
+def _prepare_units(_args: tuple, codes: dict) -> tuple:
+    return tuple(codes[name].text if name in codes else None for name in ("units_mm", "units_inch"))
+
+
+def _units_code(render, args, _options: Options):
+    """The code of `units_mm` or `units_inch`, as the unit of the machine says."""
+    return args[1] if render.engine.settings.unit is UnitSystem.IMPERIAL else args[0]
