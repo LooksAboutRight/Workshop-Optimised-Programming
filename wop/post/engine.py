@@ -335,8 +335,15 @@ class TemplatePost(Postprocessor):
             scope["ccx"], scope["ccz"] = centre.x, centre.z
         return scope
 
+    @property
+    def has_change_position(self) -> bool:
+        """The post has a [change_position]: it writes the move to the tool change position itself."""
+        return self.definition.lines_for("change_position") is not None
+
     def rapid(self, move: Rapid) -> list[str]:
         if move.at_change:
+            if self.has_change_position:
+                return self._change_position_move(move)
             lines = self._machine_change_move()
             if lines:
                 return lines
@@ -423,6 +430,18 @@ class TemplatePost(Postprocessor):
         state.tool_number = tool_number
         state.tool_cursor += 1
         return self.render_concept("tool_change")
+
+    def _change_position_move(self, move: Rapid) -> list[str]:
+        """The move to the tool change position written with the template [change_position] (the code of the controller for it). X and Z are
+        the machine's tool change position in machine coordinates when it has one, else the position of the move in work coordinates. The work
+        position is not known afterwards (the controller may have moved anywhere), so the next move writes both axes."""
+        context = self.context
+        known = context.change_radius_mm is not None and context.change_z_mm is not None
+        scope = {"x": context.change_radius_mm, "z": context.change_z_mm} if known else {"x": move.end.x, "z": move.end.z}
+        lines = self.render_concept("change_position", scope)
+        state = self.state
+        state.x = state.z = state.cx = state.cz = None
+        return lines
 
     def _machine_change_move(self) -> list[str]:
         """The move to the tool change position (the planner's move to it, `Rapid.at_change`) in machine coordinates, G53, when the

@@ -286,9 +286,14 @@ def _contour_chords(arc: ArcMove, start: Point | None, count: int) -> list[Point
 
 
 def _machine_move(post, operation) -> bool:
-    """The move to the tool change position, written in machine coordinates (the machine has that position)."""
+    """The move to the tool change position, when the post writes it by itself: with its own [change_position], or in machine coordinates (the
+    machine has that position). It is written every time, and the work position is not known after it."""
+    if not (isinstance(operation, Rapid) and operation.at_change):
+        return False
+    if getattr(post, "has_change_position", False):
+        return True
     context = getattr(post, "context", None)
-    return isinstance(operation, Rapid) and operation.at_change and context is not None and context.change_radius_mm is not None and context.change_z_mm is not None
+    return context is not None and context.change_radius_mm is not None and context.change_z_mm is not None
 
 
 def generate_gcode(

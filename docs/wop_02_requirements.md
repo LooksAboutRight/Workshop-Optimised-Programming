@@ -248,6 +248,7 @@ Rules for this list:
 | N18 | Code table with fixed names and own codes | Every project with every shipped post writes the same G-code as before. | Done |
 | N31 | No coolant capability in the machine | The Machines dialog has none. | Done |
 | N54 | A post can slow the spindle down in steps before it stops | The example post writes M3 S900, G4 P1.0 ... before M5 (`tests/test_spindle_ramp.py`); a speed it cannot know is refused. | Done, not tried on a machine |
+| N55 | The move to the tool change position can be written with the code of the controller | A post with `[change_position]` writes it before every tool change and at the end (`tests/test_post_change_position.py`). | Done, not tried on a machine |
 | N19 | Custom functions in a post with typed variables | `linuxcnc_bar_feeder.post.ini` writes the bar feed; a value outside min and max is an error. | Done |
 | O14 | Post editor window with sample output | `tests/test_post_editor.py`, `tests/test_post_editor_dialog.py` | Done |
 | N3 | Plain G-code post | Every example project can be written with it. | Done |

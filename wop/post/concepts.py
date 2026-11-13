@@ -37,6 +37,7 @@ _LIST = (
     Concept("coolant_flood", "flood coolant on"),
     Concept("coolant_mist", "mist coolant on"),
     Concept("coolant_off", "coolant off"),
+    Concept("change_position", "go to the tool change position with the code of the controller for it (G28 U0 W0 ...); X and Z are the position in machine coordinates when the machine has one, else in work coordinates. Wins over machine_rapid and the plain rapid move", needed=False),
     Concept("machine_rapid", "rapid move in machine coordinates before a tool change (the machine has a tool change position)", needed=False),
     Concept("tool_change", "change the tool (with the offset)"),
     Concept("thread_cycle", "thread in one block (threading_style = cycle)"),
@@ -53,7 +54,7 @@ _LIST = (
 CONCEPTS = {concept.name: concept for concept in _LIST}
 
 DRILL_CYCLES = frozenset({"drill_cycle", "dwell_drill_cycle", "peck_drill_cycle", "chip_break_cycle", "peck_dwell_drill_cycle"})
-MOVES = frozenset({"rapid", "feed", "arc_ccw", "arc_cw", "machine_rapid"})
+MOVES = frozenset({"rapid", "feed", "arc_ccw", "arc_cw", "machine_rapid", "change_position"})
 ARCS = frozenset({"arc_ccw", "arc_cw"})
 THREADS = frozenset({"thread_cycle", "thread_two_block", "thread_passes"})
 SPINDLE = frozenset({"spindle_css", "spindle_rpm", "spindle_ramp_step"})

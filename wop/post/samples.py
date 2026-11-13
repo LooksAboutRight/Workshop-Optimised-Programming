@@ -72,7 +72,7 @@ def _scope(concept: str, present: bool) -> dict:
             **move, "feed": SAMPLE_FEED, "start_x": SAMPLE_START.x, "start_z": SAMPLE_START.z, "center_x": center.x,
             "center_z": center.z, "start": SAMPLE_START, "end": SAMPLE_END, "center": center, "direction": direction,
         }
-    if concept == "machine_rapid":
+    if concept in ("machine_rapid", "change_position"):
         return move
     if concept == "dwell":
         return {"seconds": 1.5}

@@ -245,7 +245,7 @@ def _moves_before(block: Block, state: _MachineState, safety: Safety) -> list[Op
     changes_tool = block.needs_tool and state.tool_number != block.tool_number
     # a tool change happens at its own position
     target = Point(safety.change_point_x, safety.change_point_z) if changes_tool else Point(safety.safe_radius_mm, safety.safe_z_mm)
-    if state.position != target:
+    if state.position != target or changes_tool:  # the move is there for a tool change even when the tool stands at the position: a post may write its own code for it
         before.append(Rapid(target, at_change=changes_tool))
     if block.needs_tool:
         if changes_tool:
