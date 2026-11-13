@@ -38,6 +38,21 @@ class SvgPreviewTests(unittest.TestCase):
         self.assertTrue(rapid_only)
         self.assertFalse(rapid_only & set(_extent_points(self.plan)))
 
+    def test_a_whole_picture_holds_the_rapids_and_names_the_part_as_its_home_view(self):
+        from wop.ui.svg_preview import svg_home
+
+        plain, whole = render_svg(self.plan, with_legend=False), render_svg(self.plan, with_legend=False, whole=True)
+        self.assertIsNone(svg_home(plain))
+        x, y, width, height = svg_home(whole)
+        full_width, full_height = (float(ET.fromstring(whole).get(name)) for name in ("width", "height"))
+        self.assertGreater(width, 0)
+        self.assertGreater(height, 0)
+        self.assertLess(width, full_width)  # the tool change position lies outside the part
+        self.assertGreaterEqual(x, 0)
+        self.assertGreaterEqual(y, 0)
+        self.assertLessEqual(y + height, full_height + 1e-6)
+        self.assertGreaterEqual(float(ET.fromstring(whole).get("height")), float(ET.fromstring(plain).get("height")))
+
     def test_line_scale_thins_lines_dashes_and_marks_for_an_enlarged_picture(self):
         def widths(text):
             root = ET.fromstring(text)

@@ -35,6 +35,17 @@ class ZoomPanTests(unittest.TestCase):
         self.assertEqual((view.zoom, view.origin), (ZOOM_MIN, (0.0, 0.0)))
         self.assertTrue(view.is_default)
 
+    def test_a_picture_with_more_than_its_home_view_zooms_out_past_home_and_snaps_at_home(self):
+        view = ZoomPan()
+        view.zoom_at((400, 300), BASE, 1.2, WINDOW, 0.25)
+        self.assertEqual(view.zoom, 1.2)
+        view.zoom_at((400, 300), BASE, 1 / 1.2, WINDOW, 0.25)
+        self.assertTrue(view.is_default)  # back at home exactly
+        view.zoom_at((400, 300), BASE, 0.1, WINDOW, 0.25)
+        self.assertEqual(view.zoom, 0.25)  # as far out as the whole picture
+        view.pan_by(30, 10, BASE, WINDOW, 0.25)
+        self.assertNotEqual(view.origin, (0.0, 0.0))  # it can be moved while it is smaller than home
+
     def test_panning_moves_the_picture_but_not_out_of_the_window(self):
         view = ZoomPan()
         view.zoom_at((400, 300), BASE, 4.0, WINDOW)

@@ -223,6 +223,7 @@ Rules for this list:
 | V7 | Stepping stays responsive | `tests/test_stepper.py`, `tests/test_qt_real.py` | Done |
 | V8 | Planning and checking in the background | `tests/test_background_analysis.py` | Done |
 | V9 | A saved project shows its part at once | `tests/test_saved_part.py` | Done |
+| V10 | The 2D picture opens on the part and can be zoomed out to all tool paths | A far tool change position is not in the first view, and zooming out shows it (`tests/test_overlay_home.py`). | Done, not tried by the user |
 | V3 | Legend as an overlay; findings as crosses | 20 blocks do not move the drawing. | Done |
 | V4 | Pictures follow the OS theme | Light and dark are readable. | Done |
 | V5 | 3D view in the centre with a 2D/3D toggle | The toggle does not move the window. | Done |

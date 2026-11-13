@@ -11,6 +11,8 @@ from dataclasses import dataclass
 
 from .ui_constants import PAN_KEEP_VISIBLE_FRACTION, ZOOM_MAX, ZOOM_MIN
 
+HOME_SNAP = 0.02  # a zoom this close to the home view is the home view
+
 Rect = tuple[float, float, float, float]
 
 
@@ -30,9 +32,14 @@ class ZoomPan:
         x, y, width, height = base
         return (x + self.origin[0] * width, y + self.origin[1] * height, width * self.zoom, height * self.zoom)
 
-    def zoom_at(self, cursor: tuple[float, float], base: Rect, factor: float, window: Rect | None = None) -> None:
-        """Zoom by `factor` keeping the point of the picture under `cursor` where it is."""
-        new_zoom = min(max(self.zoom * factor, ZOOM_MIN), ZOOM_MAX)
+    def zoom_at(
+        self, cursor: tuple[float, float], base: Rect, factor: float, window: Rect | None = None, min_zoom: float = ZOOM_MIN,
+    ) -> None:
+        """Zoom by `factor` keeping the point of the picture under `cursor` where it is. `min_zoom` below 1 lets the user
+        zoom out past the home view (a picture that holds more than the home view)."""
+        new_zoom = min(max(self.zoom * factor, min_zoom), ZOOM_MAX)
+        if min_zoom < ZOOM_MIN and abs(new_zoom - ZOOM_MIN) < HOME_SNAP:
+            new_zoom = ZOOM_MIN  # passing the home view stops at it
         if new_zoom == self.zoom:
             return
         x, y, width, height = self.view_rect(base)
@@ -40,16 +47,17 @@ class ZoomPan:
         left, top = cursor[0] - (cursor[0] - x) * ratio, cursor[1] - (cursor[1] - y) * ratio
         self.zoom = new_zoom
         self.origin = ((left - base[0]) / base[2], (top - base[1]) / base[3])
-        self._keep_in_window(base, window)
+        self._keep_in_window(base, window, min_zoom)
 
-    def pan_by(self, dx: float, dy: float, base: Rect, window: Rect | None = None) -> None:
+    def pan_by(self, dx: float, dy: float, base: Rect, window: Rect | None = None, min_zoom: float = ZOOM_MIN) -> None:
         """Move the picture by (dx, dy) window pixels."""
         self.origin = (self.origin[0] + dx / base[2], self.origin[1] + dy / base[3])
-        self._keep_in_window(base, window)
+        self._keep_in_window(base, window, min_zoom)
 
-    def _keep_in_window(self, base: Rect, window: Rect | None) -> None:
-        """Do not lose the picture: a part of it always stays inside the window; unzoomed it sits at its base place."""
-        if self.zoom <= ZOOM_MIN:
+    def _keep_in_window(self, base: Rect, window: Rect | None, min_zoom: float = ZOOM_MIN) -> None:
+        """Do not lose the picture: a part of it always stays inside the window; unzoomed it sits at its base place
+        (a picture that can be zoomed out past home can be moved there too)."""
+        if self.zoom <= ZOOM_MIN and min_zoom >= ZOOM_MIN:
             self.reset()
             return
         if window is None:

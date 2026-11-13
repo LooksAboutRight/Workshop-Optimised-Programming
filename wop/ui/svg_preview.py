@@ -13,6 +13,7 @@ of blocks. Files keep the legend in the picture.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from xml.sax.saxutils import escape
 
@@ -97,9 +98,9 @@ def _polygon_element(region: Region, view: _View, fill: str, stroke: str) -> str
     )
 
 
-def _extent_points(plan: ProgramPlan, extra_points: tuple[Point, ...] = ()) -> list[Point]:
+def _extent_points(plan: ProgramPlan, extra_points: tuple[Point, ...] = (), whole: bool = False) -> list[Point]:
     """What the picture shows by default: the raw part, the cutting moves and `extra_points`. The rapid moves (to the
-    tool change position, the safe position) are drawn but may run out of the picture."""
+    tool change position, the safe position) are drawn but may run out of the picture; with `whole` they are in it."""
     points: list[Point] = list(extra_points)
     bounds = plan.stock.bounds
     if bounds is not None:
@@ -110,7 +111,7 @@ def _extent_points(plan: ProgramPlan, extra_points: tuple[Point, ...] = ()) -> l
         end = getattr(operation, "end", None)
         if isinstance(operation, ArcMove) and position is not None:
             points += _arc_points(position, operation)
-        elif isinstance(end, Point) and not isinstance(operation, Rapid):
+        elif isinstance(end, Point) and (whole or not isinstance(operation, Rapid)):
             points.append(end)
         if isinstance(end, Point):
             position = end
@@ -200,6 +201,7 @@ def render_svg(
     order_colors: tuple[str, str] | None = None,
     rapids: bool = True,
     line_scale: float = 1.0,
+    whole: bool = False,
 ) -> str:
     """The picture as SVG text.
 
@@ -219,9 +221,17 @@ def render_svg(
     order_colors: colour the cutting moves by the order they are made in, from the first colour to the second (the picture of a style).
     rapids: False leaves the rapid moves out.
     line_scale: 1 / the zoom of the window, so the lines keep their width on the screen when the picture is enlarged.
+    whole: the picture holds all the rapid moves too (to the tool change position); the part and the cutting moves are
+    the "home" view, written into the picture as `data-home` (`svg_home`), which a window shows first and zooms out of.
     """
     last = _last_block(plan, upto_block)
-    view, height = _make_view(list(fit) if fit else _extent_points(plan, extra_points), line_scale)
+    home = None
+    if whole and not fit:
+        home_points = _extent_points(plan, extra_points)
+        view, height = _make_view(_extent_points(plan, extra_points, whole=True), line_scale)
+        home = _home_rect(home_points, view)
+    else:
+        view, height = _make_view(list(fit) if fit else _extent_points(plan, extra_points), line_scale)
     shown = plan.blocks[: last + 1]
     material = step.material if step else shown[-1].material_after if shown else plan.stock
     elements = _ground_elements(plan, shown, material, view, colors, workholding, outline)
@@ -238,7 +248,7 @@ def render_svg(
     if with_legend:
         legend_elements, total_height = _legend_elements(legend_rows, height, colors)
         elements += legend_elements
-    return _document(elements, total_height, colors)
+    return _document(elements, total_height, colors, home)
 
 
 def _ground_elements(
@@ -376,7 +386,26 @@ def _legend_elements(legend_rows: list[tuple[str, str]], height: float, colors: 
     return elements, height + legend_height + ui.LEGEND_LINE_HEIGHT_PX
 
 
-def _document(elements: list[str], total_height: float, colors: ColorSet) -> str:
+def _home_rect(points: list[Point], view: _View) -> tuple[float, float, float, float]:
+    """The rectangle (x, y, width, height in picture units) round these points, with the margin of the picture."""
+    left, top = view.px(Point(max(p.x for p in points), min(p.z for p in points)))
+    right, bottom = view.px(Point(min(p.x for p in points), max(p.z for p in points)))
+    margin = ui.PICTURE_MARGIN_PX
+    return (left - margin, top - margin, right - left + 2 * margin, bottom - top + 2 * margin)
+
+
+HOME_ATTRIBUTE = re.compile(r'data-home="([-\d.eE]+) ([-\d.eE]+) ([-\d.eE]+) ([-\d.eE]+)"')
+
+
+def svg_home(text: str) -> tuple[float, float, float, float] | None:
+    """The home rectangle of a picture made with `whole` (None: the picture is shown as it is)."""
+    found = HOME_ATTRIBUTE.search(text[:400])
+    return None if found is None else tuple(float(part) for part in found.groups())  # type: ignore[return-value]
+
+
+def _document(
+    elements: list[str], total_height: float, colors: ColorSet, home: tuple[float, float, float, float] | None = None,
+) -> str:
     """The elements as one SVG text."""
     # A background gets its real size (a "100%" rectangle was drawn too small by the Qt SVG widget).
     background = (
@@ -385,8 +414,9 @@ def _document(elements: list[str], total_height: float, colors: ColorSet) -> str
         else ""
     )
     body = "\n".join(element for element in elements if element)
+    home_text = "" if home is None else " data-home=\"" + " ".join(_fmt(part) for part in home) + "\""
     return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{ui.PICTURE_WIDTH_PX}" '
+        f'<svg xmlns="http://www.w3.org/2000/svg"{home_text} width="{ui.PICTURE_WIDTH_PX}" '
         f'height="{_fmt(total_height)}" viewBox="0 0 {ui.PICTURE_WIDTH_PX} {_fmt(total_height)}">\n'
         f"{background}{body}\n</svg>\n"
     )

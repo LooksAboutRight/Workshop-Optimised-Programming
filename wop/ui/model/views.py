@@ -180,17 +180,18 @@ class ViewsMixin:
 
     def picture(
         self, upto_block: int | None = None, analysis: Analysis | None = None, with_legend: bool = True,
-        step: int | None = None, line_scale: float = 1.0,
+        step: int | None = None, line_scale: float = 1.0, whole: bool = False,
     ) -> str:
         """SVG text of the program (or of an analysis given), up to upto_block.
 
         The window asks for no legend and draws its own overlay (`legend`), and gives 1 / its zoom as `line_scale`.
-        The picture shows the raw part and the cutting moves; the safe and tool change positions are not in it.
+        The picture shows the raw part and the cutting moves; the safe and tool change positions are not in it, unless
+        `whole`: then they are, and the part and the cutting moves are the home view (`svg_home`) the window opens on.
         """
         analysis = analysis or self.analysis
         if analysis.plan is None:
             preview = self._preview_plan(analysis)
-            return "" if preview is None else render_svg(preview, None, [], self.colors, with_legend, line_scale=line_scale)
+            return "" if preview is None else render_svg(preview, None, [], self.colors, with_legend, line_scale=line_scale, whole=whole)
         shown = self.step_view(step) if step is not None and analysis is self.analysis else None
         if shown:
             upto_block = shown[0]
@@ -203,7 +204,7 @@ class ViewsMixin:
         extra += tuple(segments_to_polyline(list(outline))) if outline else ()
         return render_svg(analysis.plan, upto_block, analysis.findings, self.colors, with_legend,
                           shown[1] if shown else None, extra_points=extra, workholding=placed, outline=outline,
-                          line_scale=line_scale)
+                          line_scale=line_scale, whole=whole)
 
     def selected_outline(self, analysis: Analysis, upto_block: int | None = None) -> tuple[Segment, ...]:
         """The finished shape of the block chosen in the flow list, made from its form values (nothing for a block that

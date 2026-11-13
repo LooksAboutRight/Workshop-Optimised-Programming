@@ -87,6 +87,7 @@ WORKHOLDING_LINE_WIDTH_PX = 1.5
 # --- zoom and pan of the 2D picture ---
 ZOOM_MIN = 1.0  # the whole picture fits the window
 ZOOM_MAX = 40.0
+LINE_SCALE_TOLERANCE = 0.01  # the picture is drawn again when the line scale it was drawn for is off by more than this share
 ZOOM_PER_WHEEL_NOTCH = 1.2
 WHEEL_NOTCH_UNITS = 120  # what Qt reports for one notch of the wheel
 PAN_KEEP_VISIBLE_FRACTION = 0.1  # at least this part of the picture stays inside the window

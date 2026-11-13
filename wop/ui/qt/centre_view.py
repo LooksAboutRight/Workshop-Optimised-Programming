@@ -26,7 +26,8 @@ from PySide6.QtWidgets import (
 
 from ..app_model import AppModel
 from ..contour_picture import contour_svg
-from ..ui_constants import LEGEND_MAX_ROWS
+from ..svg_preview import svg_home
+from ..ui_constants import LEGEND_MAX_ROWS, LINE_SCALE_TOLERANCE
 from .overlay_svg import TOP_LEFT, TOP_RIGHT, OverlaySvgWidget
 from .small_screens import scrolling
 from .qt_constants import LEGEND_BACKGROUND_ALPHA, LEGEND_MARKER
@@ -333,6 +334,7 @@ class CentreView(QWidget):
         if self.model.chosen_contour() is not None:  # a contour is chosen: draw it instead of the program
             self.stack.setCurrentIndex(PAGE_2D)
             svg = contour_svg(self.model.chosen_contour(), self.model.colors)
+            self.picture.set_home(None)
             self.picture.load(QByteArray(svg.encode("utf-8")))
             self._legend.setVisible(False)
             self._legend_box.setVisible(False)
@@ -356,7 +358,11 @@ class CentreView(QWidget):
         self._fill_legend(upto)
 
     def _load_picture(self, upto: int | None, step: int | None) -> None:
-        text = self.model.picture(upto, with_legend=False, step=step, line_scale=self.picture.line_scale())  # the legend is the overlay below
+        scale = self.picture.line_scale()
+        text = self.model.picture(upto, with_legend=False, step=step, line_scale=scale, whole=True)  # the legend is the overlay below
+        self.picture.set_home(svg_home(text))  # the part is shown first, the tool change position is reached by zooming out
+        if abs(self.picture.line_scale() - scale) > LINE_SCALE_TOLERANCE * scale:  # the home view changed: the lines were drawn for the old one
+            text = self.model.picture(upto, with_legend=False, step=step, line_scale=self.picture.line_scale(), whole=True)
         self.picture.load(QByteArray(text.encode("utf-8")))
 
     def _zoom_settled(self) -> None:

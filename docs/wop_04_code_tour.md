@@ -291,7 +291,7 @@ A style decides only the order and depth of steps; the block does the moving. Th
 
 ## 13. Pictures, 3D and the stepper
 
-- **2D picture** (`ui/svg_preview.py`): SVG text of the plan, the material, the findings, the tool and the jaws, in a colour set (`ui/theme.py`; `ui/qt/theme_qt.py` takes it from the window palette). Shown by Qt's SVG widget in `ui/qt/centre_view.py`; the zoom and pan state is `ui/view_zoom.py`.
+- **2D picture** (`ui/svg_preview.py`): SVG text of the plan, the material, the findings, the tool and the jaws, in a colour set (`ui/theme.py`; `ui/qt/theme_qt.py` takes it from the window palette). Shown by Qt's SVG widget in `ui/qt/centre_view.py`; the zoom and pan state is `ui/view_zoom.py`; the picture opens on its home rectangle (`ui/qt/overlay_svg.py`).
 - **3D** (`ui/view3d.py`): a `Scene` of numbers (meshes, strokes, fills) made from the plan; `ui/qt/gl_view.py` draws it with OpenGL; `view3d_widget.py` and `view3d_dialog.py` are the places it appears. Without OpenGL 2 the window uses the 2D picture.
 - **Stepper** (`ui/stepper.py`): a list of every move of the plan as a `StepFrame`; for a step it works out the material at that moment (the cuts of the block so far, as `verify_plan` does) and the tool and holder at the tip. The slider and the arrow keys in the window use it.
 - **Other pictures:** a contour (`ui/contour_picture.py`), a tool (`ui/tool_preview.py`), the path of a style (`ui/style_picture.py`).
