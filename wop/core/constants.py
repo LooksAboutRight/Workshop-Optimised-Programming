@@ -513,4 +513,5 @@ EXAMPLE_PATH_SAFE_Z_MM = 5
 PATH_OUTLINE_MAX_PIECES = 400  # GUESS: a part before a custom path block with more pieces than this is not drawn into the sketch of the path
 SAFE_POINT_KEY = "safe point"  # the locked point of a path sketch: where every block starts and the path begins
 CLAMP_PLANE_POINT = "clamping plane"  # the named point of a drawn raw part: where the jaws begin (only its Z counts)
+ATTACH_MM = 0.01  # the material a finishing pass leaves standing in a corner is grown by this to meet the part again (the cut leaves a gap of the snap distance)
 REPLACED_DEFAULTS = apply_overrides(globals(), "wop.core.constants")

@@ -34,6 +34,9 @@ def distance_to_line(point, line):
     return abs((point.x - line.start.x) * dz - (point.z - line.start.z) * dx) / math.hypot(dx, dz)
 
 
+from wop.core.tooling.tool_reference import nose_circle
+
+
 class ForwardLeaningEdgeTests(unittest.TestCase):
     """A side edge angle below 90 degrees leans over the work: the box corner would be at the far end of the edge, in the air."""
 
@@ -190,8 +193,9 @@ class NoseBlockTests(unittest.TestCase):
 
     def test_a_plain_cylinder_with_an_insert_leaves_nothing_uncut(self):
         result = self.run_block((12, 0), (12, -30))
-        self.assertEqual(result.messages, ())
-        self.assertAlmostEqual(result.removed.area, (15 - 12) * 30, delta=0.01)
+        self.assertEqual(result.messages, ())  # the corner the nose cannot reach is too small for a note ...
+        radius = nose_circle(with_tip_at_origin(holder()))[0]
+        self.assertAlmostEqual(result.removed.area, (15 - 12) * 30 - radius ** 2 * (1 - math.pi / 4), delta=0.01)  # ... but it stands: the shoulder keeps its corner
 
     def test_a_slope_with_an_insert_leaves_nothing_uncut(self):
         result = self.run_block((8, 0), (8, -10), (14, -16), (14, -30))

@@ -13,7 +13,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 
 from ..geometry.chains import ChainError, Loop, box_of, loop_area, loops_box, region_of_loops
-from ..analytic.cut_operations import FinishingJob, cut_operations, finishing_pass
+from ..analytic.cut_operations import FinishingJob, cut_operations, finishing_pass_on
 from ..analytic.cut_list import RoughingCuts
 from ..analytic.roughing_cuts import RoughingJob, left_standing, roughing_cuts
 from ..analytic.material import chains_of_region, is_uncut, stock_chains
@@ -22,6 +22,7 @@ from ..analytic.nose_follow import largest_following_radius, misses
 from ..analytic.wanted_lines import LineDirection, removal_ring
 from ..analytic.wanted_plan import WantedJob, wanted_plan
 from ..constants import (
+    ATTACH_MM,
     CHAIN_SNAP_MM,
     CUT_JITTER_MM,
     EXAMPLE_DEPTH_OF_CUT_MM,
@@ -31,9 +32,11 @@ from ..constants import (
     EXAMPLE_MIN_FREE_ANGLE_DEG,
     GEOMETRY_TOLERANCE_MM,
     RIGHT_ANGLE_DEG,
+    UNREACHED_MIN_AREA_MM2,
 )
 from ..geometry import LineSegment, Point, Segment, segments_to_polyline
 from ..program_model.operations import BlockBegin, BlockEnd, Rapid, SetSpindle, SpindleSetting, finishing_spindle
+from ..geometry.distance import distance_to_segment
 from ..geometry.region import Region
 from ..tooling.tool_back_angle import back_direction
 from ..tooling.tool_reference import nose_circle
@@ -270,9 +273,11 @@ class ContourTurningBlock(Block):
         approach = max(start_z, bounds.max_z) + safety.clearance_mm
         return Point(safety.safe_radius_mm, approach), Point(safety.safe_radius_mm, max(safety.safe_z_mm, bounds.max_z + safety.clearance_mm, approach))
 
-    def _analytic_finishing(self, context: BlockContext, inputs: PlanInputs, material: list, start: Point) -> tuple[tuple, tuple[str, ...]]:
-        """The finishing pass of the analytic planner (`cut_operations.finishing_pass`), from `start` (where the roughing ended) to the safe
-        point, and the note when the nose cannot follow the contour (`nose_follow.py`)."""
+    def _analytic_finishing(
+        self, context: BlockContext, inputs: PlanInputs, material: list, start: Point,
+    ) -> tuple[tuple, tuple[str, ...], list | None]:
+        """The finishing pass of the analytic planner (`cut_operations.finishing_pass_on`), from `start` (where the roughing ended) to the safe
+        point, the note when the nose cannot follow the contour (`nose_follow.py`) and the material the pass leaves standing (None: not worked out)."""
         path, outside, outer = inputs.path, inputs.outside, inputs.outer
         _begin, finish = self._block_ends(context, inputs.start_z)
         feed = self.finish_feed_mm_per_rev or self.feed_mm_per_rev
@@ -280,9 +285,11 @@ class ContourTurningBlock(Block):
         if outside and back_direction(context.tool) < 0:  # a left-hand tool finishes from the chuck side towards the front: planned mirrored
             flip = MIRROR_Z
             mirrored = replace(job, path=flip.path(path), tool=flip.tool(context.tool))
-            operations = [flip.operation(move) for move in finishing_pass(mirrored, flip.loops(material), flip.point(start), flip.point(finish))]
+            moves, flipped = finishing_pass_on(mirrored, flip.loops(material), flip.point(start), flip.point(finish))
+            operations = [flip.operation(move) for move in moves]
+            standing = None if flipped is None else flip.loops(flipped)
         else:
-            operations = finishing_pass(job, material, start, finish)
+            operations, standing = finishing_pass_on(job, material, start, finish)
         spindle = finishing_spindle(self.spindle, self.finish_spindle_value)
         if spindle is not None:
             operations = [SetSpindle(spindle), *operations]
@@ -297,7 +304,7 @@ class ContourTurningBlock(Block):
                 f"and Z {min(zs):.2f}: the finishing pass needs a nose radius of {largest:.2f} mm or smaller"
                 + (" (the controller may refuse the compensated pass there)" if self.cutter_compensation else "")
             )
-        return tuple(operations), tuple(notes)
+        return tuple(operations), tuple(notes), standing
 
     def _analytic_roughing(self, context: BlockContext, run_on: float = 0.0) -> tuple[tuple, tuple[str, ...], RoughingCuts | None]:
         """The roughing moves of the analytic planner (from the first rapid to the safe point), the notes and the cut list (what it leaves for
@@ -356,12 +363,49 @@ class ContourTurningBlock(Block):
         removed = self._taken(residual, first, whole) if first is not None else Region.empty()
         if self.finish_pass:
             material = list(first.residual) if first is not None else inputs.stock
-            finishing, finish_notes = self._analytic_finishing(context, inputs, material, rough[-1].end if rough else begin)
+            finishing, finish_notes, standing = self._analytic_finishing(context, inputs, material, rough[-1].end if rough else begin)
             operations += finishing
             notes = (*notes, *finish_notes)
             removed = removed.union(whole)  # the finishing pass follows the contour: it takes what the roughing could not reach (the note stays)
+            if standing is not None:  # ... except what the rounded nose cannot take: it stands, for the next block and for the picture
+                removed, stands_note = self._without_what_stands(removed, whole, standing, inputs.path, context)
+                notes = (*notes, *stands_note)
         result = BlockResult(tuple(merge_straight_rapids([*operations, ends[1]])), removed, notes, residual.difference(whole))
         return result if inputs.outside else with_solid_note(result, inputs.stock_radius)
+
+    def _without_what_stands(
+        self, removed: Region, whole: Region, standing: list, path: list[Segment], context: BlockContext,
+    ) -> tuple[Region, tuple[str, ...]]:
+        """`removed` less the material of `whole` that the finishing pass leaves standing (`standing`: the material after the pass): the corners
+        the nose cannot reach. A piece that nowhere stands further from the contour than the shifts of a retried cut (`CUT_JITTER_MM`) is a
+        sliver of the boolean, not material; of the others only the part near where they stand deepest is kept (a thin film along the contour
+        that hangs on to a corner is the same sliver). A note when it is a lot."""
+        hair = max(math.hypot(dx, dz) for dx, dz in CUT_JITTER_MM)
+        left = Region.empty()
+        try:
+            for piece in region_of_loops(standing).intersection(whole).pieces():
+                aways = [
+                    (min(distance_to_segment(point, segment) for segment in path), point) for polygon in piece.polygons() for point in polygon.exterior
+                ]
+                depth = max((away for away, _point in aways), default=0.0)
+                if depth <= hair:
+                    continue
+                near = 2 * hair  # the core: where it stands further than this from the contour (the film of the cut along the contour is thinner); the tapering ends of a corner stay
+                core = [point for away, point in aways if away >= near]
+                kept = piece.intersection(Region.rectangle(
+                    min(p.x for p in core) - near, min(p.z for p in core) - near, max(p.x for p in core) + near, max(p.z for p in core) + near,
+                ))
+                left = left.union(kept.offset(ATTACH_MM).intersection(whole))  # grown a hair: the corner touches the part again (the cut left a gap of the snap distance)
+        except (ChainError, ValueError):
+            return removed, ()  # not worked out: as before, the finishing pass is taken to have cut the whole shape
+        if left.is_empty:
+            return removed, ()
+        notes = ()
+        if left.area >= UNREACHED_MIN_AREA_MM2:
+            radius, _centre = nose_circle(context.tool)
+            notes = (f"{self.name or self.type_name}: {left.area:.2f} mm2 of the finished shape stays standing, in the corners the nose of the tool "
+                     f"(radius {radius:.2f} mm) cannot reach",)
+        return removed.difference(left), notes
 
     @staticmethod
     def _taken(residual: Region, first: RoughingCuts, whole: Region) -> Region:

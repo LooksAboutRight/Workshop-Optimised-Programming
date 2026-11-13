@@ -105,6 +105,11 @@ class FinishingJob:
 
 
 def finishing_pass(job: FinishingJob, material: list[Loop], start: Point, finish: Point) -> list:
+    """The moves of `finishing_pass_on` (see there)."""
+    return finishing_pass_on(job, material, start, finish)[0]
+
+
+def finishing_pass_on(job: FinishingJob, material: list[Loop], start: Point, finish: Point) -> tuple[list, list[Loop] | None]:
     """The finishing pass (the user's rule, 2026-10-23): the tool path along the whole contour (`reference_path`: the nose follows it) at the
     finishing feed, through the air too, never shortened and never left; from where the tool stands (`start`) to the safe point (`finish`).
     The way there and away are the rapids between the cuts (X12, `clear_way`): they keep the clearance from the material (`material` before
@@ -112,7 +117,10 @@ def finishing_pass(job: FinishingJob, material: list[Loop], start: Point, finish
     such way is found, the tool goes out to `clear_x` first. `compensate`: a pass for a controller with cutter compensation: a lead-in along
     the first contour piece and a lead-out away from the part, the nose radius plus a margin long, and on every move its point of the nominal
     contour (the post writes those). Where the nose cannot follow the contour the checker reports what it does (`nose_follow.py` names the
-    nose radius that would)."""
+    nose radius that would).
+
+    Returns the moves and the material the pass leaves standing: what the cutting edges of the tool, the rounded nose included, do not take
+    along the path (a sharp inner corner keeps the corner the nose cannot reach), or None when the boolean could not work it out."""
     path, tool, outside, compensate, feed, clearance = job.path, job.tool, job.outside, job.compensate, job.feed, job.clearance
     pieces = reference_path(path, tool, outside)
     sign = 1 if outside else -1
@@ -145,13 +153,15 @@ def finishing_pass(job: FinishingJob, material: list[Loop], start: Point, finish
         end = moves[-1].end
     way_in = clear_way(start, begin, loops, material, clearance, down_cuts=True)
     head = _rebuilt(way_in, feed) if way_in is not None else _out_and_over(start, begin, job.clear_x, feed)
+    standing: list[Loop] | None = None
     try:
         after = cut(material, loops, path_of(moves, begin), CHAIN_SNAP_MM)[0]
+        standing = after
     except ChainError:
         after = material  # the way away keeps off the material as it was before the pass
     way_out = clear_way(end, finish, loops, after, clearance)
     tail = _rebuilt(way_out, feed) if way_out is not None else _out_and_over(end, finish, job.clear_x, None)
-    return [*head, *moves, *tail]
+    return [*head, *moves, *tail], standing
 
 
 def _out_and_over(here: Point, target: Point, clear_x: float, feed: float | None) -> list:

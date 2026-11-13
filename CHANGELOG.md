@@ -17,6 +17,7 @@ At a release, `Unreleased` becomes the new version heading with its date.
 - Window unit: File > Preferences > Program > DISPLAY_UNITS shows lengths, feeds and sketch dimensions in inches or millimetres (after a restart), whatever the unit of the machine. Messages and summaries follow it. A spindle speed field names its unit (RPM, m/min, or ft/min in inch). ISO tool sizes, the values in Preferences and the taper rise per 100 mm stay metric.
 - G-code in inches: an imperial machine writes `G20`, lengths and feeds in inches and constant surface speed in feet per minute (new post token `<units code>`, post settings `decimals_inch` and `feed_decimals_inch`).
 ### Changed
+- Turning: the material that the rounded nose of the tool cannot reach (the corner of a sharp inner corner) now stays standing after the block, in the picture and for the next block; before, the block took the finished shape as cut. A note names it when it is more than 0.25 mm2.
 - Grooving: a cut-off (a groove to the axis) now starts its full-depth cutting at the wall of the part, so the part comes off at its length; before, the first plunge could be one one-sided cut away from it.
 - Grooving: the value of the one-sided cut and its mode entry "mm" follow the unit of the window.
 - The 2D picture again holds all tool paths, also the moves to the tool change position, but still opens zoomed to the part: zoom out (mouse wheel) to see everything, double click to come back.

@@ -1,0 +1,413 @@
+{
+  "format": 1,
+  "settings": {
+    "title": "WOP program",
+    "x_mode": "DIAMETER",
+    "work_offset": "G54"
+  },
+  "raw_part": {
+    "material": "Mild steel",
+    "outer_diameter_mm": 30,
+    "length_outside_mm": 60,
+    "inner_diameter_mm": 0,
+    "length_mm": null,
+    "front_z_mm": 0
+  },
+  "safety": {
+    "safe_radius_mm": 25,
+    "safe_z_mm": 10,
+    "clearance_mm": 1,
+    "change_radius_mm": null,
+    "change_z_mm": null
+  },
+  "tools": [
+    {
+      "format": 1,
+      "number": 1,
+      "name": "Turning tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0.010956209,
+              2.209056927
+            ],
+            "end": [
+              2.209056927,
+              0.010956209
+            ],
+            "center": [
+              2,
+              2
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              2.209056927,
+              0.010956209
+            ],
+            "end": [
+              20,
+              1.880859676
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20,
+              1.880859676
+            ],
+            "end": [
+              20.197686318,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20.197686318,
+              0
+            ],
+            "end": [
+              100,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100,
+              0
+            ],
+            "end": [
+              100,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100,
+              20
+            ],
+            "end": [
+              1.880859676,
+              20
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              1.880859676,
+              20
+            ],
+            "end": [
+              0.010956209,
+              2.209056927
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "turning",
+      "definition": {
+        "number": 1,
+        "name": "",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 2,
+        "side_edge_length_mm": 20,
+        "side_edge_angle_deg": 96,
+        "front_edge_angle_deg": 96,
+        "width_mm": 20,
+        "length_mm": 100
+      }
+    },
+    {
+      "format": 1,
+      "number": 2,
+      "name": "Turning tool",
+      "pieces": [
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "arc",
+            "start": [
+              0.00054781,
+              0.110452846
+            ],
+            "end": [
+              0.110452846,
+              0.00054781
+            ],
+            "center": [
+              0.1,
+              0.1
+            ],
+            "direction": "ccw"
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              0.110452846,
+              0.00054781
+            ],
+            "end": [
+              20,
+              2.091023454
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20,
+              2.091023454
+            ],
+            "end": [
+              20.219775421,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              20.219775421,
+              0
+            ],
+            "end": [
+              100,
+              0
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100,
+              0
+            ],
+            "end": [
+              100,
+              20
+            ]
+          }
+        },
+        {
+          "role": "HOLDER",
+          "segment": {
+            "type": "line",
+            "start": [
+              100,
+              20
+            ],
+            "end": [
+              2.091023454,
+              20
+            ]
+          }
+        },
+        {
+          "role": "CUTTER",
+          "segment": {
+            "type": "line",
+            "start": [
+              2.091023454,
+              20
+            ],
+            "end": [
+              0.00054781,
+              0.110452846
+            ]
+          }
+        }
+      ],
+      "material": "CARBIDE",
+      "kind": "turning",
+      "definition": {
+        "number": 2,
+        "name": "",
+        "material": "CARBIDE",
+        "hand": "RIGHT",
+        "nose_radius_mm": 0.1,
+        "side_edge_length_mm": 20,
+        "side_edge_angle_deg": 96,
+        "front_edge_angle_deg": 96,
+        "width_mm": 20,
+        "length_mm": 100
+      }
+    }
+  ],
+  "contours": [],
+  "blocks": [
+    {
+      "type": "turning",
+      "parameters": {
+        "block_id": "b1",
+        "tool_number": 1,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_RPM",
+          "value": 1000,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Turning",
+        "comment": "",
+        "side": "OUTSIDE",
+        "target_radius_mm": 10,
+        "end_z_mm": -20,
+        "start_z_mm": 0,
+        "taper_deg": 0,
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 1,
+        "pass_direction": "ALONG_Z",
+        "start_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "shoulder_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "finish_allowance_mm": 1.000000000155292,
+        "finish_pass": true,
+        "cutter_compensation": false,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": null
+      }
+    },
+    {
+      "type": "turning",
+      "parameters": {
+        "block_id": "b2",
+        "tool_number": 2,
+        "spindle": {
+          "direction": "CLOCKWISE",
+          "mode": "CONSTANT_RPM",
+          "value": 1000,
+          "rpm_limit": null
+        },
+        "coolant": "NONE",
+        "name": "Turning",
+        "comment": "",
+        "side": "OUTSIDE",
+        "target_radius_mm": 10,
+        "end_z_mm": -20,
+        "start_z_mm": -18.590733418862765,
+        "taper_deg": 0,
+        "feed_mm_per_rev": 0.2,
+        "depth_of_cut_mm": 1,
+        "pass_direction": "ALONG_Z",
+        "start_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "shoulder_corner": {
+          "kind": "NONE",
+          "size_mm": 0
+        },
+        "finish_allowance_mm": 0.05000000021323955,
+        "finish_pass": true,
+        "cutter_compensation": false,
+        "finish_feed_mm_per_rev": 0.1,
+        "finish_spindle_value": null
+      }
+    }
+  ],
+  "machine": {
+    "format": 1,
+    "name": "schaublin_125",
+    "unit_system": "metric",
+    "default_x_mode": "diameter",
+    "axes": [
+      {
+        "name": "X",
+        "min_mm": -81.0,
+        "max_mm": 104.0
+      },
+      {
+        "name": "Z",
+        "min_mm": -400.0,
+        "max_mm": 0.1
+      }
+    ],
+    "min_rpm": 60.0,
+    "max_rpm": 3000.0,
+    "spindle_power_kw": 2.5,
+    "max_velocity_x_mm_min": 3000.0,
+    "max_velocity_z_mm_min": 3000.0,
+    "capabilities": [
+      "constant surface speed",
+      "spindle-synchronised moves"
+    ],
+    "capabilities_off": [],
+    "postprocessor": "linuxcnc_spindle_ramp",
+    "change_radius_mm": 50.0,
+    "change_z_mm": 390.0,
+    "machine_change_radius_mm": 92.5,
+    "machine_change_z_mm": -5.0
+  },
+  "touched": [
+    "block:b2/tool_number"
+  ],
+  "preview": [
+    [
+      "L 0 -60 15 -60",
+      "L 15 -60 15 -20.000000000000004",
+      "L 15 -20 14.999965613089152 -20",
+      "L 14.999965613089152 -20 11.407966113694815 -20",
+      "L 11.407966113694815 -20 10.070025609883766 -20",
+      "A 10.070025609883766 -20 10.070465183710098 -19.997067722493032 10.060465183710098 -19.997067722493032 CCW",
+      "L 10.070465183710098 -19.997067722493032 10.070465183710098 -19.99185313426417",
+      "A 10.070465183710098 -19.99185313426417 10.064418665364876 -19.982667820834276 10.060465183710098 -19.99185313426417 CCW",
+      "A 10.064418665364876 -19.982667820834276 10.017332180987514 -19.935581338867777 10.10000000042648 -19.89999999957352 CW",
+      "A 10.017332180987514 -19.935581338867777 10.008146867760045 -19.92953482099285 10.008146867760045 -19.93953482099285 CCW",
+      "L 10.008146867760045 -19.92953482099285 10.002932280222216 -19.92953482099285",
+      "A 10.002932280222216 -19.92953482099285 9.999999999999998 -19.92997439565198 10.002932280222216 -19.93953482099285 CCW",
+      "L 10 -19.92997439565198 10 -18.592033886304712",
+      "L 10 -18.592033886304712 10 -18.586048639108466",
+      "A 10 -18.586048639108466 9.994767409819218 -18.591281229289248 9.994767409819218 -18.586048639108466 CW",
+      "L 9.994767409819218 -18.591281229289248 9.089814082658334 -18.591281229289244",
+      "A 9.089814082658334 -18.591281229289244 8.989814457352885 -18.49100732364923 9.089814082658334 -18.491281228862764 CW",
+      "A 8.989814457352885 -18.49100732364923 8.990361892658335 -18.480828382862764 9.089814082658334 -18.491281228862764 CW",
+      "L 8.990361892658335 -18.480828382862764 9.989563481072699 -8.973518162401003",
+      "A 9.989563481072699 -8.973518162401003 10 -8.974065086162714 9.99476740981922 -8.974065086162714 CW",
+      "L 10 -8.974065188752279 10 0",
+      "L 10.000000000000002 0 0 0",
+      "L 0 0 0 -60"
+    ]
+  ]
+}

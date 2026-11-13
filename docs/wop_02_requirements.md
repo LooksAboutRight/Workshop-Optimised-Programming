@@ -215,6 +215,7 @@ Rules for this list:
 | X12 | Rapids keep one clearance from the standing material | `tests/test_analytic_replay.py` | Partly: blocks on the old planner are not checked |
 | X17 | A start corner cuts the edge of a bar also when the target is the bar diameter or more | `tests/test_turning_edge_only.py` | Done, not tried |
 | X18 | A finishing pass past a wall lower than the nose radius ends away from the part | `tests/test_turning_edge_only.py` | Done, not tried |
+| X19 | What the nose of the tool cannot reach stands after the block | The material after a block with a nose radius keeps the corner of a sharp inner corner; the next block and the picture get it (`tests/test_nose_leftover.py`). | Done, not tried |
 | X15 | Simple turning starts where the material of the block begins | `tests/test_turning_start_z.py` | Done, not tried |
 
 ## Preview
