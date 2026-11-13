@@ -20,12 +20,14 @@ from .base import Feature, PostInfo
 from .concepts import CONCEPTS
 from .post_constants import (
     COORDINATE_DECIMALS,
+    COORDINATE_DECIMALS_INCH,
     DEFAULT_LINE_NUMBER_PREFIX,
     DEFAULT_LINE_NUMBER_START,
     DEFAULT_LINE_NUMBER_STEP,
     EXAMPLE_DATE_FORMAT,
     EXAMPLE_TIME_FORMAT,
     FEED_DECIMALS,
+    FEED_DECIMALS_INCH,
     POST_FILE_FORMAT_VERSION,
     SPEED_DECIMALS,
     WORK_OFFSET_CODE_PREFIX,
@@ -71,6 +73,8 @@ class PostFileSettings:
     decimals: int = COORDINATE_DECIMALS
     feed_decimals: int = FEED_DECIMALS
     speed_decimals: int = SPEED_DECIMALS
+    decimals_inch: int = COORDINATE_DECIMALS_INCH  # decimals of coordinates in an inch program
+    feed_decimals_inch: int = FEED_DECIMALS_INCH
     zeros: bool = False  # keep trailing zeros
     point: bool = False  # always a decimal point
     line_ending: str = "lf"
@@ -99,6 +103,7 @@ class PostFileSettings:
 
 SETTING_HELP = {
     "decimals": "decimals of coordinates", "feed_decimals": "decimals of feeds", "speed_decimals": "decimals of speeds",
+    "decimals_inch": "decimals of coordinates in an inch program", "feed_decimals_inch": "decimals of feeds in an inch program",
     "zeros": "keep trailing zeros (yes/no)", "point": "always write a decimal point (yes/no)",
     "line_ending": "lf or crlf", "file_extension": "extension of the G-code file", "encoding": "text encoding of the file",
     "line_numbers": "number every line that is not a comment (yes/no)", "line_number_prefix": "letter(s) in front of a line number", "line_number_start": "first line number",

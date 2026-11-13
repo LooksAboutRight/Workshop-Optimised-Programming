@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from ..core.constants import GEOMETRY_TOLERANCE_MM
+from ..core.constants import GEOMETRY_TOLERANCE_MM, MM_PER_INCH
 from ..core.geometry import ArcDirection, Point
 from ..core.program_model.operations import (
     ArcMove,
@@ -31,15 +31,15 @@ from ..core.program_model.operations import (
     SpindleSetting,
     ThreadOperation,
 )
-from ..core.program_model.units import XInputMode
+from ..core.program_model.units import UnitSystem, XInputMode
 from .base import PostError, PostInfo, Postprocessor, PostSettings
 from .concepts import CONCEPTS
 from .context import BlockInfo, PostContext
 from .numbers import NumberFormat, format_number
-from .post_constants import SEPARATOR_PLACEHOLDER
+from .post_constants import INCHES_PER_FOOT, M_PER_MIN_TO_MM_PER_MIN, SEPARATOR_PLACEHOLDER
 from .post_definition import BoundOptional, Line, PostDefinition, replace_pairs
 from .template import Literal
-from .tokens import BoundToken
+from .tokens import DIMENSION_LENGTH, DIMENSION_SURFACE_SPEED, BoundToken, dimension_of
 from .variables import VariableError, check_values
 
 FUNCTION_CONCEPTS = {
@@ -196,9 +196,22 @@ class TemplatePost(Postprocessor):
 
     # --- one token -----------------------------------------------------------------------
 
+    def _unit_factor(self, token, render: Render) -> float:
+        """The factor from the millimetres of the program to the unit of the G-code (1 for millimetres)."""
+        if self.settings.unit is not UnitSystem.IMPERIAL:
+            return 1
+        dimension = dimension_of(token)
+        if dimension == DIMENSION_LENGTH:
+            return 1 / MM_PER_INCH
+        if dimension == DIMENSION_SURFACE_SPEED and render.concept == "spindle_css":  # m/min to feet per minute
+            return M_PER_MIN_TO_MM_PER_MIN / MM_PER_INCH / INCHES_PER_FOOT
+        return 1
+
     def _number_format(self, token) -> NumberFormat:
         settings = self.definition.settings
-        decimals = {"coordinate": settings.decimals, "feed": settings.feed_decimals, "speed": settings.speed_decimals,
+        imperial = self.settings.unit is UnitSystem.IMPERIAL and dimension_of(token) == DIMENSION_LENGTH
+        decimals = {"coordinate": settings.decimals_inch if imperial else settings.decimals,
+                    "feed": settings.feed_decimals_inch if imperial else settings.feed_decimals, "speed": settings.speed_decimals,
                     "one": ONE_DECIMAL, "count": 0}[token.number_format]
         if token.number_format in COORDINATE_FORMATS:
             return NumberFormat(decimals, settings.zeros, settings.point)
@@ -210,7 +223,7 @@ class TemplatePost(Postprocessor):
         if value is None:
             return ""
         if token.kind == "number":
-            text = format_number(float(value), self._number_format(token), options)
+            text = format_number(float(value) * self._unit_factor(token, render), self._number_format(token), options)
         else:
             text = str(value)
             if options.has("safe"):

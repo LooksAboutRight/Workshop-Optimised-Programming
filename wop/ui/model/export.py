@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from ...core.program_model.units import UnitSystem
 from ...post.base import PostSettings
 from ...post.context import make_context
 from ...post.engine import TemplatePost
@@ -100,7 +101,7 @@ class ExportMixin:
         post = TemplatePost(definition)
         machine = self.project.machine
         title = self.project.settings.title
-        settings = PostSettings(self.project.settings.x_mode)
+        settings = PostSettings(self.project.settings.x_mode, machine.unit_system if machine else UnitSystem.METRIC)
         context = make_context(self.program, plan, title, machine.name if machine else "", datetime.now(),
                                machine=machine, work_offset=self.project.settings.work_offset)
         notes = (not_found,) if not_found else ()

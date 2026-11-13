@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 from ..core.geometry import ArcSegment, Point
 from ..core.program_model.operations import DrillMode, ThreadTaper
-from ..core.program_model.units import XInputMode
+from ..core.program_model.units import UnitSystem, XInputMode
 from .base import PostError
 from .concepts import ARCS, DRILL_CYCLES, MOVES, SPINDLE, THREADS
 from .token_codes import _code, _comp_code, _prepare_code, _prepare_compensation, _prepare_spindle_code, _spindle_code  # noqa: F401 (the code tokens live in token_codes.py)
@@ -49,6 +49,19 @@ class Token:
     memory: bool = False  # the engine decides `changed` by comparing with what this token wrote last time
     args: int = 0  # words after the name that belong to the token, not to the options
     prepare: Callable[[tuple, dict], tuple] | None = None  # turns the words into what evaluate needs, with the codes of the post
+    dimension: str | None = None  # what the number measures in an inch program: "length" (also a feed), "surface" (constant surface speed), "none"; None: a length for a coordinate or feed format, else none
+
+
+DIMENSION_LENGTH = "length"
+DIMENSION_SURFACE_SPEED = "surface"
+DIMENSION_NONE = "none"
+
+
+def dimension_of(token: Token) -> str:
+    """What the number of a token measures (the engine converts it when the program is written in inches)."""
+    if token.dimension is not None:
+        return token.dimension
+    return DIMENSION_LENGTH if token.kind == "number" and token.number_format in ("coordinate", "feed") else DIMENSION_NONE
 
 
 TOKENS: dict[str, Token] = {}
@@ -235,6 +248,14 @@ def _prepare_x_mode(_args: tuple, codes: dict) -> tuple:
 
 def _x_mode_code(render, args, _options: Options):
     return args[0] if render.engine.settings.x_mode is XInputMode.DIAMETER else args[1]
+
+
+def _prepare_units(_args: tuple, codes: dict) -> tuple:
+    return tuple(codes[name].text if name in codes else None for name in ("units_mm", "units_inch"))
+
+
+def _units_code(render, args, _options: Options):
+    return args[1] if render.engine.settings.unit is UnitSystem.IMPERIAL else args[0]
 
 
 def _line_number(advance: bool) -> Evaluate:
@@ -430,11 +451,12 @@ def _define() -> None:
                    NUMBER_OPTIONS | {"contour", "path"}, "number"))
     register(Token("F", "feed (per revolution; `per_minute` uses the spindle speed)", "0.2",
                    _feed, ARCS | {"feed"} | DRILL_CYCLES, NUMBER_OPTIONS | {"per_minute"}, "number", "feed", changeable=True, memory=True))
-    register(Token("S", "spindle speed (rpm, or m/min for constant surface speed)", "1200", _plain("value"), SPINDLE,
-                   NUMBER_OPTIONS, "number", "speed", changeable=True, memory=True))
+    register(Token("S", "spindle speed (rpm, or m/min for constant surface speed; ft/min in an inch program)", "1200", _plain("value"), SPINDLE,
+                   NUMBER_OPTIONS, "number", "speed", changeable=True, memory=True, dimension=DIMENSION_SURFACE_SPEED))
     register(Token("S max", "speed limit for constant surface speed (empty without a limit)", "3000", _plain("rpm_limit"),
                    SPINDLE, NUMBER_OPTIONS, "number", "speed"))
-    register(Token("dwell", "dwell time in seconds", "1.5", _plain("seconds"), frozenset({"dwell"}), NUMBER_OPTIONS, "number", "feed"))
+    register(Token("dwell", "dwell time in seconds", "1.5", _plain("seconds"), frozenset({"dwell"}), NUMBER_OPTIONS, "number", "feed",
+                   dimension=DIMENSION_NONE))
     register(Token("code", "a code of the code table of the post (the word after it is the name); `changed`: empty when the "
                    "last code of its modal group was this one", "G0", _code, every, frozenset(), "text", args=1, changeable=True,
                    prepare=_prepare_code))
@@ -443,6 +465,8 @@ def _define() -> None:
                    prepare=_prepare_spindle_code))
     register(Token("x mode code", "the code of `diameter_mode` or `radius_mode` of the code table (empty when the post has none)",
                    "G7", _x_mode_code, every, frozenset(), "text", prepare=_prepare_x_mode))
+    register(Token("units code", "the code of `units_mm` or `units_inch` of the code table, as the unit of the machine says (empty when the post has none)",
+                   "G21", _units_code, every, frozenset(), "text", prepare=_prepare_units))
     register(Token("N", "the last line number written (empty before the first)", "N20", _line_number(False), every,
                    frozenset(), "text"))
     register(Token("N next", "the next line number (prefix, start and step are settings of the post)", "N30", _line_number(True),
@@ -529,7 +553,8 @@ def _define() -> None:
         ("drill peck", "depth of one peck (empty for a plain drill)", "peck_depth_mm"),
         ("drill dwell", "dwell at the bottom in seconds (empty without one)", "dwell_s"),
     ):
-        register(Token(name, label, "-10", _drill_value(attribute), drill, NUMBER_OPTIONS, "number"))
+        register(Token(name, label, "-10", _drill_value(attribute), drill, NUMBER_OPTIONS, "number",
+                       dimension=DIMENSION_NONE if attribute == "dwell_s" else None))
     register(Token("drill mode", "drill, peck or peck full retract", "peck", _drill_mode, drill, TEXT_OPTIONS, "text"))
 
 

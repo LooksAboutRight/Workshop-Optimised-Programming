@@ -3,6 +3,9 @@
 COORDINATE_DECIMALS = 3
 FEED_DECIMALS = 3
 SPEED_DECIMALS = 1
+COORDINATE_DECIMALS_INCH = 4  # decimals of coordinates in an inch program
+FEED_DECIMALS_INCH = 4  # decimals of feeds in an inch program
+INCHES_PER_FOOT = 12  # a constant surface speed in an inch program is in feet per minute
 # Used by the fixed-RPM remedy: RPM = surface speed (m/min) * this / (pi * diameter in mm).
 M_PER_MIN_TO_MM_PER_MIN = 1000
 # Chord deviation allowed when arcs are replaced by short lines (remedy).
@@ -68,6 +71,7 @@ FIXED_CODES = (
     ("feed_per_rev", "feed per revolution", CODE_HEADING_MAIN),
     ("feed_per_minute", "feed per minute", CODE_HEADING_MAIN),
     ("units_mm", "units are millimetres", CODE_HEADING_MAIN),
+    ("units_inch", "units are inches", CODE_HEADING_MAIN),
     ("absolute", "absolute coordinates", CODE_HEADING_MAIN),
     ("plane_zx", "the plane of a lathe (Z and X)", CODE_HEADING_MAIN),
     ("plane_xy", "the plane in which a cycle drills along Z", CODE_HEADING_MAIN),

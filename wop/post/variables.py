@@ -101,7 +101,7 @@ def _token(name: str, type_name: str, label: str, default: Any) -> Token:
     numbers = type_name in NUMBER_TYPES
     return Token(
         name, label, str(default), evaluate, kind="number" if numbers else "text",
-        number_format="coordinate" if type_name == "float" else "count",
+        number_format="coordinate" if type_name == "float" else "count", dimension="none",
         options=NUMBER_OPTIONS if numbers else (TEXT_OPTIONS if type_name == "string" else frozenset({"yes", "no", "prefix", "suffix"})),
     )
 

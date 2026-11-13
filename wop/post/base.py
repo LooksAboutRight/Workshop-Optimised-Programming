@@ -25,7 +25,7 @@ from ..core.program_model.operations import (
     RapidAxes,
     SpindleSetting,
 )
-from ..core.program_model.units import XInputMode
+from ..core.program_model.units import UnitSystem, XInputMode
 
 
 class PostError(ValueError):
@@ -62,6 +62,7 @@ class PostInfo:
 @dataclass(frozen=True)
 class PostSettings:
     x_mode: XInputMode  # G-code mode of the whole program (B11)
+    unit: UnitSystem = UnitSystem.METRIC  # the unit of the numbers in the G-code (the unit of the machine); the program itself is in mm
 
 
 def function_feature(kind: MachineFunctionKind) -> Feature | None:

@@ -27,6 +27,7 @@ from wop.core.material import MaterialLibrary  # noqa: E402
 from wop.core.lathe.power import estimate_power  # noqa: E402
 from wop.adapters.project_files import load_project  # noqa: E402
 from wop.core.program_model.program import plan_program  # noqa: E402
+from wop.core.program_model.units import UnitSystem  # noqa: E402
 from wop.core.files.project_io import ProjectError, program_problems  # noqa: E402
 from wop.core.verify import verify_plan  # noqa: E402
 from wop.adapters.post_library import load_post_library  # noqa: E402
@@ -88,7 +89,7 @@ def main(argv: list[str]) -> int:
         print(f"post: {problem}")
     post = TemplatePost(definition)
     machine = project.machine
-    settings = PostSettings(project.settings.x_mode)
+    settings = PostSettings(project.settings.x_mode, machine.unit_system if machine else UnitSystem.METRIC)
     context = make_context(program, plan, project.settings.title, machine.name if machine else "", datetime.now(),
                            machine=machine, work_offset=project.settings.work_offset)
     first = generate_gcode(plan, post, settings, context=context)
