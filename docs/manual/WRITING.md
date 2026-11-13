@@ -15,6 +15,7 @@ Read this before you touch `docs/manual`. It holds the rules and the user's deci
 - Guesses made while writing (the user corrects them): the efficiency and the power wording, the advice for the first run on a machine, the order of the posts pages, the order of the chapters is that of use; each block section lists its fields with a short explanation and has a picture of its form; the style pictures are the ones of the program (hover pictures).
 
 ## Still to do
+- No picture yet for the grooving style Edges before full depth, and the picture of the grooving form (`block_grooving`) has to be made again: it has the new edge fields.
 - Waiting for the user's notes (tone, detail, errors); then they are worked in.
 - All pictures were made fresh on 2026-11-02 (light theme). No pictures yet for the Tools view, the workholding view, the toolboxes window, the materials window.
 - Guessed: the first-run advice (Exporting), the power wording, the troubleshooting list.

@@ -197,9 +197,9 @@ class GroovingPathTests(unittest.TestCase):
         self.assertEqual(next(s for s in specs if s.path[0] == "start_z_mm").label, "Groove Z (front edge)")
         self.assertEqual(next(s for s in specs if s.path[0] == "bottom_radius_mm").label, "Final X radius")
         off = {spec.path[0] for spec in specs if not spec.enabled}
-        self.assertEqual(off, {"peck_mode", "finish_feed_mm_per_rev", "finish_spindle_value"})
+        self.assertEqual(off, {"peck_mode", "finish_feed_mm_per_rev", "finish_spindle_value", "right_edge_mm", "left_edge_mm"})
         on = {spec.path[0] for spec in form_for(block(peck_depth_mm=1, finish_pass=True)) if not spec.enabled}
-        self.assertEqual(on, set())
+        self.assertEqual(on, {"right_edge_mm", "left_edge_mm"})  # only the sizes of edges that are off
 
     def test_the_finishing_speed_is_set_before_the_finishing_plunges(self):
         result = block(width_mm=6, finish_allowance_mm=0.2, finish_pass=True, finish_spindle_value=1200).generate(context())
@@ -280,4 +280,4 @@ class OneSidedModeTests(unittest.TestCase):
             specs = {spec.path[0]: spec for spec in form_for(block(one_sided_mode=mode, one_sided_cut_value=1))}
             self.assertIs(specs["one_sided_mode"].kind, FieldKind.CHOICE)
             self.assertEqual([c.value for c in specs["one_sided_mode"].choices], list(OneSidedMode))
-            self.assertIn(f"({unit})", specs["one_sided_cut_value"].label)
+            self.assertEqual(specs["one_sided_cut_value"].unit, unit)  # the unit is shown at the field, a length follows the window

@@ -11,9 +11,12 @@ At a release, `Unreleased` becomes the new version heading with its date.
 ## [Unreleased]
 
 ### Added
+- Grooving: a chamfer or a fillet on the edge of each groove wall (left: chuck side, right: face side), with the new style "Edges before full depth" for a cut-off with a chamfer or fillet on the part. The edge and the wall are cut in one move (pecked as the form says), a large edge in several passes (at most the one-sided cut). New preferences GROOVE_EDGE_SIZE_MM, GROOVE_EDGE_SKIN_MM and GROOVE_EDGE_RELIEF_MM.
 - Window unit: File > Preferences > Program > DISPLAY_UNITS shows lengths, feeds and sketch dimensions in inches or millimetres (after a restart), whatever the unit of the machine. Messages and summaries follow it. A spindle speed field names its unit (RPM, m/min, or ft/min in inch). ISO tool sizes, the values in Preferences and the taper rise per 100 mm stay metric.
 - G-code in inches: an imperial machine writes `G20`, lengths and feeds in inches and constant surface speed in feet per minute (new post token `<units code>`, post settings `decimals_inch` and `feed_decimals_inch`).
 ### Changed
+- Grooving: a cut-off (a groove to the axis) now starts its full-depth cutting at the wall of the part, so the part comes off at its length; before, the first plunge could be one one-sided cut away from it.
+- Grooving: the value of the one-sided cut and its mode entry "mm" follow the unit of the window.
 - The 2D picture again holds all tool paths, also the moves to the tool change position, but still opens zoomed to the part: zoom out (mouse wheel) to see everything, double click to come back.
 - Posts you made or copied before this change do not follow the new inch output. On an imperial machine they still write `G21` in the header (their setup uses `<code units_mm>`) while the numbers are in inches, so they must be updated: add `units_inch = G20` to `[codes]`, `G20` to the `units` group of `[modal_groups]`, and replace `<code units_mm>` with `<units code>` in the setup. Metric machines are not affected.
 ### Fixed

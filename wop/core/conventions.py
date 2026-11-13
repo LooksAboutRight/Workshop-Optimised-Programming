@@ -142,6 +142,9 @@ CONVENTIONS = (
     Convention("GROOVE_ONE_SIDED_CUT_PERCENT", GROOVING, "that most, in percent of the blade width (used when the mode above is percent)", PERCENT),
     Convention("GROOVE_FINISH_STOP_MIN_MM", GROOVING, "the finishing sweep along a groove bottom ends at least this early before the wall", NON_NEGATIVE),
     Convention("GROOVE_FINISH_STOP_BLADE_FRACTION", GROOVING, "... or this part of the blade width, whichever is more", SHARE),
+    Convention("GROOVE_EDGE_SIZE_MM", GROOVING, "size of a chamfer or a fillet on the edge of a groove wall (the length along the wall and along the surface)"),
+    Convention("GROOVE_EDGE_SKIN_MM", GROOVING, "the roughing of a groove leaves this much on a wall with a chamfer or a fillet, so that the edge and the wall are cut in one move (a burr stays when the wall is cut first)", NON_NEGATIVE),
+    Convention("GROOVE_EDGE_RELIEF_MM", GROOVING, "the style Edges before full depth opens the groove this much deeper than the edge is large before the edge is cut", NON_NEGATIVE),
     Convention("GROOVE_AIR_SKIP_MIN_MM", GROOVING, "air above an existing groove must be this deep to be crossed with a rapid", NON_NEGATIVE),
     # --- drilling ---
     Convention("EXAMPLE_DRILL_MODE", DRILLING, "drill mode of a new drilling block", CHOICE, CORE, ("drilling", "peck drilling", "peck drilling, full retract")),

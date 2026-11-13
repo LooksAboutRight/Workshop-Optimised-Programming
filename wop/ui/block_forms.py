@@ -357,6 +357,11 @@ def form_for(obj: Any, context: FormContext = FormContext()) -> list[FieldSpec]:
             for spec in specs
         ]
     specs = _with_spindle_units(obj, specs)
+    units = getattr(obj, "form_units", None)  # an object may give a field a unit that depends on its other values: name -> unit
+    if callable(units):
+        given_units = units()
+        specs = [dataclasses.replace(s, unit=given_units[s.path[0]]) if len(s.path) == 1 and s.path[0] in given_units else s for s in specs]
+    specs = [dataclasses.replace(s, choices=tuple(Choice(c.value, shown_unit(c.label)) for c in s.choices)) if s.choices else s for s in specs]  # a choice "mm" says "in" in inches
     if getattr(obj, "metric_only", False):
         specs = [dataclasses.replace(spec, metric=True) for spec in specs]
     specs = _with_function_fields(obj, specs, context)

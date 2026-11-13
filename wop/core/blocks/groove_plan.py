@@ -21,8 +21,9 @@ def _covered(z: float, blade: float, cleared: list[tuple[float, float]]) -> bool
     return position >= z + blade - GEOMETRY_TOLERANCE_MM
 
 
-def rough_plunges(low: float, high: float, blade: float, one_sided_mm: float) -> list[float]:
-    """Tip Z of the roughing plunges in the order they are made; the groove is [low, high] (walls included)."""
+def rough_plunges(low: float, high: float, blade: float, one_sided_mm: float, wall_first: bool = False) -> list[float]:
+    """Tip Z of the roughing plunges in the order they are made; the groove is [low, high] (walls included).
+    `wall_first`: the first plunge is at the front wall (a cut-off: the part comes off at its length), then the steps go towards the chuck."""
     if high - low <= blade + GEOMETRY_TOLERANCE_MM:
         return [low]  # the blade fills the groove
     top = high - blade  # the highest position of the blade
@@ -33,7 +34,7 @@ def rough_plunges(low: float, high: float, blade: float, one_sided_mm: float) ->
             "check the groove width and the one-sided cut"
         )
     full = side >= blade - GEOMETRY_TOLERANCE_MM  # a one-sided cut as wide as the blade: no first plunge needed
-    wanted = [top] if full else [max(low, top - side), top]
+    wanted = [top] if full or wall_first else [max(low, top - side), top]
     z = wanted[0] - side
     while z > low + GEOMETRY_TOLERANCE_MM:
         wanted.append(z)

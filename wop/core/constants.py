@@ -33,6 +33,9 @@ GROOVE_ONE_SIDED_CUT_MM = 1.0  # most a blade may cut wide with air on its other
 GROOVE_ONE_SIDED_CUT_PERCENT = 50  # the same, as a percentage of the blade width
 GROOVE_FINISH_STOP_MIN_MM = 0.2  # the finishing pass along the bottom ends this early before the wall ...
 GROOVE_FINISH_STOP_BLADE_FRACTION = 0.5  # ... or this part of the blade width, whichever is more
+GROOVE_EDGE_SIZE_MM = 0.5  # size of a chamfer or a fillet on the edge of a groove wall when the block is given one
+GROOVE_EDGE_SKIN_MM = 0.2  # the roughing leaves this much on a wall with a chamfer or a fillet: the edge and the wall are cut in one move
+GROOVE_EDGE_RELIEF_MM = 0.5  # before an edge is cut the groove is opened this much deeper than the edge is large (style Edges before full depth)
 # What a new drilling block opens with (the order is the order in Preferences).
 EXAMPLE_DRILL_MODE = "peck drilling"  # "drilling", "peck drilling" or "peck drilling, full retract" (the names of the Drill mode dropdown)
 EXAMPLE_DRILL_DEPTH_MM = 15  # the depth, positive: the hole goes this far behind the front face

@@ -7,10 +7,11 @@ class only moves, with the `Sweeper` so that the blade stops before a collision.
 
 from __future__ import annotations
 
-from ..constants import DRILL_REAPPROACH_MM, GROOVE_AIR_SKIP_MIN_MM, PECK_RETRACT_MM
-from ..geometry import Point
+from ..constants import DRILL_REAPPROACH_MM, GEOMETRY_TOLERANCE_MM, GROOVE_AIR_SKIP_MIN_MM, PECK_RETRACT_MM
+from ..geometry import ArcSegment, Point
 from ..passes import pass_levels
-from ..program_model.operations import LinearMove, Rapid
+from ..program_model.operations import ArcMove, LinearMove, Rapid
+from .groove_edges import EdgeMoves
 from .groove_style import Plunge
 from .sweep import Sweeper
 
@@ -84,6 +85,49 @@ class GroovePath:
         self.operations.extend(moves)
         self.started = True
         self.last_z = z
+
+    def edge_cut(self, moves: EdgeMoves, z_offset: float, feed: float, depth_x: float | None = None, peck: float | None = None) -> None:
+        """Cut the edge of a wall: the corner of the blade comes down from the clear radius along `moves` (in corner coordinates; `z_offset`
+        leads from the corner to the reference point of the tool). With `depth_x` the blade goes on straight down the wall to that radius in
+        the same move (the edge and the wall are one cut), pecked as the form says (`peck`); then, or without it right away, it goes straight back out."""
+        sweeper = self.sweeper
+        lead = Point(moves.lead.x, moves.lead.z + z_offset)
+        operations: list = [] if self.started else self._way_to_first_plunge(lead.z)
+        operations.append(Rapid(Point(self.clear_x, lead.z)))
+        if abs(lead.x - self.clear_x) > GEOMETRY_TOLERANCE_MM:  # the lead is at the clear radius (the clearance is what it was started from)
+            operations.append(Rapid(lead))
+        here = lead
+        for piece in moves.pieces:
+            end = Point(piece.end.x, piece.end.z + z_offset)
+            if isinstance(piece, ArcSegment):
+                centre = Point(piece.center.x, piece.center.z + z_offset)
+                way = ArcSegment(here, end, centre, piece.direction).to_polyline()
+                operations.append(ArcMove(end, centre, piece.direction, feed))
+            else:
+                way = [here, end]
+                operations.append(LinearMove(end, feed))
+            for a, b in zip(way, way[1:]):
+                _, collision = sweeper.follow_line(a, b)
+                self.collisions.append(collision)
+            here = end
+        if depth_x is not None:
+            z = here.z
+            levels = (pass_levels(here.x, depth_x, peck) if peck is not None else []) or [depth_x]  # the pecks of the form, counted from the end of the edge
+            for index, level in enumerate(levels):
+                target = Point(level, z)
+                _, collision = sweeper.follow_line(here, target)
+                self.collisions.append(collision)
+                operations.append(LinearMove(target, feed))
+                if index < len(levels) - 1:
+                    if self.full_retract:  # all the way out, then in to just above the last depth
+                        operations += [Rapid(Point(self.clear_x, z)), Rapid(Point(level + self.sign * DRILL_REAPPROACH_MM, z))]
+                    else:  # chip breaking: out a little and back
+                        operations += [Rapid(Point(level + self.sign * PECK_RETRACT_MM, z)), Rapid(target)]
+                here = target
+        operations.append(Rapid(Point(self.clear_x, here.z)))
+        self.operations.extend(operations)
+        self.started = True
+        self.last_z = here.z
 
     def pass_along(self, step: Plunge, finish_feed: float) -> None:
         """After the plunge of `step`: the pass along the bottom to `step.sweep_to`, in place of the retract of the plunge."""

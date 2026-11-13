@@ -28,6 +28,7 @@ Rules for this list:
 | B1 | A program is an ordered list of blocks | Add, delete, move: window, file and G-code have the same order. | Done |
 | B2 | Block types facing, turning, threading | One block of each type generates G-code and reloads equal. | Done |
 | B3 | Block types boring, grooving, drilling | Each type has an example that generates G-code and passes the reach check. | Done |
+| B20 | A groove wall can have a chamfer or a fillet on its edge, also for a cut-off | A cut-off with a chamfer on the part: the groove is opened to the edge size, then the edge and the wall of the part are cut in one move, the part comes off at its length; a large edge is cut in passes (`tests/test_groove_edges.py`). | Done, not tried on a machine |
 | B12 | Custom path block (path drawn in the sketch editor) | A path with rapids, feed lines and an arc is planned, drawn, checked and written (`tests/test_custom_path.py`, `tests/test_sketch_path.py`). | Done, not tried |
 | B13 | Machine function block (follows the functions of the post) | A function the post lacks is not offered; a block whose function is missing is left out at export with the reason. | Done |
 | B8 | Hand-written G-code block | - | Removed (a post function does it, B13) |

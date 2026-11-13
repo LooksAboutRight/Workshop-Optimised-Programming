@@ -88,6 +88,23 @@ class DisplayUnitTests(unittest.TestCase):
             self.assertEqual(display_units.shown_unit("RPM"), "RPM")
             self.assertEqual(display_units.shown_text("CSS 100 m/min (max 3000 rpm), 2 mm"), "CSS 328 ft/min (max 3000 rpm), 0.0787 in")
 
+    def test_the_one_sided_cut_of_a_groove_follows_the_unit_of_the_window(self):
+        from wop.core.blocks.grooving import OneSidedMode
+        from wop.ui.block_forms import form_for
+        from tests.test_blocks_grooving import block
+
+        def specs(mode, value):
+            return {s.path[0]: s for s in form_for(block(one_sided_mode=mode, one_sided_cut_value=value))}
+
+        with inches():
+            length = specs(OneSidedMode.MM, 2.54)
+            self.assertEqual(display_units.shown_unit(length["one_sided_cut_value"].unit), "in")
+            self.assertAlmostEqual(to_display(length["one_sided_cut_value"], 2.54, XInputMode.RADIUS), 0.1)
+            self.assertEqual([c.label for c in length["one_sided_mode"].choices], ["in", "% of blade width"])
+            percent = specs(OneSidedMode.PERCENT, 50)
+            self.assertAlmostEqual(to_display(percent["one_sided_cut_value"], 50, XInputMode.RADIUS), 50)
+        self.assertEqual([c.label for c in specs(OneSidedMode.MM, 1)["one_sided_mode"].choices], ["mm", "% of blade width"])
+
     def test_iso_tool_forms_stay_in_millimetres(self):
         from wop.core.tool_types.holder import HolderDefinition
         from wop.ui.block_forms import form_for, spec_scale, spec_unit

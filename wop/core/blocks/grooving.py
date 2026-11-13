@@ -30,6 +30,9 @@ from ..constants import (
     EXAMPLE_GROOVE_START_Z_MM,
     EXAMPLE_GROOVE_WIDTH_MM,
     GEOMETRY_TOLERANCE_MM,
+    GROOVE_EDGE_RELIEF_MM,
+    GROOVE_EDGE_SIZE_MM,
+    GROOVE_EDGE_SKIN_MM,
     GROOVE_FINISH_STOP_BLADE_FRACTION,
     GROOVE_FINISH_STOP_MIN_MM,
     GROOVE_ONE_SIDED_CUT_MM,
@@ -38,12 +41,14 @@ from ..constants import (
     PERCENT_OF_WHOLE,
 )
 from ..geometry import LineSegment, Point, Segment
+from ..geometry.chains import reversed_segment
 from ..program_model.operations import BlockBegin, BlockEnd, SetSpindle, SpindleSetting, finishing_spindle
 from ..reach import prepare_tool
 from ..geometry.region import Region
 from .base import BLOCK_TYPES, Block, BlockContext, BlockError, BlockResult
+from .groove_edges import EdgeKind, edge_moves, edge_pieces, edge_region
 from .groove_path import GroovePath
-from .groove_style import GrooveInput, GrooveStyleError, GROOVING, check_plunges
+from .groove_style import EDGE_HIGH, EdgeCut, GrooveInput, GrooveStyleError, GROOVING, check_plunges
 from .styles import DEFAULT_STYLE_KEY, STYLES, StyleError
 from .sweep import Sweeper
 from .turning_common import TurningSide
@@ -80,6 +85,10 @@ class GroovingBlock(Block):
     width_mm: float
     bottom_radius_mm: float
     feed_mm_per_rev: float
+    left_edge_kind: EdgeKind = EdgeKind.NONE  # the edge of the wall nearer the chuck (the lower Z, the left in the picture) ...
+    left_edge_mm: float = GROOVE_EDGE_SIZE_MM  # ... a chamfer or a fillet of this size
+    right_edge_kind: EdgeKind = EdgeKind.NONE  # the edge of the wall nearer the face (the right): the part of a cut-off
+    right_edge_mm: float = GROOVE_EDGE_SIZE_MM
     peck_depth_mm: float | None = None  # None: one plunge to the bottom
     peck_mode: GroovePeckMode = GroovePeckMode.CHIP_BREAK  # what the tool does between two pecks
     one_sided_mode: OneSidedMode = default_one_sided_mode()  # how the next field is given
@@ -94,7 +103,7 @@ class GroovingBlock(Block):
         """The order of the form (the free comment is not shown)."""
         return (
             "name", "style", "side", "tool_number", "spindle", "feed_mm_per_rev", "start_z_mm", "width_mm", "bottom_radius_mm",
-            "peck_depth_mm", "peck_mode", "one_sided_mode", "one_sided_cut_value", "finish_allowance_mm", "finish_pass", "finish_feed_mm_per_rev",
+            "right_edge_kind", "right_edge_mm", "left_edge_kind", "left_edge_mm", "peck_depth_mm", "peck_mode", "one_sided_mode", "one_sided_cut_value", "finish_allowance_mm", "finish_pass", "finish_feed_mm_per_rev",
             "finish_spindle_value", "coolant",
         )
 
@@ -113,15 +122,23 @@ class GroovingBlock(Block):
         return {"style": known[self.style].hint if self.style in known else "This style is not available in this program: choose another one."}
 
     def form_labels(self) -> dict[str, str]:
-        unit = "%" if self.one_sided_mode is OneSidedMode.PERCENT else "mm"
         return {"start_z_mm": "Groove Z (front edge)", "bottom_radius_mm": "Final X radius",
-                "one_sided_mode": "One-sided cut in", "one_sided_cut_value": f"Max one-sided cut ({unit})"}  # short: a long label squeezes the form
+                "right_edge_kind": "Right edge (face side)", "right_edge_mm": "size", "left_edge_kind": "Left edge (chuck side)", "left_edge_mm": "size",
+                "one_sided_mode": "One-sided cut in", "one_sided_cut_value": "Max one-sided cut"}  # short: a long label squeezes the form
+
+    def form_units(self) -> dict[str, str]:
+        """The one-sided cut is a length or a percentage, as the mode says (a length follows the unit of the window)."""
+        return {"one_sided_cut_value": "%" if self.one_sided_mode is OneSidedMode.PERCENT else "mm"}
 
     def form_same_line(self) -> frozenset[str]:
-        return frozenset({"finish_feed_mm_per_rev", "finish_spindle_value"})  # next to the "Finishing" checkbox
+        return frozenset({"finish_feed_mm_per_rev", "finish_spindle_value", "right_edge_mm", "left_edge_mm"})  # next to the "Finishing" checkbox, next to the kind of an edge
 
     def form_disabled(self) -> frozenset[str]:
         off: set[str] = set()
+        if self.right_edge_kind is EdgeKind.NONE:
+            off.add("right_edge_mm")
+        if self.left_edge_kind is EdgeKind.NONE:
+            off.add("left_edge_mm")
         if self.peck_depth_mm is None:
             off.add("peck_mode")
         if not self.finish_pass:
@@ -170,6 +187,9 @@ class GroovingBlock(Block):
             raise BlockError("the peck depth must be greater than zero")
         if self.finish_allowance_mm < 0:
             raise BlockError("finishing allowance must not be negative")
+        for label, kind, size in (("right", self.right_edge_kind, self.right_edge_mm), ("left", self.left_edge_kind, self.left_edge_mm)):
+            if kind is not EdgeKind.NONE and size <= 0:
+                raise BlockError(f"the size of the {label} edge must be greater than zero")
         if self.finish_feed_mm_per_rev is not None and self.finish_feed_mm_per_rev <= 0:
             raise BlockError("finishing feed must be greater than zero")
         if self.finish_spindle_value is not None and self.finish_spindle_value <= 0:
@@ -182,8 +202,14 @@ class GroovingBlock(Block):
             return ()
         surface = bounds.max_x if self.side is TurningSide.OUTSIDE else bounds.min_x
         z_high, z_low = self.start_z_mm, self.start_z_mm - self.width_mm
-        corners = [Point(surface, z_high), Point(self.bottom_radius_mm, z_high), Point(self.bottom_radius_mm, z_low), Point(surface, z_low)]
-        return tuple(LineSegment(a, b) for a, b in zip(corners, corners[1:]))
+        sign = 1 if self.side is TurningSide.OUTSIDE else -1
+        right = edge_pieces(self.right_edge_kind, self.right_edge_mm, True, surface, z_high, sign)
+        left = edge_pieces(self.left_edge_kind, self.left_edge_mm, False, surface, z_low, sign)
+        top = right[-1].end if right else Point(surface, z_high)  # where the wall starts under its edge
+        low = left[-1].end if left else Point(surface, z_low)
+        walls = [Point(self.bottom_radius_mm, z_high), Point(self.bottom_radius_mm, z_low), low]
+        corners = [top, *walls]
+        return (*right, *(LineSegment(a, b) for a, b in zip(corners, corners[1:])), *(reversed_segment(piece) for piece in reversed(left)))
 
     # --- helpers --------------------------------------------------------------------
 
@@ -214,24 +240,46 @@ class GroovingBlock(Block):
         planned = residual.intersection(Region.rectangle(near, place.z_low, far, place.z_high))
         if planned.is_empty:
             return self._nothing("grooving: nothing to remove")
+        edges = self._edge_regions(place)
+        for edge_region_ in edges:
+            planned = planned.union(residual.intersection(edge_region_))  # the part the edges take off is cut too
 
         allowance = self.finish_allowance_mm
         finishing = self.finish_pass and allowance > 0
         rough_bottom = self.bottom_radius_mm + place.sign * allowance
         self._check_allowance(place, rough_bottom)
-        sweeper = Sweeper(context, residual.difference(planned))
+        self._check_edges(place)
+        groove = self._groove_input(place, rough_bottom, finishing)
+        open_for_the_tool = planned
+        if groove.relief_low_z is not None and groove.relief_low_z < place.z_low - GEOMETRY_TOLERANCE_MM:
+            # the first plunges of a cut-off with an edge reach a little past the wall nearer the chuck, so that the wall of the part keeps its skin
+            open_for_the_tool = planned.union(residual.intersection(Region.rectangle(near, groove.relief_low_z, far, place.z_low)))
+        sweeper = Sweeper(context, residual.difference(open_for_the_tool))
         path = self._path(context, bounds, place, sweeper)
-        plunges = self._plunges(self._groove_input(place, rough_bottom, finishing))
+        plunges = self._plunges(groove)
 
         feed = self.feed_mm_per_rev
         finish_feed = self.finish_feed_mm_per_rev or feed
         finishing_started = False
+        part_off = False  # a groove that goes to the axis has cut the part off
+        part_edge_late = False
         for step in plunges:
+            edge = step.side if isinstance(step, EdgeCut) else step.edge
+            if edge == EDGE_HIGH and part_off:
+                part_edge_late = True  # the edge of the part is cut after the part came off
+            if isinstance(step, EdgeCut):
+                path.edge_cut(self._edge_moves(edge, step.size_mm, place), place.shift - (place.blade if edge == EDGE_HIGH else 0), finish_feed)
+                continue
             if step.finishing and not finishing_started:
                 finishing_started = True
                 if path.started and self.finish_spindle_value is not None:
                     path.operations.append(SetSpindle(finishing_spindle(self.spindle, self.finish_spindle_value)))  # often faster
-            path.plunge(step.z, step.radius, finish_feed if step.finishing else feed, None if step.finishing else self.peck_depth_mm)
+            if edge is not None:  # the corner cuts the edge and goes on down the wall in the same move
+                path.edge_cut(self._edge_moves(edge, None, place), place.shift - (place.blade if edge == EDGE_HIGH else 0), finish_feed, step.radius, self.peck_depth_mm)
+            else:
+                path.plunge(step.z, step.radius, finish_feed if step.finishing else feed, None if step.finishing else self.peck_depth_mm)
+            if groove.through and abs(step.radius - self.bottom_radius_mm) <= GEOMETRY_TOLERANCE_MM:
+                part_off = True
             if step.sweep_to is not None:
                 path.pass_along(step, finish_feed)
         path.leave()
@@ -241,12 +289,36 @@ class GroovingBlock(Block):
         if allowance > 0 and not finishing and place.z_high - place.z_low > 2 * allowance:  # the allowance stays on the part
             low_x, high_x = sorted((rough_bottom, place.outer))
             wanted = residual.intersection(Region.rectangle(low_x, place.z_low + allowance, high_x, place.z_high - allowance))
+        for edge_region_ in edges:
+            wanted = wanted.union(residual.intersection(edge_region_))
         removed, messages = report_uncut(self.name or self.type_name, wanted, sweeper.current)
         if any(point is not None for point in path.collisions):
             messages.insert(0, "grooving: the tool collides while cutting the groove; it is cut as asked, see the problem list")
+        if part_edge_late:
+            messages.insert(0, "grooving: the groove goes to the axis, so the part is off before its (right) edge is cut; use the style 'Edges before full depth'")
         if place.solid:
             messages.insert(0, "grooving inside starts in solid material (there is no bore): drill and bore first unless the tool can cut at the centre")
         return BlockResult(tuple(path.operations), removed, tuple(messages))
+
+    def _edge_moves(self, side: str, size_mm: float | None, place: "_Place"):
+        """How the corner of the blade cuts an edge: all of it, or the part of this size (one of the first passes of a large edge)."""
+        high = side == EDGE_HIGH
+        kind, size = (self.right_edge_kind, self.right_edge_mm) if high else (self.left_edge_kind, self.left_edge_mm)
+        return edge_moves(kind, size_mm or size, high, place.surface, place.z_high if high else place.z_low, place.sign, place.clearance)
+
+    def _edge_regions(self, place: "_Place") -> list[Region]:
+        """The material the chamfers or fillets take off the part (none for an edge that is off)."""
+        regions = [
+            edge_region(self.right_edge_kind, self.right_edge_mm, True, place.surface, place.z_high, place.sign),
+            edge_region(self.left_edge_kind, self.left_edge_mm, False, place.surface, place.z_low, place.sign),
+        ]
+        return [region for region in regions if not region.is_empty]
+
+    def _check_edges(self, place: "_Place") -> None:
+        depth = place.sign * (place.surface - self.bottom_radius_mm)
+        for label, kind, size in (("right", self.right_edge_kind, self.right_edge_mm), ("left", self.left_edge_kind, self.left_edge_mm)):
+            if kind is not EdgeKind.NONE and size >= depth - GEOMETRY_TOLERANCE_MM:
+                raise BlockError(f"the {label} edge ({size:g} mm) is as large as the groove is deep ({depth:g} mm) or larger")
 
     def _header(self) -> BlockBegin:
         return BlockBegin(0, self.block_id, self.type_name, self.name)
@@ -311,14 +383,29 @@ class GroovingBlock(Block):
         """What a style needs to decide the order and depth of the plunges."""
         allowance = self.finish_allowance_mm
         blade = place.blade
-        rough_low, rough_high = place.z_low + allowance, place.z_high - allowance
-        if rough_high - rough_low < blade:  # narrow groove: the blade fills it
-            rough_high = max(rough_high, rough_low + blade)
+        # a wall with an edge keeps a thin skin when the roughing is done, so that the edge and the wall are cut in one move
+        skin_low = allowance if allowance > 0 or self.left_edge_kind is EdgeKind.NONE else GROOVE_EDGE_SKIN_MM
+        skin_high = allowance if allowance > 0 or self.right_edge_kind is EdgeKind.NONE else GROOVE_EDGE_SKIN_MM
+        rough_low, rough_high = place.z_low + skin_low, place.z_high - skin_high
+        relief_low = relief_high = None
+        if rough_high - rough_low < blade:  # narrow groove: the blade fills it, inside the walls
+            if self.right_edge_kind is not EdgeKind.NONE:
+                relief_high, relief_low = rough_high, rough_high - blade  # the first plunges reach a little past the wall nearer the chuck: the wall of the part keeps its skin
+            rough_low = min(rough_low, place.z_high - blade)
+            rough_high = rough_low + blade
+        edges = [size for kind, size in ((self.right_edge_kind, self.right_edge_mm), (self.left_edge_kind, self.left_edge_mm)) if kind is not EdgeKind.NONE]
+        relief = place.surface - place.sign * (max(edges) + GROOVE_EDGE_RELIEF_MM) if edges else None
+        if relief is not None and place.sign * (relief - rough_bottom) <= GEOMETRY_TOLERANCE_MM:
+            relief = None  # the groove is not deeper than the edge needs: no relief step
         return GrooveInput(
             blade_mm=blade, wall_low_z=place.z_low, wall_high_z=place.z_high, rough_low_z=rough_low, rough_high_z=rough_high,
             surface_radius=place.surface, rough_bottom_radius=rough_bottom, final_radius=self.bottom_radius_mm,
             one_sided_mm=self.one_sided_mm(blade), peck_depth_mm=self.peck_depth_mm, finishing=finishing,
             finish_stop_early_mm=max(GROOVE_FINISH_STOP_MIN_MM, GROOVE_FINISH_STOP_BLADE_FRACTION * blade),
+            edge_high_mm=self.right_edge_mm if self.right_edge_kind is not EdgeKind.NONE else 0,
+            edge_low_mm=self.left_edge_mm if self.left_edge_kind is not EdgeKind.NONE else 0,
+            relief_radius=relief, relief_low_z=relief_low, relief_high_z=relief_high,
+            through=place.sign > 0 and self.bottom_radius_mm <= GEOMETRY_TOLERANCE_MM,
         )
 
     def _plunges(self, groove: GrooveInput) -> list:
